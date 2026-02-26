@@ -1,599 +1,1697 @@
+# 2. Практика 6. Руководство по сборке Unity-клиента для strategy-support-is
 
-## 6. Интеграция с игрой (Unity / Web / Mobile) — подробная теория и задание (обновлено)
+## Что это такое и зачем
 
-Раздел интеграции проверяет, что клиент связывается с backend **как инженерная система**, а не как набор разрозненных запросов: есть единый сетевой слой, токены живут централизованно, ответы парсятся по контракту, ошибки обрабатываются одинаково, события не теряются, повторная отправка не ломает данные, а `requestId` позволяет быстро связать запрос клиента с логами сервера.
+Данный документ — пошаговая инструкция по созданию Unity-приложения, которое подключается к Flask-бэкенду `strategy-support-is` и обменивается с ним данными. Уровень реализации — учебный MVP: авторизация, профиль, события, завершение матча, лидерборд.
 
-[![REST API Tutorial](https://tse2.mm.bing.net/th/id/OIP.D4eit5gVSm8KYGcCIa7TeQHaEK?pid=Api)](https://www.javaguides.net/p/rest-api-tutorial.html?utm_source=chatgpt.com)
-
----
-
-# 6.1. Что интегрируем: MVP-сценарии и почему они обязательны
-
-Минимальный набор сценариев (MVP) должен закрывать полный цикл данных:
-
-1. **Регистрация/логин** → клиент получает JWT → появляется авторизованный контекст
-2. **Профиль** → клиент получает витрину состояния игрока (`user + progress`)
-3. **События (телеметрия)** → клиент отправляет факты (`session_start`, `match_finish`)
-4. **Лидерборд** → клиент читает агрегированные витрины (`/leaderboard`)
-5. **Ошибки/лимиты/бан** → клиент корректно живёт при 400/401/403/409/429/500
-6. **Дедупликация** → повторная отправка события не даёт двойных начислений
-
-Почему это считается архитектурным минимумом:
-
-* JWT показывает понимание stateless REST и того, что аутентификация идёт через заголовки.
-* Profile проверяет чтение витрин и работу с DTO.
-* Events проверяет журналирование фактов и устойчивость к сетевым сбоям.
-* Leaderboard проверяет понимание “сырьё” vs “агрегаты”.
-* Ошибки проверяют эксплуатацию: большая часть проблем в проде — это обработка краёв.
+После выполнения всех шагов у вас будет Unity-приложение с тремя сценами, которое:
+- Регистрирует и авторизует пользователей через Flask JWT
+- Отображает профиль и прогресс игрока
+- Отправляет игровые события с UUID-дедупликацией
+- Завершает матч и получает начисленные сервером награды
+- Показывает таблицу лидеров
 
 ---
 
-# 6.2. Архитектура сетевого слоя клиента: как должно быть устроено
+## Часть 1. Теория: как Unity общается с сервером
 
-## 6.2.1. Почему нельзя делать запросы “в кнопке” или “в MonoBehaviour напрямую”
+### 6.1. Что такое REST API и почему это важно для Unity
 
-Если запросы размазаны по UI/сценам:
+REST API — это набор URL-адресов (endpoint'ов) на сервере, к которым клиент обращается по протоколу HTTP. Unity выступает клиентом: она формирует запрос, отправляет его серверу и получает ответ в формате JSON.
 
-* токен забудут добавить в часть запросов;
-* обработка ошибок станет разной в разных местах;
-* невозможно централизованно включить таймауты, ретраи, логирование;
-* сложно тестировать и воспроизводить баги.
+Главное правило: **сервер — источник истины**. Unity не хранит постоянные данные о прогрессе, очках и наградах в себе. Всё это живёт в базе данных на сервере и запрашивается по API.
 
-Требование: показать **минимальную архитектуру клиентского networking слоя**.
+### 6.2. HTTP-методы
 
-## 6.2.2. Минимальные компоненты (обязательные)
+| Метод  | Назначение                    | Пример                        |
+|--------|-------------------------------|-------------------------------|
+| GET    | Получить данные               | `GET /api/v1/profile`         |
+| POST   | Создать / выполнить действие  | `POST /api/v1/match/finish`   |
 
-### 1) ApiClient (Networking Gateway)
+### 6.3. JSON — формат обмена данными
 
-Ответственность ApiClient:
-
-* сбор URL (`baseUrl + path`)
-* заголовки (`Authorization`, `Content-Type`, `X-Request-Id`)
-* таймаут
-* отправка запроса
-* парсинг ответа в единый формат `ApiEnvelope<T>`
-* возврат результата в бизнес-слой
-
-Запрещено в ApiClient:
-
-* UI-логика
-* расчёт наград/геймплей
-* хранение профиля игрока (кроме токена через TokenStore)
-
----
-
-### 2) TokenStore (JWT storage + lifecycle)
-
-Ответственность TokenStore:
-
-* сохранить токен после login
-* загрузить токен при старте
-* очистить токен при logout
-* (опционально) проверить срок жизни / refresh flow
-
-Хранение (минимально допустимо для учебного MVP):
-
-* Unity: `PlayerPrefs` (с пометкой “в проде нужен secure storage”)
-* Web: `localStorage` (с пометкой “в проде предпочтительнее memory + refresh”)
-
----
-
-### 3) EventQueue (offline-first)
-
-Ответственность EventQueue:
-
-* сформировать событие (`eventId` = UUID) и добавить в очередь **до отправки**
-* отправить событие (по одному или пачкой)
-* удалить из очереди только при подтверждённом успехе (`ok:true`)
-* сохранить очередь (Unity: файл/PlayerPrefs; Web: localStorage; лучше: SQLite)
-* реализовать политику retry/backoff, а также остановку на 401/403
-
----
-
-### 4) ErrorMapper (policy layer)
-
-Ответственность ErrorMapper:
-
-* перевести `HTTP status` и `error.code` в действие клиента:
-
-  * logout
-  * retry
-  * backoff
-  * refresh profile
-  * показать сообщение
-* обеспечить единый UX ошибок для всех запросов
-
----
-
-# 6.3. Контракт HTTP/JSON: что обязан соблюдать клиент и сервер
-
-## 6.3.1. Единый формат ответа
-
-Успех:
+Все запросы и ответы используют JSON. Unity сериализует классы C# в JSON с помощью `JsonUtility.ToJson()` и десериализует ответы обратно через `JsonUtility.FromJson<T>()`.
 
 ```json
-{ "ok": true, "data": {} }
+// Пример запроса к /api/v1/auth/login
+{ "email": "alice@example.com", "password": "password123" }
+
+// Пример успешного ответа
+{ "ok": true, "data": { "accessToken": "eyJ...", "userId": 1, "nickname": "Commander_Alice" } }
+
+// Пример ответа с ошибкой
+{ "ok": false, "error": { "code": "UNAUTHORIZED", "message": "Invalid credentials", "requestId": "req_abc123" } }
 ```
 
-Ошибка:
+### 6.4. JWT — как работает авторизация
 
+**JWT (JSON Web Token)** — это зашифрованный токен, который сервер выдаёт после успешного входа. Все последующие запросы к защищённым endpoint'ам отправляются с заголовком:
+
+```
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+Токен хранится в памяти приложения (в классе `AuthSession`) и не сохраняется на диск (в учебном проекте). При перезапуске приложения нужно войти заново.
+
+### 6.5. UnityWebRequest — HTTP в Unity
+
+Unity не может использовать `HttpClient` из .NET напрямую в корутинах. Для работы с HTTP используется `UnityWebRequest` — встроенный класс Unity.
+
+Все вызовы API выполняются как **корутины** (IEnumerator + StartCoroutine). Это значит: HTTP-запрос не блокирует основной поток, а выполняется асинхронно в фоне.
+
+```csharp
+// Паттерн корутины
+StartCoroutine(api.Login("email", "pass",
+    onSuccess: resp => Debug.Log("OK: " + resp.nickname),
+    onError:   err  => Debug.LogError("Fail: " + err)));
+```
+
+### 6.6. Контракт всех ответов сервера
+
+Все ответы сервера имеют единую структуру:
+
+```
+{ "ok": true/false, "data": {...} }   ← успех
+{ "ok": false, "error": {...} }       ← ошибка
+```
+
+В Unity это отражено классом `ApiResponse<T>`:
+
+```csharp
+[Serializable]
+public class ApiResponse<T>
+{
+    public bool     ok;
+    public T        data;
+    public ApiError error;
+}
+```
+
+---
+
+## Часть 2. Структура скриптов
+
+```
+Assets/
+  Scripts/
+    API/
+      ApiConfig.cs        ← адрес сервера и все URL
+      ApiModels.cs        ← все DTO (классы запросов/ответов)
+      AuthSession.cs      ← хранит JWT-токен и UserId
+      ApiClient.cs        ← низкоуровневый HTTP (Get/Post)
+      GameApiService.cs   ← высокоуровневый сервис (Login/Profile/...)
+    UI/
+      AuthController.cs   ← экран входа/регистрации
+      ProfileController.cs← экран профиля
+      LeaderboardController.cs ← таблица лидеров
+    Game/
+      MatchController.cs  ← управление матчем
+      EventSender.cs      ← отправка произвольных событий
+```
+
+### Зависимости между слоями
+
+```
+UI / Game
+    ↓  вызывают
+GameApiService
+    ↓  использует
+ApiClient  +  AuthSession
+    ↓  использует
+UnityWebRequest  (встроен в Unity)
+```
+
+---
+
+## Часть 3. Endpoint'ы сервера
+
+### 3.1. Таблица всех endpoint'ов
+
+| Метод | URL                         | Авторизация | Описание                   |
+|-------|-----------------------------|-------------|----------------------------|
+| POST  | `/api/v1/auth/register`     | Нет         | Регистрация                |
+| POST  | `/api/v1/auth/login`        | Нет         | Вход, получить JWT         |
+| GET   | `/api/v1/profile`           | Bearer JWT  | Профиль + прогресс         |
+| POST  | `/api/v1/events`            | Bearer JWT  | Отправить игровое событие  |
+| POST  | `/api/v1/match/finish`      | Bearer JWT  | Завершить матч             |
+| GET   | `/api/v1/leaderboard`       | Нет         | Таблица лидеров            |
+
+### 3.2. Описание каждого endpoint'а
+
+#### POST /api/v1/auth/register
+
+**Запрос:**
 ```json
 {
-  "ok": false,
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Field level must be >= 1",
-    "requestId": "req_01HF..."
+  "email":    "player@example.com",
+  "password": "mypassword",
+  "nickname": "Commander"
+}
+```
+
+**Ответ 201:**
+```json
+{ "ok": true, "data": { "userId": 42, "email": "...", "nickname": "Commander" } }
+```
+
+**Ошибки:**
+- `400` — не заполнены поля / пароль < 6 символов
+- `409` — email уже зарегистрирован
+
+---
+
+#### POST /api/v1/auth/login
+
+**Запрос:**
+```json
+{ "email": "alice@example.com", "password": "password123" }
+```
+
+**Ответ 200:**
+```json
+{
+  "ok": true,
+  "data": {
+    "accessToken": "eyJ...",
+    "userId":      1,
+    "nickname":    "Commander_Alice"
   }
 }
 ```
 
-### Почему `requestId` обязателен
+**Ошибки:**
+- `401` — неверный пароль или email
+- `403` — аккаунт заблокирован
 
-`requestId` — связка клиент ↔ лог сервера:
-
-* клиент фиксирует `requestId` в консоли/логе;
-* по `requestId` быстро ищется запись на сервере;
-* воспроизведение багов ускоряется.
-
-Требование: клиент логирует `requestId` на каждый запрос.
+> Данные из `seed.sql`: `alice@example.com` / `password123`
 
 ---
 
-## 6.3.2. События и прогресс — разные сущности
+#### GET /api/v1/profile
 
-* `/events` — журнал фактов: “что произошло”
-* `/profile` / `/progress` — витрина состояния: “что сейчас”
+**Заголовок:** `Authorization: Bearer <token>`
 
-Если смешать:
-
-* “прогресс как событие” → придётся пересчитывать всё из логов;
-* “события как прогресс” → теряется история и аудит.
-
----
-
-## 6.3.3. Дедупликация: `eventId` как защита от повторов
-
-Повторная отправка в мобильной сети неизбежна. Поэтому:
-
-* каждое событие должно иметь `eventId` (UUID)
-* при повторной отправке `eventId` не меняется
-* сервер делает дедупликацию по `eventId` (уникальность на стороне БД или отдельный реестр обработанных requestId/eventId)
-
-Это защищает от:
-
-* двойного начисления валюты
-* двойных наград
-* разъезжающихся статистик
-
----
-
-# 6.4. Unity интеграция: инженерный минимум (с примерами)
-
-## 6.4.1. DTO (обязательные классы)
-
-```csharp
-[Serializable]
-public class ApiEnvelope<T>
+**Ответ 200:**
+```json
 {
-    // Единый контракт API: ok + data/error
-    public bool ok;
-    public T data;
-    public ApiError error;
-}
-
-[Serializable]
-public class ApiError
-{
-    public string code;
-    public string message;
-    public string requestId;
-}
-
-[Serializable]
-public class LoginRequest
-{
-    public string email;
-    public string password;
-}
-
-[Serializable]
-public class LoginData
-{
-    public string accessToken;
-    public string tokenType;
-    public int expiresInSeconds;
-}
-
-[Serializable]
-public class ProfileData
-{
-    public UserDto user;
-    public ProgressDto progress;
-}
-
-[Serializable]
-public class UserDto
-{
-    public int id;
-    public string email;
-    public string nickname;
-}
-
-[Serializable]
-public class ProgressDto
-{
-    public int level;
-    public int xp;
-    public int softCurrency;
-    public int hardCurrency;
+  "ok": true,
+  "data": {
+    "userId":   1,
+    "email":    "alice@example.com",
+    "nickname": "Commander_Alice",
+    "roles":    ["player"],
+    "progress": {
+      "level":        42,
+      "xp":           85400,
+      "softCurrency": 12500,
+      "hardCurrency": 250
+    }
+  }
 }
 ```
 
-Комментарий: DTO разрывают связь UI ↔ JSON и обеспечивают типизацию.
+**Ошибки:**
+- `401` — токен отсутствует или устарел
+- `403` — аккаунт заблокирован
 
 ---
 
-## 6.4.2. TokenStore (пример)
+#### POST /api/v1/events
 
-```csharp
-public interface ITokenStore
+**Заголовок:** `Authorization: Bearer <token>`
+
+**Запрос:**
+```json
 {
-    string GetToken();
-    void SaveToken(string token);
-    void Clear();
+  "eventId":   "550e8400-e29b-41d4-a716-446655440000",
+  "eventType": "unit_deploy",
+  "sessionId": null,
+  "clientTime": "2026-02-27T12:00:00.000Z",
+  "payload": {
+    "matchId":  9,
+    "unitCode": "cavalry",
+    "amount":   40,
+    "atSecond": 15
+  }
 }
+```
 
-public class PlayerPrefsTokenStore : ITokenStore
+**Ответ 200:**
+```json
+{ "ok": true, "data": { "eventId": "550e...", "status": "accepted" } }
+```
+
+**Важно:** `eventId` — уникальный UUID на каждое событие. Сервер отклонит повторный запрос с тем же `eventId` с кодом `409`.
+
+**Ошибки:**
+- `400` — неверная структура
+- `409` — дублирующийся `eventId`
+
+---
+
+#### POST /api/v1/match/finish
+
+**Заголовок:** `Authorization: Bearer <token>`
+
+**Запрос:**
+```json
 {
-    private const string Key = "jwt_token";
+  "matchId": 9,
+  "result": {
+    "isWin":           true,
+    "score":           1850,
+    "durationSeconds": 1200
+  }
+}
+```
 
-    public string GetToken()
-    {
-        return PlayerPrefs.GetString(Key, "");
-    }
+**Ответ 200:**
+```json
+{
+  "ok": true,
+  "data": {
+    "matchId":             9,
+    "isWin":               true,
+    "xpGained":            100,
+    "softCurrencyGained":  50
+  }
+}
+```
 
-    public void SaveToken(string token)
-    {
-        PlayerPrefs.SetString(Key, token ?? "");
-        PlayerPrefs.Save();
-    }
+**Важно:** XP и монеты **рассчитывает сервер**, клиент их не присылает.
 
-    public void Clear()
-    {
-        PlayerPrefs.DeleteKey(Key);
-        PlayerPrefs.Save();
-    }
+**Ошибки:**
+- `404` — матч не найден
+- `403` — матч принадлежит другому игроку
+- `409` — матч уже завершён (status ≠ started)
+
+---
+
+#### GET /api/v1/leaderboard
+
+**Параметры запроса:** `?boardCode=default&season=1&limit=10`
+
+**Ответ 200:**
+```json
+{
+  "ok": true,
+  "data": {
+    "boardCode": "default",
+    "season":    1,
+    "items": [
+      { "rank": 1, "userId": 5, "nickname": "Siege_Eve",     "score": 9850 },
+      { "rank": 2, "userId": 3, "nickname": "WarLord_Carol", "score": 8720 }
+    ]
+  }
 }
 ```
 
 ---
 
-## 6.4.3. ApiClient (UnityWebRequest, единый вход, логирование, requestId)
+## Часть 4. Пошаговая сборка проекта Unity
+
+### Шаг 1. Создать проект
+
+1. Открыть **Unity Hub**.
+2. Нажать **New Project** → выбрать шаблон **2D** (или **3D**) → назвать `StrategyClient`.
+3. Нажать **Create project**.
+
+---
+
+### Шаг 2. Скопировать скрипты
+
+1. В папке проекта откройте `Assets`.
+2. Создайте структуру папок:
+   ```
+   Assets/Scripts/API/
+   Assets/Scripts/UI/
+   Assets/Scripts/Game/
+   ```
+3. Скопируйте все `.cs`-файлы из пакета в соответствующие папки:
+   - `API/` → `ApiConfig.cs`, `ApiModels.cs`, `AuthSession.cs`, `ApiClient.cs`, `GameApiService.cs`
+   - `UI/`  → `AuthController.cs`, `ProfileController.cs`, `LeaderboardController.cs`
+   - `Game/` → `MatchController.cs`, `EventSender.cs`
+
+---
+
+### Шаг 3. Настроить адрес сервера
+
+Откройте `Assets/Scripts/API/ApiConfig.cs`. По умолчанию:
 
 ```csharp
+public const string BaseUrl = "http://127.0.0.1:5000";
+```
+
+Если Flask запущен на другом порту или машине — замените адрес здесь. Менять нужно только эту одну строчку.
+
+---
+
+### Шаг 4. Запустить сервер
+
+Перед тестированием в Unity убедитесь, что Flask-сервер запущен:
+
+```bash
+cd strategy-support-is
+python wsgi.py
+```
+
+Сервер должен выводить:
+```
+* Running on http://127.0.0.1:5000
+```
+
+---
+
+### Шаг 5. Сцена AuthScene — экран входа
+
+#### 5.1. Создать сцену
+
+`File → New Scene → Save As → Scenes/AuthScene`.
+
+#### 5.2. Создать Canvas
+
+1. `GameObject → UI → Canvas`.
+2. В Canvas создайте два панели: `LoginPanel` и `RegisterPanel`.
+
+#### 5.3. Наполнить LoginPanel
+
+Добавьте в **LoginPanel**:
+
+| Объект                 | Компонент        | Назначение            |
+|------------------------|------------------|-----------------------|
+| `EmailInput`           | TMP_InputField   | Поле email            |
+| `PasswordInput`        | TMP_InputField   | Поле пароля (Password)|
+| `LoginButton`          | Button + TMP_Text| Кнопка "Войти"        |
+| `StatusText`           | TMP_Text         | Статус / ошибка       |
+| `GoToRegisterButton`   | Button           | Переключить панель     |
+
+#### 5.4. Наполнить RegisterPanel (аналогично)
+
+Добавьте поля email, password, nickname, кнопку регистрации и статус.
+
+#### 5.5. Создать менеджер
+
+1. `GameObject → Create Empty` → назвать `AuthManager`.
+2. Добавьте компоненты: `AuthController` и `GameApiService`.
+3. Привяжите поля в Inspector:
+   - `loginPanel` → объект `LoginPanel`
+   - `registerPanel` → объект `RegisterPanel`
+   - `loginEmail` → `EmailInput`
+   - `loginPassword` → `PasswordInput`
+   - `loginButton` → `LoginButton`
+   - `regEmail`, `regPassword`, `regNickname` → соответствующие поля
+   - `registerButton` → кнопка регистрации
+   - `statusText` → `StatusText`
+   - `sceneAfterLogin` → `"MainMenu"` (имя следующей сцены)
+
+4. На `GoToRegisterButton` в Inspector → `Button.OnClick`:
+   - Добавить → выбрать `AuthManager` → метод `AuthController.ShowRegister`.
+
+---
+
+### Шаг 6. Сцена MainMenu — профиль и лидерборд
+
+#### 6.1. Создать сцену
+
+`File → New Scene → Save As → Scenes/MainMenu`.
+
+#### 6.2. Панель профиля
+
+1. Создайте `GameObject → Create Empty` → `ProfileManager`.
+2. Добавьте `ProfileController` и `GameApiService`.
+3. В Canvas создайте панель `ProfilePanel` с TMP_Text-полями:
+   - `NicknameText`, `EmailText`, `LevelText`, `XpText`, `SoftText`, `HardText`, `StatusText`
+4. Привяжите все поля в Inspector у `ProfileController`.
+5. Кнопка "Обновить" → `ProfileController.Refresh()`.
+
+#### 6.3. Панель лидерборда
+
+1. Создайте `GameObject → Create Empty` → `LeaderboardManager`.
+2. Добавьте `LeaderboardController` и `GameApiService`.
+3. В Canvas создайте `ScrollView` для списка.
+4. Создайте Prefab строки:
+   - `GameObject → Create Empty` → `LeaderboardRow`.
+   - Добавьте три `TMP_Text`: `RankText`, `NicknameText`, `ScoreText`.
+   - Сохраните в `Assets/Prefabs/LeaderboardRow.prefab`.
+5. В Inspector `LeaderboardController`:
+   - `rowContainer` → `ScrollView/Viewport/Content`
+   - `rowPrefab` → `LeaderboardRow.prefab`
+
+---
+
+### Шаг 7. Сцена GameScene — матч
+
+#### 7.1. Создать сцену
+
+`File → New Scene → Save As → Scenes/GameScene`.
+
+#### 7.2. Создать менеджер матча
+
+1. `GameObject → Create Empty` → `MatchManager`.
+2. Добавьте `MatchController` и `GameApiService`.
+3. В Inspector:
+   - `matchId` → `9` (матч из seed.sql, принадлежащий alice)
+   - Привяжите: `timerText`, `statusText`, `rewardText`, `resultPanel`
+
+#### 7.3. Кнопки тестирования
+
+Добавьте два Button:
+
+- `WinButton` → в OnClick: `MatchController.EndMatchWin()` или напишите обёртку:
+
+```csharp
+// Добавьте в MatchController для привязки кнопок в Inspector:
+public void EndMatchWin()  => EndMatch(isWin: true,  score: 1850);
+public void EndMatchLose() => EndMatch(isWin: false, score:  300);
+```
+
+---
+
+### Шаг 8. Добавить сцены в Build Settings
+
+1. `File → Build Settings`.
+2. Нажать **Add Open Scenes** для каждой сцены: `AuthScene`, `MainMenu`, `GameScene`.
+3. Убедиться, что `AuthScene` стоит первой (index 0).
+
+---
+
+### Шаг 9. Проверить работу
+
+**Порядок тестирования:**
+
+1. Запустить Flask: `python wsgi.py`.
+2. Нажать **Play** в Unity.
+3. Войти с данными из `seed.sql`: `alice@example.com` / `password123`.
+4. После входа автоматически откроется `MainMenu`.
+5. Проверить профиль — должны появиться данные уровня/XP.
+6. Проверить лидерборд — должны появиться строки.
+7. Перейти в `GameScene`, нажать "Победа" — должны появиться награды.
+
+---
+
+### Шаг 10. Отладка
+
+#### Консоль Unity
+
+Все запросы и ответы логируются через `Debug.Log`. При ошибке будет:
+```
+[Match] FinishMatch error: [409] Match is not in started state
+```
+
+#### Частые проблемы
+
+| Проблема | Причина | Решение |
+|---|---|---|
+| `Connection refused` | Flask не запущен | `python wsgi.py` |
+| `401 UNAUTHORIZED` | Не выполнен вход | Вызвать Login() перед другими запросами |
+| `409 CONFLICT` при finish | Матч уже закрыт | Создать новый матч в БД или использовать другой `matchId` |
+| `400 VALIDATION_ERROR` | Неверный тип поля | Проверить DTO в `ApiModels.cs` |
+| JSON parse error | Ответ сервера не совпадает с моделью | Проверить поля класса в `ApiModels.cs` |
+
+---
+
+## Часть 5. Тестовые учётные данные (из seed.sql)
+
+| Пользователь | Email                  | Пароль        | Матч id=9 |
+|--------------|------------------------|---------------|-----------|
+| alice        | `alice@example.com`    | `password123` | ✅ owner  |
+| bob          | `bob@example.com`      | `password123` | —         |
+| banned       | `banned@example.com`   | `password123` | заблокирован |
+
+---
+
+## Часть 6. Описание каждого скрипта
+
+### ApiConfig.cs
+
+Единственное место где хранится `BaseUrl` и все строки URL. При смене адреса сервера меняется только здесь.
+
+```Csharp
+namespace StrategyGame.API
+{
+    /// <summary>
+    /// Единая точка настройки адреса сервера.
+    /// Меняйте BaseUrl под своё окружение:
+    ///   Локально:   http://127.0.0.1:5000
+    ///   Production: https://your-server.com
+    /// </summary>
+    public static class ApiConfig
+    {
+        public const string BaseUrl = "http://127.0.0.1:5000";
+
+        // Endpoints
+        public const string Register       = BaseUrl + "/api/v1/auth/register";
+        public const string Login          = BaseUrl + "/api/v1/auth/login";
+        public const string Profile        = BaseUrl + "/api/v1/profile";
+        public const string Events         = BaseUrl + "/api/v1/events";
+        public const string MatchFinish    = BaseUrl + "/api/v1/match/finish";
+        public const string Leaderboard    = BaseUrl + "/api/v1/leaderboard";
+
+        // Leaderboard defaults
+        public const string DefaultBoard   = "default";
+        public const int    DefaultSeason  = 1;
+        public const int    DefaultLimit   = 10;
+    }
+}
+```
+
+---
+
+### ApiModels.cs
+
+Все классы-модели данных (`[Serializable]`). Каждый класс точно соответствует полю `data` в ответе сервера. Нельзя переименовывать поля — JsonUtility сопоставляет их по имени.
+
+```Csharp
 using System;
+using System.Collections.Generic;
+
+namespace StrategyGame.API
+{
+    // ─────────────────────────────────────────
+    // Общая обёртка ответов сервера
+    // { "ok": true/false, "data": {...}, "error": {...} }
+    // ─────────────────────────────────────────
+
+    [Serializable]
+    public class ApiResponse<T>
+    {
+        public bool ok;
+        public T    data;
+        public ApiError error;
+    }
+
+    [Serializable]
+    public class ApiError
+    {
+        public string code;
+        public string message;
+        public string requestId;
+    }
+
+    // ─────────────────────────────────────────
+    // POST /api/v1/auth/register
+    // ─────────────────────────────────────────
+
+    [Serializable]
+    public class RegisterRequest
+    {
+        public string email;
+        public string password;
+        public string nickname;
+    }
+
+    [Serializable]
+    public class RegisterResponse
+    {
+        public int    userId;
+        public string email;
+        public string nickname;
+    }
+
+    // ─────────────────────────────────────────
+    // POST /api/v1/auth/login
+    // ─────────────────────────────────────────
+
+    [Serializable]
+    public class LoginRequest
+    {
+        public string email;
+        public string password;
+    }
+
+    [Serializable]
+    public class LoginResponse
+    {
+        public string accessToken;
+        public int    userId;
+        public string nickname;
+    }
+
+    // ─────────────────────────────────────────
+    // GET /api/v1/profile
+    // ─────────────────────────────────────────
+
+    [Serializable]
+    public class ProfileUser
+    {
+        public int    id;
+        public string email;
+        public string nickname;
+        public List<string> roles;
+    }
+
+    [Serializable]
+    public class ProfileProgress
+    {
+        public int level;
+        public int xp;
+        public int softCurrency;
+        public int hardCurrency;
+    }
+
+    [Serializable]
+    public class ProfileResponse
+    {
+        public int              userId;
+        public string           email;
+        public string           nickname;
+        public List<string>     roles;
+        public ProfileProgress  progress;
+    }
+
+    // ─────────────────────────────────────────
+    // POST /api/v1/events
+    // ─────────────────────────────────────────
+
+    [Serializable]
+    public class EventRequest
+    {
+        public string eventId;      // UUID — обязателен для дедупликации
+        public string eventType;
+        public int?   sessionId;    // nullable
+        public string clientTime;   // ISO 8601
+        public object payload;      // произвольный JSON-объект
+    }
+
+    [Serializable]
+    public class EventResponse
+    {
+        public string eventId;
+        public string status;       // "accepted"
+    }
+
+    // ─────────────────────────────────────────
+    // POST /api/v1/match/finish
+    // ─────────────────────────────────────────
+
+    [Serializable]
+    public class MatchResult
+    {
+        public bool   isWin;
+        public int    score;
+        public int    durationSeconds;
+        public int?   powerDelta;    // опционально
+    }
+
+    [Serializable]
+    public class MatchFinishRequest
+    {
+        public int         matchId;
+        public MatchResult result;
+    }
+
+    [Serializable]
+    public class MatchFinishResponse
+    {
+        public int  matchId;
+        public bool isWin;
+        public int  xpGained;
+        public int  softCurrencyGained;
+    }
+
+    // ─────────────────────────────────────────
+    // GET /api/v1/leaderboard
+    // ─────────────────────────────────────────
+
+    [Serializable]
+    public class LeaderboardItem
+    {
+        public int    rank;
+        public int    userId;
+        public string nickname;
+        public int    score;
+    }
+
+    [Serializable]
+    public class LeaderboardResponse
+    {
+        public string                boardCode;
+        public int                   season;
+        public List<LeaderboardItem> items;
+    }
+}
+
+```
+
+---
+
+
+
+### AuthSession.cs
+
+Статический класс-синглтон. Хранит `AccessToken`, `UserId`, `Nickname` в памяти. Все API-клиенты читают токен из него автоматически.
+
+```Csharp
+namespace StrategyGame.API
+{
+    /// <summary>
+    /// Хранит JWT-токен и данные текущего пользователя.
+    /// Живёт в памяти на протяжении игровой сессии.
+    /// Используется всеми API-клиентами для подстановки Bearer-заголовка.
+    /// </summary>
+    public static class AuthSession
+    {
+        public static string AccessToken { get; private set; }
+        public static int    UserId      { get; private set; }
+        public static string Nickname    { get; private set; }
+        public static bool   IsLoggedIn  => !string.IsNullOrEmpty(AccessToken);
+
+        public static void Save(LoginResponse resp)
+        {
+            AccessToken = resp.accessToken;
+            UserId      = resp.userId;
+            Nickname    = resp.nickname;
+        }
+
+        public static void Clear()
+        {
+            AccessToken = null;
+            UserId      = 0;
+            Nickname    = null;
+        }
+    }
+}
+
+```
+
+---
+
+
+
+### ApiClient.cs
+
+Низкоуровневый слой. Умеет выполнять GET и POST через `UnityWebRequest`. Разбирает ответ в `ApiResponse<T>` и вызывает `onSuccess` или `onError`. Напрямую из UI не вызывается — только через `GameApiService`.
+
+```Csharp
+using System;
+using System.Collections;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-using Newtonsoft.Json;
 
-public class ApiClient
+namespace StrategyGame.API
 {
-    private readonly string _baseUrl;
-    private readonly ITokenStore _tokenStore;
-
-    public ApiClient(string baseUrl, ITokenStore tokenStore)
+    /// <summary>
+    /// Низкоуровневый HTTP-клиент.
+    /// Умеет отправлять GET и POST с JSON-телом.
+    /// При наличии AccessToken автоматически добавляет заголовок Authorization.
+    /// Все методы — корутины: вызывайте через StartCoroutine().
+    /// </summary>
+    public static class ApiClient
     {
-        _baseUrl = baseUrl.TrimEnd('/');
-        _tokenStore = tokenStore;
-    }
+        // ─── GET ────────────────────────────────────────────────
 
-    // Универсальный метод: отправить запрос и получить ApiEnvelope<T>
-    public async Task<ApiEnvelope<T>> SendAsync<T>(string method, string path, object body = null, int timeoutSeconds = 10)
-    {
-        var url = _baseUrl + path;
-        var requestId = "req_" + Guid.NewGuid().ToString("N")[..8];
-
-        using var req = new UnityWebRequest(url, method);
-        req.timeout = timeoutSeconds;
-
-        // Заголовки
-        req.SetRequestHeader("Content-Type", "application/json");
-        req.SetRequestHeader("X-Request-Id", requestId);
-
-        var token = _tokenStore.GetToken();
-        if (!string.IsNullOrEmpty(token))
-            req.SetRequestHeader("Authorization", "Bearer " + token);
-
-        // Тело запроса
-        if (body != null)
+        /// <summary>
+        /// Отправить GET-запрос и получить JSON-ответ.
+        /// </summary>
+        public static IEnumerator Get<TResponse>(
+            string url,
+            Action<TResponse> onSuccess,
+            Action<string>    onError,
+            bool              withAuth = true)
         {
-            var json = JsonConvert.SerializeObject(body);
-            var bytes = Encoding.UTF8.GetBytes(json);
-            req.uploadHandler = new UploadHandlerRaw(bytes);
+            using var req = UnityWebRequest.Get(url);
+
+            SetHeaders(req, withAuth);
+
+            yield return req.SendWebRequest();
+
+            HandleResponse(req, onSuccess, onError);
         }
 
-        req.downloadHandler = new DownloadHandlerBuffer();
+        // ─── POST ───────────────────────────────────────────────
 
-        var start = Time.realtimeSinceStartup;
-        var op = req.SendWebRequest();
-        while (!op.isDone) await Task.Yield();
-        var durationMs = (int)((Time.realtimeSinceStartup - start) * 1000);
-
-        // requestId из ответа сервера (если сервер вернул)
-        var serverRid = req.GetResponseHeader("X-Request-Id") ?? requestId;
-
-        // Логирование сетевого слоя (обязательно)
-        Debug.Log($"{method} {path} status={(int)req.responseCode} {durationMs}ms rid={serverRid}");
-
-        // Если тело не JSON — это ошибка интеграции
-        var text = req.downloadHandler.text;
-
-        ApiEnvelope<T> envelope;
-        try
+        /// <summary>
+        /// Отправить POST-запрос с JSON-телом и получить JSON-ответ.
+        /// </summary>
+        public static IEnumerator Post<TRequest, TResponse>(
+            string   url,
+            TRequest body,
+            Action<TResponse> onSuccess,
+            Action<string>    onError,
+            bool              withAuth = true)
         {
-            envelope = JsonConvert.DeserializeObject<ApiEnvelope<T>>(text);
+            string json = JsonUtility.ToJson(body);
+            byte[] bytes = Encoding.UTF8.GetBytes(json);
+
+            using var req = new UnityWebRequest(url, "POST");
+            req.uploadHandler   = new UploadHandlerRaw(bytes);
+            req.downloadHandler = new DownloadHandlerBuffer();
+
+            SetHeaders(req, withAuth);
+
+            yield return req.SendWebRequest();
+
+            HandleResponse<TResponse>(req, onSuccess, onError);
         }
-        catch
+
+        // ─── Helpers ────────────────────────────────────────────
+
+        private static void SetHeaders(UnityWebRequest req, bool withAuth)
         {
-            return new ApiEnvelope<T>
+            req.SetRequestHeader("Content-Type",  "application/json");
+            req.SetRequestHeader("Accept",        "application/json");
+
+            if (withAuth && AuthSession.IsLoggedIn)
+                req.SetRequestHeader("Authorization", "Bearer " + AuthSession.AccessToken);
+        }
+
+        private static void HandleResponse<TResponse>(
+            UnityWebRequest   req,
+            Action<TResponse> onSuccess,
+            Action<string>    onError)
+        {
+            if (req.result != UnityWebRequest.Result.Success)
             {
-                ok = false,
-                error = new ApiError
+                // Попытаться распарсить тело ошибки
+                string raw = req.downloadHandler?.text ?? "";
+                try
                 {
-                    code = "CLIENT_PARSE_ERROR",
-                    message = "Response is not valid ApiEnvelope JSON",
-                    requestId = serverRid
+                    var errWrapper = JsonUtility.FromJson<ApiResponse<TResponse>>(raw);
+                    string msg = errWrapper?.error?.message ?? req.error;
+                    onError?.Invoke($"[{req.responseCode}] {msg}");
                 }
-            };
-        }
-
-        // Даже при HTTP 200 envelope.ok может быть false (контракт)
-        // HTTP-статус дополнительно анализируется ErrorMapper-ом на уровне выше.
-        if (envelope != null && envelope.error != null && string.IsNullOrEmpty(envelope.error.requestId))
-            envelope.error.requestId = serverRid;
-
-        return envelope;
-    }
-}
-```
-
----
-
-## 6.4.4. EventQueue (пример минимальной политики)
-
-```csharp
-[Serializable]
-public class QueuedEvent
-{
-    public string eventId;        // UUID клиента (дедупликация)
-    public string eventType;      // session_start / match_finish / ...
-    public int? sessionId;
-    public string clientTime;     // ISO string
-    public object payload;        // конкретный payload
-    public int attempt;           // попытки отправки
-}
-
-public class EventQueue
-{
-    private readonly ApiClient _api;
-    private readonly ITokenStore _tokenStore;
-    private readonly List<QueuedEvent> _queue = new();
-
-    public EventQueue(ApiClient api, ITokenStore tokenStore)
-    {
-        _api = api;
-        _tokenStore = tokenStore;
-    }
-
-    public void Enqueue(string eventType, int? sessionId, object payload)
-    {
-        _queue.Add(new QueuedEvent
-        {
-            eventId = Guid.NewGuid().ToString(),
-            eventType = eventType,
-            sessionId = sessionId,
-            clientTime = DateTime.UtcNow.ToString("o"),
-            payload = payload,
-            attempt = 0
-        });
-
-        // В учебном MVP допустимо хранить очередь в памяти,
-        // но для устойчивости лучше сохранять в файл/PlayerPrefs/SQLite.
-    }
-
-    public async Task DrainAsync()
-    {
-        for (int i = 0; i < _queue.Count; i++)
-        {
-            var ev = _queue[i];
-            ev.attempt++;
-
-            // Обязательное правило: при повторе eventId не меняем
-            var body = new
-            {
-                eventId = ev.eventId,
-                eventType = ev.eventType,
-                sessionId = ev.sessionId,
-                clientTime = ev.clientTime,
-                payload = ev.payload
-            };
-
-            var res = await _api.SendAsync<object>("POST", "/api/v1/events", body);
-
-            // Успех: удалить из очереди
-            if (res.ok)
-            {
-                _queue.RemoveAt(i);
-                i--;
-                continue;
-            }
-
-            // Политики по ошибкам
-            var code = res.error?.code ?? "UNKNOWN";
-            if (code == "UNAUTHORIZED" || code == "USER_BANNED")
-            {
-                // 401/403: остановить очередь, очистить токен
-                _tokenStore.Clear();
+                catch
+                {
+                    onError?.Invoke($"[{req.responseCode}] {req.error}");
+                }
                 return;
             }
 
-            if (code == "RATE_LIMITED")
+            try
             {
-                // 429: backoff (упрощённо)
-                await Task.Delay(Math.Min(30000, (int)Math.Pow(2, ev.attempt) * 1000));
-                i--;
-                continue;
+                var wrapper = JsonUtility.FromJson<ApiResponse<TResponse>>(req.downloadHandler.text);
+                if (wrapper.ok)
+                    onSuccess?.Invoke(wrapper.data);
+                else
+                    onError?.Invoke(wrapper.error?.message ?? "Unknown server error");
             }
-
-            // 409 (duplicate / rejected): событие не удалять автоматически без политики,
-            // обычно нужно запросить профиль для синхронизации и принять решение.
-            // network/500: оставить в очереди
+            catch (Exception ex)
+            {
+                onError?.Invoke("Parse error: " + ex.Message);
+            }
         }
     }
 }
+
 ```
 
 ---
 
-# 6.5. Web интеграция: инженерный минимум (с примерами)
+### GameApiService.cs
 
-## 6.5.1. Timeout (обязателен)
+`MonoBehaviour`-компонент. Одна точка входа для всех вызовов. Каждый метод — корутина. Добавляется на GameObject в сцене.
 
-```js
-export async function apiFetch(path, { method = "GET", body = null, token = null, timeoutMs = 8000 } = {}) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+```Csharp
+using System;
+using System.Collections;
+using UnityEngine;
 
-  const requestId = `req_${crypto.randomUUID().slice(0, 8)}`;
-  const headers = { "Content-Type": "application/json", "X-Request-Id": requestId };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
+namespace StrategyGame.API
+{
+    /// <summary>
+    /// Высокоуровневый сервис — одна точка входа для всех вызовов API.
+    /// Использует ApiClient для HTTP и AuthSession для хранения токена.
+    ///
+    /// Использование:
+    ///   GameApiService svc = GetComponent<GameApiService>();
+    ///   StartCoroutine(svc.Login("alice@example.com", "password123", onOk, onErr));
+    /// </summary>
+    public class GameApiService : MonoBehaviour
+    {
+        // ─── Auth ────────────────────────────────────────────────
 
-  const start = performance.now();
-  try {
-    const res = await fetch(BASE_URL + path, {
-      method,
-      headers,
-      body: body ? JSON.stringify(body) : null,
-      signal: controller.signal,
-    });
+        /// <summary>POST /api/v1/auth/register</summary>
+        public IEnumerator Register(
+            string email, string password, string nickname,
+            Action<RegisterResponse> onSuccess,
+            Action<string>           onError)
+        {
+            var body = new RegisterRequest
+            {
+                email    = email,
+                password = password,
+                nickname = nickname
+            };
+            yield return StartCoroutine(
+                ApiClient.Post<RegisterRequest, RegisterResponse>(
+                    ApiConfig.Register, body, onSuccess, onError, withAuth: false));
+        }
 
-    const durationMs = Math.round(performance.now() - start);
-    const serverRid = res.headers.get("X-Request-Id") || requestId;
+        /// <summary>POST /api/v1/auth/login — сохраняет токен в AuthSession</summary>
+        public IEnumerator Login(
+            string email, string password,
+            Action<LoginResponse> onSuccess,
+            Action<string>        onError)
+        {
+            var body = new LoginRequest { email = email, password = password };
+            yield return StartCoroutine(
+                ApiClient.Post<LoginRequest, LoginResponse>(
+                    ApiConfig.Login, body,
+                    resp =>
+                    {
+                        AuthSession.Save(resp);
+                        onSuccess?.Invoke(resp);
+                    },
+                    onError,
+                    withAuth: false));
+        }
 
-    const json = await res.json();
+        public void Logout() => AuthSession.Clear();
 
-    console.log(`${method} ${path} status=${res.status} ${durationMs}ms rid=${serverRid}`);
+        // ─── Profile ─────────────────────────────────────────────
 
-    if (!res.ok || !json.ok) {
-      const err = json?.error || { code: "HTTP_ERROR", message: "Request failed", requestId: serverRid };
-      if (!err.requestId) err.requestId = serverRid;
-      throw { httpStatus: res.status, ...err };
+        /// <summary>GET /api/v1/profile — требует авторизации</summary>
+        public IEnumerator GetProfile(
+            Action<ProfileResponse> onSuccess,
+            Action<string>          onError)
+        {
+            yield return StartCoroutine(
+                ApiClient.Get<ProfileResponse>(
+                    ApiConfig.Profile, onSuccess, onError));
+        }
+
+        // ─── Events ──────────────────────────────────────────────
+
+        /// <summary>POST /api/v1/events — отправить игровое событие</summary>
+        public IEnumerator SendEvent(
+            string eventType,
+            object payload,
+            Action<EventResponse> onSuccess,
+            Action<string>        onError,
+            int?  sessionId  = null,
+            string clientTime = null)
+        {
+            var body = new EventRequest
+            {
+                eventId    = Guid.NewGuid().ToString(),   // уникальный UUID для дедупликации
+                eventType  = eventType,
+                sessionId  = sessionId,
+                clientTime = clientTime ?? DateTime.UtcNow.ToString("o"),
+                payload    = payload
+            };
+            yield return StartCoroutine(
+                ApiClient.Post<EventRequest, EventResponse>(
+                    ApiConfig.Events, body, onSuccess, onError));
+        }
+
+        // ─── Match ───────────────────────────────────────────────
+
+        /// <summary>POST /api/v1/match/finish — завершить матч</summary>
+        public IEnumerator FinishMatch(
+            int  matchId,
+            bool isWin,
+            int  score,
+            int  durationSeconds,
+            Action<MatchFinishResponse> onSuccess,
+            Action<string>              onError,
+            int? powerDelta = null)
+        {
+            var body = new MatchFinishRequest
+            {
+                matchId = matchId,
+                result  = new MatchResult
+                {
+                    isWin           = isWin,
+                    score           = score,
+                    durationSeconds = durationSeconds,
+                    powerDelta      = powerDelta
+                }
+            };
+            yield return StartCoroutine(
+                ApiClient.Post<MatchFinishRequest, MatchFinishResponse>(
+                    ApiConfig.MatchFinish, body, onSuccess, onError));
+        }
+
+        // ─── Leaderboard ─────────────────────────────────────────
+
+        /// <summary>GET /api/v1/leaderboard?boardCode=...&season=...&limit=...</summary>
+        public IEnumerator GetLeaderboard(
+            Action<LeaderboardResponse> onSuccess,
+            Action<string>              onError,
+            string boardCode = ApiConfig.DefaultBoard,
+            int    season    = ApiConfig.DefaultSeason,
+            int    limit     = ApiConfig.DefaultLimit)
+        {
+            string url = $"{ApiConfig.Leaderboard}?boardCode={boardCode}&season={season}&limit={limit}";
+            yield return StartCoroutine(
+                ApiClient.Get<LeaderboardResponse>(url, onSuccess, onError));
+        }
+    }
+}
+
+```
+
+---
+
+### AuthController.cs
+
+Управляет UI-логикой экрана входа/регистрации. После успешного входа загружает следующую сцену через `SceneManager.LoadScene()`.
+
+```Csharp
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using StrategyGame.API;
+
+namespace StrategyGame.UI
+{
+    /// <summary>
+    /// Контроллер экрана авторизации.
+    ///
+    /// Как подключить в сцене:
+    ///   1. Создайте пустой GameObject "AuthManager".
+    ///   2. Добавьте компоненты AuthController и GameApiService.
+    ///   3. Привяжите UI-поля в Inspector.
+    ///   4. Укажите onLoginSuccess: имя сцены которую надо загрузить после входа.
+    /// </summary>
+    public class AuthController : MonoBehaviour
+    {
+        [Header("Panels")]
+        [SerializeField] private GameObject loginPanel;
+        [SerializeField] private GameObject registerPanel;
+
+        [Header("Login Fields")]
+        [SerializeField] private TMP_InputField loginEmail;
+        [SerializeField] private TMP_InputField loginPassword;
+        [SerializeField] private Button         loginButton;
+
+        [Header("Register Fields")]
+        [SerializeField] private TMP_InputField regEmail;
+        [SerializeField] private TMP_InputField regPassword;
+        [SerializeField] private TMP_InputField regNickname;
+        [SerializeField] private Button         registerButton;
+
+        [Header("Status")]
+        [SerializeField] private TMP_Text statusText;
+
+        [Header("Navigation")]
+        [SerializeField] private string sceneAfterLogin = "MainMenu";
+
+        private GameApiService _api;
+
+        private void Awake()
+        {
+            _api = GetComponent<GameApiService>();
+            if (_api == null)
+                _api = gameObject.AddComponent<GameApiService>();
+
+            loginButton   .onClick.AddListener(OnLoginClick);
+            registerButton.onClick.AddListener(OnRegisterClick);
+
+            ShowLogin();
+        }
+
+        // ─── Переключение панелей ────────────────────────────────
+
+        public void ShowLogin()
+        {
+            loginPanel   .SetActive(true);
+            registerPanel.SetActive(false);
+            SetStatus("");
+        }
+
+        public void ShowRegister()
+        {
+            loginPanel   .SetActive(false);
+            registerPanel.SetActive(true);
+            SetStatus("");
+        }
+
+        // ─── Логин ──────────────────────────────────────────────
+
+        private void OnLoginClick()
+        {
+            string email = loginEmail.text.Trim();
+            string pass  = loginPassword.text;
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pass))
+            {
+                SetStatus("Заполните email и пароль", error: true);
+                return;
+            }
+
+            SetStatus("Вход...");
+            SetInteractable(false);
+
+            StartCoroutine(_api.Login(email, pass,
+                onSuccess: resp =>
+                {
+                    SetStatus($"Добро пожаловать, {resp.nickname}!");
+                    SetInteractable(true);
+                    // Переход в главное меню
+                    UnityEngine.SceneManagement.SceneManager.LoadScene(sceneAfterLogin);
+                },
+                onError: err =>
+                {
+                    SetStatus(err, error: true);
+                    SetInteractable(true);
+                }));
+        }
+
+        // ─── Регистрация ─────────────────────────────────────────
+
+        private void OnRegisterClick()
+        {
+            string email    = regEmail.text.Trim();
+            string pass     = regPassword.text;
+            string nickname = regNickname.text.Trim();
+
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(pass) || string.IsNullOrEmpty(nickname))
+            {
+                SetStatus("Заполните все поля", error: true);
+                return;
+            }
+
+            SetStatus("Регистрация...");
+            SetInteractable(false);
+
+            StartCoroutine(_api.Register(email, pass, nickname,
+                onSuccess: resp =>
+                {
+                    SetStatus("Аккаунт создан! Войдите.");
+                    SetInteractable(true);
+                    ShowLogin();
+                },
+                onError: err =>
+                {
+                    SetStatus(err, error: true);
+                    SetInteractable(true);
+                }));
+        }
+
+        // ─── Helpers ─────────────────────────────────────────────
+
+        private void SetStatus(string msg, bool error = false)
+        {
+            if (statusText == null) return;
+            statusText.text  = msg;
+            statusText.color = error ? Color.red : Color.white;
+        }
+
+        private void SetInteractable(bool value)
+        {
+            loginButton   .interactable = value;
+            registerButton.interactable = value;
+        }
+    }
+}
+
+
+```
+
+---
+
+### ProfileController.cs
+
+Запрашивает профиль при `Start()` и отображает данные в TMP_Text-полях. Кнопка `Refresh` вызывает повторный запрос.
+
+```Csharp
+using UnityEngine;
+using TMPro;
+using StrategyGame.API;
+
+namespace StrategyGame.UI
+{
+    /// <summary>
+    /// Отображает профиль текущего игрока.
+    ///
+    /// Как подключить:
+    ///   1. GameObject "ProfilePanel" → добавить ProfileController + GameApiService.
+    ///   2. Привязать TMP-поля в Inspector.
+    ///   3. Вызывается автоматически при Start().
+    /// </summary>
+    public class ProfileController : MonoBehaviour
+    {
+        [Header("UI Labels")]
+        [SerializeField] private TMP_Text nicknameText;
+        [SerializeField] private TMP_Text emailText;
+        [SerializeField] private TMP_Text levelText;
+        [SerializeField] private TMP_Text xpText;
+        [SerializeField] private TMP_Text softCurrencyText;
+        [SerializeField] private TMP_Text hardCurrencyText;
+        [SerializeField] private TMP_Text statusText;
+
+        private GameApiService _api;
+
+        private void Awake()
+        {
+            _api = GetComponent<GameApiService>();
+            if (_api == null)
+                _api = gameObject.AddComponent<GameApiService>();
+        }
+
+        private void Start()
+        {
+            if (!AuthSession.IsLoggedIn)
+            {
+                SetStatus("Не авторизован", error: true);
+                return;
+            }
+            Refresh();
+        }
+
+        /// <summary>Перезагрузить данные профиля с сервера.</summary>
+        public void Refresh()
+        {
+            SetStatus("Загрузка...");
+            StartCoroutine(_api.GetProfile(
+                onSuccess: data =>
+                {
+                    ApplyProfile(data);
+                    SetStatus("");
+                },
+                onError: err => SetStatus(err, error: true)));
+        }
+
+        // ─── Применение данных ────────────────────────────────────
+
+        private void ApplyProfile(ProfileResponse data)
+        {
+            if (nicknameText)     nicknameText.text     = data.nickname;
+            if (emailText)        emailText.text        = data.email;
+            if (levelText)        levelText.text        = $"Уровень {data.progress?.level}";
+            if (xpText)           xpText.text           = $"XP: {data.progress?.xp}";
+            if (softCurrencyText) softCurrencyText.text = $"Монеты: {data.progress?.softCurrency}";
+            if (hardCurrencyText) hardCurrencyText.text = $"Гемы: {data.progress?.hardCurrency}";
+        }
+
+        private void SetStatus(string msg, bool error = false)
+        {
+            if (statusText == null) return;
+            statusText.text  = msg;
+            statusText.color = error ? Color.red : Color.gray;
+        }
+    }
+}
+
+```
+
+---
+
+### LeaderboardController.cs
+
+При `Start()` запрашивает таблицу лидеров и создаёт экземпляры `rowPrefab` для каждой строки.
+
+```Csharp
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using StrategyGame.API;
+
+namespace StrategyGame.UI
+{
+    /// <summary>
+    /// Загружает и отображает таблицу лидеров.
+    ///
+    /// Как подключить:
+    ///   1. GameObject "LeaderboardPanel" → добавить LeaderboardController + GameApiService.
+    ///   2. Создайте Prefab строки: TMP_Text rank | nickname | score.
+    ///      Привяжите как rowPrefab.
+    ///   3. Привяжите ScrollView.Content как rowContainer.
+    /// </summary>
+    public class LeaderboardController : MonoBehaviour
+    {
+        [Header("List")]
+        [SerializeField] private Transform rowContainer;   // ScrollView > Viewport > Content
+        [SerializeField] private GameObject rowPrefab;     // Prefab строки таблицы
+
+        [Header("Status")]
+        [SerializeField] private TMP_Text statusText;
+
+        [Header("Settings")]
+        [SerializeField] private string boardCode = ApiConfig.DefaultBoard;
+        [SerializeField] private int    season    = ApiConfig.DefaultSeason;
+        [SerializeField] private int    limit     = ApiConfig.DefaultLimit;
+
+        private GameApiService _api;
+
+        private void Awake()
+        {
+            _api = GetComponent<GameApiService>();
+            if (_api == null)
+                _api = gameObject.AddComponent<GameApiService>();
+        }
+
+        private void Start() => Refresh();
+
+        /// <summary>Перезагрузить таблицу с сервера.</summary>
+        public void Refresh()
+        {
+            SetStatus("Загрузка...");
+            StartCoroutine(_api.GetLeaderboard(
+                onSuccess: data =>
+                {
+                    Render(data);
+                    SetStatus("");
+                },
+                onError: err => SetStatus(err, error: true),
+                boardCode: boardCode,
+                season:    season,
+                limit:     limit));
+        }
+
+        // ─── Рендер строк ─────────────────────────────────────────
+
+        private void Render(LeaderboardResponse data)
+        {
+            // Очистить старые строки
+            foreach (Transform child in rowContainer)
+                Destroy(child.gameObject);
+
+            if (data.items == null || data.items.Count == 0)
+            {
+                SetStatus("Таблица пуста");
+                return;
+            }
+
+            foreach (var item in data.items)
+            {
+                var row = Instantiate(rowPrefab, rowContainer);
+
+                // Ищем TMP-поля в prefab по тегам или именам объектов
+                var labels = row.GetComponentsInChildren<TMP_Text>();
+                if (labels.Length >= 3)
+                {
+                    labels[0].text = item.rank.ToString();
+                    labels[1].text = item.nickname;
+                    labels[2].text = item.score.ToString();
+                }
+            }
+        }
+
+        private void SetStatus(string msg, bool error = false)
+        {
+            if (statusText == null) return;
+            statusText.text  = msg;
+            statusText.color = error ? Color.red : Color.gray;
+        }
+    }
+}
+
+```
+
+---
+
+### MatchController.cs
+
+При `Start()` запускает таймер и отправляет `match_start` событие. Метод `EndMatch(isWin, score)` останавливает таймер и отправляет `POST /api/v1/match/finish`.
+
+```Csharp
+using System.Collections;
+using UnityEngine;
+using TMPro;
+using StrategyGame.API;
+
+namespace StrategyGame.Game
+{
+    /// <summary>
+    /// Управляет жизненным циклом матча в Unity:
+    ///   • Отправляет событие match_start
+    ///   • Считает время матча
+    ///   • При вызове EndMatch() — отправляет POST /api/v1/match/finish
+    ///   • Показывает результат (награды) в UI
+    ///
+    /// Как подключить:
+    ///   1. Создайте GameObject "MatchManager".
+    ///   2. Добавьте MatchController + GameApiService.
+    ///   3. Привяжите UI-поля в Inspector.
+    ///   4. Назначьте matchId в Inspector (или задайте через код перед стартом матча).
+    ///   5. Вызывайте EndMatch(isWin, score) из игровой логики.
+    /// </summary>
+    public class MatchController : MonoBehaviour
+    {
+        [Header("Match Settings")]
+        [SerializeField] private int matchId = 9;    // id матча из БД (seed.sql → id=9)
+
+        [Header("UI")]
+        [SerializeField] private TMP_Text timerText;
+        [SerializeField] private TMP_Text statusText;
+        [SerializeField] private TMP_Text rewardText;
+        [SerializeField] private GameObject resultPanel;
+
+        private GameApiService _api;
+        private float          _elapsed;
+        private bool           _running;
+
+        // ─── Lifecycle ───────────────────────────────────────────
+
+        private void Awake()
+        {
+            _api = GetComponent<GameApiService>();
+            if (_api == null)
+                _api = gameObject.AddComponent<GameApiService>();
+
+            if (resultPanel) resultPanel.SetActive(false);
+        }
+
+        private void Start()
+        {
+            StartMatch();
+        }
+
+        private void Update()
+        {
+            if (!_running) return;
+            _elapsed += Time.deltaTime;
+            if (timerText)
+                timerText.text = FormatTime(_elapsed);
+        }
+
+        // ─── Старт матча ─────────────────────────────────────────
+
+        private void StartMatch()
+        {
+            _elapsed = 0f;
+            _running = true;
+
+            SetStatus("Матч начался!");
+
+            // Отправляем событие match_start
+            var payload = new MatchStartPayload
+            {
+                matchId  = matchId,
+                mode     = "pve",
+                mapCode  = "coastal_siege",
+                season   = 1
+            };
+
+            StartCoroutine(_api.SendEvent(
+                eventType: "match_start",
+                payload:   payload,
+                onSuccess: _ => Debug.Log("[Match] match_start принят"),
+                onError:   err => Debug.LogWarning("[Match] match_start ошибка: " + err)));
+        }
+
+        // ─── Конец матча (вызывать из игровой логики) ────────────
+
+        /// <summary>
+        /// Завершить матч. Вызывайте когда игра выиграна или проиграна.
+        /// </summary>
+        public void EndMatch(bool isWin, int score)
+        {
+            if (!_running) return;
+            _running = false;
+
+            int duration = Mathf.RoundToInt(_elapsed);
+            SetStatus(isWin ? "Победа! Отправляем результат..." : "Поражение... Отправляем результат...");
+
+            StartCoroutine(SendMatchFinish(isWin, score, duration));
+        }
+
+        private IEnumerator SendMatchFinish(bool isWin, int score, int duration)
+        {
+            yield return StartCoroutine(_api.FinishMatch(
+                matchId:         matchId,
+                isWin:           isWin,
+                score:           score,
+                durationSeconds: duration,
+                onSuccess: data =>
+                {
+                    ShowResult(data);
+                },
+                onError: err =>
+                {
+                    SetStatus("Ошибка: " + err, error: true);
+                    Debug.LogError("[Match] FinishMatch error: " + err);
+                }));
+        }
+
+        // ─── Отображение результата ──────────────────────────────
+
+        private void ShowResult(MatchFinishResponse data)
+        {
+            if (resultPanel) resultPanel.SetActive(true);
+
+            string result = data.isWin ? "🏆 ПОБЕДА!" : "💀 ПОРАЖЕНИЕ";
+            SetStatus(result);
+
+            if (rewardText)
+                rewardText.text = $"+{data.xpGained} XP\n+{data.softCurrencyGained} монет";
+
+            Debug.Log($"[Match] Завершён. isWin={data.isWin} xp={data.xpGained} soft={data.softCurrencyGained}");
+        }
+
+        // ─── Helpers ─────────────────────────────────────────────
+
+        private void SetStatus(string msg, bool error = false)
+        {
+            if (statusText == null) return;
+            statusText.text  = msg;
+            statusText.color = error ? Color.red : Color.white;
+        }
+
+        private static string FormatTime(float seconds)
+        {
+            int m = (int)seconds / 60;
+            int s = (int)seconds % 60;
+            return $"{m:00}:{s:00}";
+        }
     }
 
-    return json.data;
-  } finally {
-    clearTimeout(timer);
-  }
+    // ─── Payload для match_start ──────────────────────────────────
+
+    [System.Serializable]
+    public class MatchStartPayload
+    {
+        public int    matchId;
+        public string mode;
+        public string mapCode;
+        public int    season;
+    }
+}
+
+```
+
+---
+
+### EventSender.cs
+
+Статический вспомогательный класс. Метод `EventSender.Send(this, "eventType", payload)` ищет `GameApiService` в сцене и отправляет произвольное событие.
+
+```Csharp
+using System;
+using UnityEngine;
+using StrategyGame.API;
+
+namespace StrategyGame.Game
+{
+    /// <summary>
+    /// Вспомогательный компонент для отправки произвольных игровых событий.
+    ///
+    /// Использование из любого MonoBehaviour:
+    ///   EventSender.Send(this, "unit_deploy", new { matchId=9, unitCode="cavalry", amount=40 });
+    /// </summary>
+    public static class EventSender
+    {
+        /// <summary>
+        /// Отправить событие через GameApiService, найденный в сцене.
+        /// </summary>
+        public static void Send(MonoBehaviour caller, string eventType, object payload,
+            Action onSuccess = null, Action<string> onError = null)
+        {
+            var svc = UnityEngine.Object.FindObjectOfType<GameApiService>();
+            if (svc == null)
+            {
+                Debug.LogError("[EventSender] GameApiService не найден в сцене!");
+                return;
+            }
+
+            caller.StartCoroutine(svc.SendEvent(
+                eventType: eventType,
+                payload:   payload,
+                onSuccess: resp =>
+                {
+                    Debug.Log($"[Event] {eventType} принят: {resp.eventId}");
+                    onSuccess?.Invoke();
+                },
+                onError: err =>
+                {
+                    Debug.LogWarning($"[Event] {eventType} ошибка: {err}");
+                    onError?.Invoke(err);
+                }));
+        }
+    }
+
+    // ─── Готовые payload-классы для жанровых событий ─────────────
+
+    [Serializable]
+    public class UnitDeployPayload
+    {
+        public int    matchId;
+        public string unitCode;   // infantry / cavalry / archer / siege
+        public int    amount;
+        public int    atSecond;
+    }
+
+    [Serializable]
+    public class UnitRetreatPayload
+    {
+        public int    matchId;
+        public string unitCode;
+        public int    lost;
+        public int    atSecond;
+    }
+
+    [Serializable]
+    public class BuildingUpgradePayload
+    {
+        public string buildingCode;  // barracks / farm / forge / walls
+        public int    fromLevel;
+        public int    toLevel;
+        public int    goldCost;
+    }
+}
+
+```
+
+---
+
+---
+
+## Часть 7. Расширение проекта
+
+### Добавить новое событие
+
+1. В `EventSender.cs` добавить новый payload-класс:
+```csharp
+[Serializable]
+public class MyEventPayload { public int matchId; public string data; }
+```
+
+2. Отправить из любого MonoBehaviour:
+```csharp
+EventSender.Send(this, "my_event", new MyEventPayload { matchId = 9, data = "test" });
+```
+
+### Сохранить токен между сессиями (PlayerPrefs)
+
+```csharp
+// При сохранении:
+PlayerPrefs.SetString("token",    AuthSession.AccessToken);
+PlayerPrefs.SetInt   ("userId",   AuthSession.UserId);
+PlayerPrefs.SetString("nickname", AuthSession.Nickname);
+
+// При загрузке:
+if (PlayerPrefs.HasKey("token"))
+{
+    var fakeResp = new LoginResponse {
+        accessToken = PlayerPrefs.GetString("token"),
+        userId      = PlayerPrefs.GetInt("userId"),
+        nickname    = PlayerPrefs.GetString("nickname")
+    };
+    AuthSession.Save(fakeResp);
 }
 ```
 
----
+### Смена сервера (dev / prod)
 
-# 6.6. Mobile-специфика: обязательные знания
-
-## 6.6.1. Offline-first для событий
-
-Правило: события не теряются.
-
-Если нет сети:
-
-* событие кладётся в очередь
-* отправляется при восстановлении
-* удаляется только после подтверждённого `ok:true`
-
-## 6.6.2. Backoff на 429
-
-При `429 RATE_LIMITED`:
-
-* запрещено спамить повтором
-* включается экспоненциальная задержка 1 → 2 → 4 → 8 → … до 30 секунд
+Измените `ApiConfig.BaseUrl`:
+```csharp
+// Локально:    "http://127.0.0.1:5000"
+// По сети:     "http://192.168.1.100:5000"
+// Production:  "https://your-server.com"
+```
 
 ---
 
-# 6.7. EventQueue: минимальная реализация логики (что должен уметь студент)
-
-Очередь обязана реализовать политику:
-
-1. сформировать событие (`eventId` UUID + payload)
-2. положить в очередь
-3. попытаться отправить
-4. при успехе удалить
-5. при 401/403 остановить очередь + logout
-6. при 429 backoff
-7. при network error оставить в очереди
-
----
-
-# 6.8. Таблица “ошибка → действие клиента” (обязательна в отчёте)
-
-| Ситуация           | HTTP / code                        | Действие клиента                                                   |
-| ------------------ | ---------------------------------- | ------------------------------------------------------------------ |
-| Данные невалидны   | 400 / VALIDATION_ERROR             | показать сообщение, логировать requestId                           |
-| Нет токена/истёк   | 401 / UNAUTHORIZED                 | logout + экран login                                               |
-| Бан пользователя   | 403 / USER_BANNED                  | показать “доступ запрещён”, остановить очередь                     |
-| Конфликт состояния | 409 / EVENT_REJECTED или duplicate | обновить профиль (GET /profile), синхронизировать состояние        |
-| Слишком часто      | 429 / RATE_LIMITED                 | backoff, блокировать повтор                                        |
-| Ошибка сервера     | 500 / INTERNAL_ERROR               | показать “позже”, оставить событие в очереди, логировать requestId |
-
----
-
-# Практическое задание (подробно)
-
-## Вариант A: Unity (рекомендуется для геймдева)
-
-Сделать:
-
-1. Экран Login (email+password)
-2. `POST /api/v1/auth/login` → сохранить JWT в TokenStore
-3. Экран Profile (nickname + level + currency)
-4. `GET /api/v1/profile` с JWT
-5. Кнопка “Send session_start” → `POST /api/v1/events` (eventId UUID)
-6. Кнопка “Send match_finish” → `POST /api/v1/events` (eventId UUID)
-7. EventQueue: при network error событие остаётся в очереди
-8. Ошибки:
-
-   * `401` → очистить токен, вернуть на login
-   * `403` → остановить очередь
-   * `429` → backoff и повтор
-   * `409` → обновить профиль, не начислять повторно
-
-Артефакты:
-
-* `ApiClient.cs`, `TokenStore.cs`, `EventQueue.cs`, DTO
-* видео/скриншоты Unity Console (method/path/status/duration/requestId)
-* README со сценарием проверки
-
----
-
-## Вариант B: Web (быстрее для проверки)
-
-Сделать:
-
-1. HTML форма login
-2. `apiFetch("/api/v1/auth/login")` → сохранить токен
-3. Кнопка “Load profile” → `GET /api/v1/profile`
-4. Кнопка “Send session_start” → `POST /api/v1/events` с eventId UUID
-5. Очередь событий (минимум: массив + localStorage)
-6. Обработка 401/429/409 как в таблице
-7. Ошибки выводить на экран (не только console)
-
-Артефакты:
-
-* `api.js`, `auth.js`, `events.js`
-* скрин DevTools Network (login, profile, events)
-* README
-
----
