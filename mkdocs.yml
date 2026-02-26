@@ -1,0 +1,61 @@
+site_name: Проектирование и разработка информационных систем
+
+use_directory_urls: false
+
+theme:
+  name: material
+  logo: assets/icons/logo.png
+  favicon: assets/icons/logo.png
+  language: ru
+  features:
+    - content.code.copy     # кнопка "копировать"
+    - content.image.zoom    # zoom картинок
+    - navigation.top        # "наверх"
+    - navigation.tracking   # подсветка активного пункта в правом TOC
+    - toc.follow            # правый TOC следует за прокруткой
+
+plugins:
+  - glightbox
+  - search
+
+nav:
+    - Главная: index.md
+    - Теория: 
+        - Архиектурная модель: theory/architecture.md
+        - Универсальная модель данных: theory/universal_data_model.md
+        - Жанровая адаптацию ИС: theory/genre_adaptation.md
+        - Реализация backendа: theory/backend_implementation.md
+        - API дизайн: theory/api_design.md
+        - Интеграция с игрой: theory/game_integration.md
+        - Тестирование: theory/testing.md 
+    - Практика:
+        - Архиектурная модель: practice/architecture.md
+        - Универсальная модель данных: practice/universal_data_model.md
+        - Жанровая адаптация ИС: practice/genre_adaptation.md 
+        - Реализация backendа: practice/backend_implementation.md
+        - API дизайн: practice/api_design.md
+        - Интеграция с игрой: practice/game_integration.md
+        - Тестирование: practice/testing.md
+    # Добавьте свои разделы и страницы здесь
+
+markdown_extensions:
+  - tables
+  - admonition
+  - attr_list
+  - pymdownx.highlight
+  - pymdownx.details
+  - pymdownx.tasklist
+  - md_in_html
+  - pymdownx.blocks.caption
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+  - assets/js/mermaid-init.js
+
+extra_css:
+  - assets/stylesheets/extra.css
