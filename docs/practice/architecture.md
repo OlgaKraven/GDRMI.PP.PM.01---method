@@ -189,7 +189,7 @@ project-root/
 
 ```mermaid
 flowchart LR
-  C[Client\n(Unity TD Game)] -->|HTTPS + JSON| A[API\nREST]
+  C[Client\Unity TD Game] -->|HTTPS + JSON| A[API\nREST]
   A --> AU[Auth\nJWT + RBAC]
   AU --> BL[Business Logic\nMatch / Rewards]
   BL --> D[Data Layer\nMySQL 8.0]
@@ -393,7 +393,7 @@ COMMIT;
 
 ```mermaid
 flowchart LR
-  C[Client\n(Unity Strategy Game)] -->|HTTPS + JSON| A[REST API]
+  C[Client\Unity Strategy Game] -->|HTTPS + JSON| A[REST API]
   A --> AU[Auth\nJWT + RBAC]
   AU --> BL[Business Logic\nCity / Economy / Battle]
   BL --> D[Data Layer\nMySQL 8.0]
