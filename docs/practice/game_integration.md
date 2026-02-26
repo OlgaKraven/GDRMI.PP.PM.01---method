@@ -1695,3 +1695,5 @@ if (PlayerPrefs.HasKey("token"))
 
 ---
 
+# Ссылка на пример проекта
+[!Ссылка на пример проекта](https://github.com/OlgaKraven/strategy-support-is.git)
