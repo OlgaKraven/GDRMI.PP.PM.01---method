@@ -1,0 +1,1897 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="backend_implementation.html">
+      
+      
+        <link rel="next" href="game_integration.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/icons/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>API дизайн - Проектирование и разработка информационных систем</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-5-api" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Проектирование и разработка информационных систем" class="md-header__button md-logo" aria-label="Проектирование и разработка информационных систем" data-md-component="logo">
+      
+  <img src="../assets/icons/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Проектирование и разработка информационных систем
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              API дизайн
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Проектирование и разработка информационных систем" class="md-nav__button md-logo" aria-label="Проектирование и разработка информационных систем" data-md-component="logo">
+      
+  <img src="../assets/icons/logo.png" alt="logo">
+
+    </a>
+    Проектирование и разработка информационных систем
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Теория
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Теория
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Архиектурная модель
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="universal_data_model.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Универсальная модель данных
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="genre_adaptation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Жанровая адаптацию ИС
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="backend_implementation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Реализация backendа
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API дизайн
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="api_design.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API дизайн
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#51-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1. Принципы REST (что студент обязан соблюдать)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1. Принципы REST (что студент обязан соблюдать)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#511-resource-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1.1. Ресурсный подход (почему “resource-first”)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#512-stateless-server-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1.2. Stateless (почему “никаких server sessions”)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#513-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1.3. Единый контракт JSON (включая ошибки)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2. Именование endpoint’ов (правила)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.2. Именование endpoint’ов (правила)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#521-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2.1. Нотация URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#522-query-params-vs-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2.2. Query params vs Body
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3. HTTP методы и коды (что и зачем)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.3. HTTP методы и коды (что и зачем)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#531" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3.1. Методы
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#532" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3.2. Коды ответа (минимальный набор)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4. Минимальные endpoints (обязательные) — спецификация + примеры
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.4. Минимальные endpoints (обязательные) — спецификация + примеры">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#541-post-register" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.1. POST /register — регистрация
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#542-post-login-jwt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.2. POST /login — получение JWT
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#543-get-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.3. GET /profile — профиль игрока
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#544-post-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.4. POST /progress — обновление прогресса
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#545-post-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.5. POST /event — отправка события
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#546-get-leaderboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.6. GET /leaderboard — топ по доске
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#547-get-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.7. GET /stats — статистика игрока
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55-swagger-openapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5. Swagger / OpenAPI (что студент обязан оформить)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.5. Swagger / OpenAPI (что студент обязан оформить)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#551-openapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5.1. Что должно быть в OpenAPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#swagger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пояснение “почему Swagger обязателен”
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#swagger_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что студент обычно забывает (и это ломает Swagger)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="game_integration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Интеграция с игрой
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Тестирование
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Практика
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Практика
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Архиектурная модель
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/universal_data_model.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Универсальная модель данных
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/genre_adaptation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Жанровая адаптация ИС
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/backend_implementation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Реализация backendа
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/api_design.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API дизайн
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/game_integration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Интеграция с игрой
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Тестирование
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#51-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1. Принципы REST (что студент обязан соблюдать)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.1. Принципы REST (что студент обязан соблюдать)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#511-resource-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1.1. Ресурсный подход (почему “resource-first”)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#512-stateless-server-sessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1.2. Stateless (почему “никаких server sessions”)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#513-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1.3. Единый контракт JSON (включая ошибки)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#52-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2. Именование endpoint’ов (правила)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.2. Именование endpoint’ов (правила)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#521-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2.1. Нотация URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#522-query-params-vs-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2.2. Query params vs Body
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#53-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3. HTTP методы и коды (что и зачем)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.3. HTTP методы и коды (что и зачем)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#531" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3.1. Методы
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#532" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3.2. Коды ответа (минимальный набор)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#54-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4. Минимальные endpoints (обязательные) — спецификация + примеры
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.4. Минимальные endpoints (обязательные) — спецификация + примеры">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#541-post-register" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.1. POST /register — регистрация
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#542-post-login-jwt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.2. POST /login — получение JWT
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#543-get-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.3. GET /profile — профиль игрока
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#544-post-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.4. POST /progress — обновление прогресса
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#545-post-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.5. POST /event — отправка события
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#546-get-leaderboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.6. GET /leaderboard — топ по доске
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#547-get-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4.7. GET /stats — статистика игрока
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#55-swagger-openapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5. Swagger / OpenAPI (что студент обязан оформить)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.5. Swagger / OpenAPI (что студент обязан оформить)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#551-openapi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5.1. Что должно быть в OpenAPI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#swagger" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пояснение “почему Swagger обязателен”
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#swagger_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что студент обычно забывает (и это ломает Swagger)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="1-5-api">1. Теория. 5. API дизайн ИС сопровождения игрового продукта</h1>
+<p>Цель раздела — научить студента проектировать API так, чтобы оно:</p>
+<ul>
+<li>было <strong>предсказуемым</strong> для Unity/Web/Mobile;</li>
+<li>работало как <strong>stateless REST</strong> (без серверных сессий);</li>
+<li>было <strong>безопасным</strong> (JWT + RBAC + валидация);</li>
+<li>было <strong>удобным для тестирования</strong> (Postman/Swagger);</li>
+<li>имело <strong>единые ответы и ошибки</strong> (контракт).</li>
+</ul>
+<hr>
+<h2 id="51-rest">5.1. Принципы REST (что студент обязан соблюдать)</h2>
+<h3 id="511-resource-first">5.1.1. Ресурсный подход (почему “resource-first”)</h3>
+<p>REST — это про <strong>ресурсы</strong> (данные и их представления), а не про “команды”.</p>
+<ul>
+<li><strong>плохо:</strong> <code>/doLogin</code>, <code>/updateProgressNow</code>, <code>/sendEventCommand</code></li>
+<li><strong>хорошо:</strong> <code>/auth/login</code>, <code>/progress</code>, <code>/events</code></li>
+</ul>
+<p><strong>Почему так правильно (инженерно):</strong></p>
+<ol>
+<li>
+<p><strong>Предсказуемость клиенту</strong>
+   Unity/Web/Mobile клиентам важно “угадывать” API:
+   если всё построено как ресурсы — разработчик быстро находит нужный endpoint.</p>
+</li>
+<li>
+<p><strong>Документация и тестирование проще</strong>
+   Swagger/OpenAPI “любит” ресурсный подход: схемы ресурсов, единые паттерны, меньше исключений.</p>
+</li>
+<li>
+<p><strong>Эволюция без ломки</strong>
+   Командный подход часто приводит к хаосу: <code>/doX</code>, <code>/doX2</code>, <code>/doXNow</code>.
+   Ресурсный подход позволяет расширять без переименований.</p>
+</li>
+</ol>
+<p><strong>Правило для студента:</strong>
+если endpoint звучит как глагол “сделай” — это сигнал, что вы проектируете команды, а не REST.</p>
+<p><strong>Исключение (важное для игр):</strong>
+в играх есть “действия”, которые сложно выразить чистым CRUD (например, <code>match/finish</code>).
+Тогда делаем “ресурс + подресурс-действие”, но в контролируемом виде:</p>
+<ul>
+<li><code>POST /matches/{id}/finish</code></li>
+<li><code>POST /matches/{id}/events</code></li>
+</ul>
+<p>Это всё равно “ресурсно”, потому что базовый объект — <code>match</code>.</p>
+<hr>
+<h3 id="512-stateless-server-sessions">5.1.2. Stateless (почему “никаких server sessions”)</h3>
+<p>Каждый запрос несёт в себе всё необходимое:</p>
+<ul>
+<li><code>Authorization: Bearer &lt;JWT&gt;</code></li>
+<li>JSON body / query params</li>
+</ul>
+<p><strong>Почему это критично именно в игровых системах:</strong></p>
+<ol>
+<li>
+<p><strong>Горизонтальное масштабирование</strong>
+   Если сервер хранит сессию в памяти, запрос №1 попал на инстанс A, запрос №2 — на B.
+   B не знает “сессию” → ошибки, рассинхронизация.</p>
+</li>
+<li>
+<p><strong>Повторы запросов (сетевые ретраи)</strong>
+   Мобильный интернет нестабилен: клиент повторяет запрос.
+   Stateless API проще делает <strong>idempotency / дедупликацию</strong> (по requestId/eventId).</p>
+</li>
+<li>
+<p><strong>Инфраструктура: балансировка, autoscaling</strong>
+   Stateless упрощает работу Load Balancer и запуск новых инстансов без прогрева “памяти сессий”.</p>
+</li>
+</ol>
+<p><strong>Практическое правило:</strong>
+состояние игрока хранится в БД (progress/stats), а не в памяти процесса.</p>
+<hr>
+<h3 id="513-json">5.1.3. Единый контракт JSON (включая ошибки)</h3>
+<p>API <strong>всегда</strong> отвечает JSON (даже на ошибках), чтобы Unity/Web/Mobile:</p>
+<ul>
+<li>не падали на HTML-странице ошибки,</li>
+<li>могли одинаково обработать любую ситуацию.</li>
+</ul>
+<p>Рекомендуемый формат:</p>
+<p><strong>Success</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><strong>Error</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Field level must be &gt;= 1"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"req_..."</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Почему это обязательно (а не “можно и так”)</strong>:</p>
+<ol>
+<li>
+<p><strong>Клиентская обработка становится тривиальной</strong>
+   Один и тот же код обработки ошибок для всех endpoint’ов.</p>
+</li>
+<li>
+<p><strong>requestId связывает клиента и сервер</strong>
+   Если студент потом добавит логирование, requestId позволит найти конкретный запрос в логах.</p>
+</li>
+<li>
+<p><strong>Единый формат помогает тестированию</strong>
+   Postman коллекции/автотесты могут проверять <code>ok</code>, <code>error.code</code>, <code>error.requestId</code>.</p>
+</li>
+</ol>
+<p><strong>Правило безопасности:</strong>
+в <code>message</code> нельзя отдавать stack trace и SQL-ошибки в проде.
+В лог — можно, клиенту — нет.</p>
+<hr>
+<h2 id="52-endpoint">5.2. Именование endpoint’ов (правила)</h2>
+<h3 id="521-url">5.2.1. Нотация URL</h3>
+<ul>
+<li>только <strong>lowercase</strong></li>
+<li>слова через <code>-</code> или <code>_</code> (лучше без подчеркиваний в URL)</li>
+<li><strong>существительные</strong>: <code>/profile</code>, <code>/events</code>, <code>/leaderboard</code></li>
+<li>версии API: <code>/api/v1/...</code> (если планируется развитие)</li>
+</ul>
+<p>Пример:</p>
+<ul>
+<li><code>/api/v1/auth/login</code></li>
+<li><code>/api/v1/profile</code></li>
+<li><code>/api/v1/progress</code></li>
+<li><code>/api/v1/events</code></li>
+</ul>
+<p><strong>Почему версионирование важно сразу (даже в учебном проекте):</strong></p>
+<ul>
+<li>вы сможете добавить поля/поведение без “ломания” клиентов;</li>
+<li>преподавателю проще принимать разные итерации проекта;</li>
+<li>студент видит практику индустрии.</li>
+</ul>
+<p><strong>Рекомендованный нейминг:</strong></p>
+<ul>
+<li><code>boardCode</code>, <code>season</code>, <code>limit</code> — в query</li>
+<li><code>eventType</code>, <code>payload</code> — в body</li>
+</ul>
+<hr>
+<h3 id="522-query-params-vs-body">5.2.2. Query params vs Body</h3>
+<ul>
+<li><strong>GET</strong>: фильтры в query</li>
+<li><strong>POST</strong>: данные в body</li>
+</ul>
+<p>Пример:</p>
+<ul>
+<li><code>GET /leaderboard?boardCode=td_score&amp;season=1&amp;limit=100</code></li>
+<li><code>POST /events</code> — body содержит payload события</li>
+</ul>
+<p><strong>Почему GET нельзя использовать для отправки событий:</strong></p>
+<ul>
+<li>GET может кэшироваться прокси/браузером;</li>
+<li>GET не предназначен для побочных эффектов;</li>
+<li>логика “GET записал данные” ломает дебаг, мониторинг и безопасность.</li>
+</ul>
+<hr>
+<h2 id="53-http">5.3. HTTP методы и коды (что и зачем)</h2>
+<h3 id="531">5.3.1. Методы</h3>
+<ul>
+<li><code>POST</code> — создать / отправить событие / выполнить операцию записи</li>
+<li><code>GET</code> — получить данные (без побочных эффектов)</li>
+</ul>
+<p><em>(Для MVP достаточно POST/GET. PUT/PATCH/DELETE можно позже.)</em></p>
+<p><strong>Почему в MVP реально достаточно:</strong></p>
+<ul>
+<li>студенту важнее освоить контур: auth → validation → service → db → response;</li>
+<li>PATCH/PUT добавляют сложность (частичные обновления, идемпотентность), это итерация №2.</li>
+</ul>
+<hr>
+<h3 id="532">5.3.2. Коды ответа (минимальный набор)</h3>
+<ul>
+<li><code>200 OK</code> — успешно</li>
+<li><code>201 Created</code> — создан ресурс (register/match_start)</li>
+<li><code>400 Bad Request</code> — валидация/поля неверны</li>
+<li><code>401 Unauthorized</code> — нет JWT/невалиден</li>
+<li><code>403 Forbidden</code> — нет прав / user banned</li>
+<li><code>404 Not Found</code> — ресурс не найден</li>
+<li><code>409 Conflict</code> — конфликт состояния (например, матч уже завершён)</li>
+<li><code>429 Too Many Requests</code> — rate limit</li>
+<li><code>500 Internal Server Error</code> — непредвиденная ошибка</li>
+</ul>
+<p><strong>Почему важно соблюдать коды:</strong>
+клиенты (Unity/Web) могут автоматически отличать:</p>
+<ul>
+<li>“пользователь виноват” (400),</li>
+<li>“нет токена” (401),</li>
+<li>“прав нет” (403),</li>
+<li>“сервер упал” (500).</li>
+</ul>
+<p><strong>Классика анти-паттерна студентов:</strong>
+“всегда 200 и внутри ok:false”.
+Почему плохо: мониторинг и прокси видят “всё ок”, а система реально падает.</p>
+<hr>
+<h2 id="54-endpoints">5.4. Минимальные endpoints (обязательные) — спецификация + примеры</h2>
+<p>Ниже — набор, который обязан быть у MVP.</p>
+<hr>
+<h3 id="541-post-register">5.4.1. <code>POST /register</code> — регистрация</h3>
+<p><strong>Назначение:</strong> создать аккаунт, назначить роль <code>player</code>.</p>
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/auth/register</span>
+<span class="err">Content-Type: application/json</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"player1@example.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P@ssw0rd!"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PlayerOne"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Response (201)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Ошибки:</strong></p>
+<ul>
+<li><code>400 VALIDATION_ERROR</code> (email невалиден, пароль слабый)</li>
+<li><code>409 EMAIL_ALREADY_EXISTS</code></li>
+</ul>
+<p><strong>Почему 409:</strong> это конфликт уникальности <code>users.email</code>.</p>
+<p><strong>Что студент должен обязательно учесть (почему так):</strong></p>
+<ul>
+<li>пароль хранится <strong>только как hash</strong> (bcrypt/argon2), иначе это критическая уязвимость;</li>
+<li>email должен валидироваться (минимально — формат);</li>
+<li>nickname ограничить по длине, иначе мусор и XSS в UI.</li>
+</ul>
+<hr>
+<h3 id="542-post-login-jwt">5.4.2. <code>POST /login</code> — получение JWT</h3>
+<p><strong>Назначение:</strong> выдать <code>accessToken</code>.</p>
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/auth/login</span>
+<span class="err">Content-Type: application/json</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"player1@example.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P@ssw0rd!"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Response (200)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"accessToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJhbGciOiJIUzI1NiIs..."</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"tokenType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"expiresInSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Ошибки:</strong></p>
+<ul>
+<li><code>401 INVALID_CREDENTIALS</code></li>
+<li><code>403 USER_BANNED</code></li>
+</ul>
+<p><strong>Почему 403 для ban:</strong> токен может быть валиден, но доступ запрещён политикой.</p>
+<p><strong>Реальный нюанс:</strong>
+Если пользователь забанен после выдачи токена — сервер всё равно должен проверять <code>users.is_banned</code> на защищённых endpoint’ах (или держать ban-cache).
+Иначе бан “не работает” до истечения токена.</p>
+<hr>
+<h3 id="543-get-profile">5.4.3. <code>GET /profile</code> — профиль игрока</h3>
+<p><strong>Назначение:</strong> отдать “витрину” профиля: user + progress (+ опционально достижения/лучшие результаты)</p>
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/profile</span>
+<span class="err">Authorization: Bearer &lt;JWT&gt;</span>
+</code></pre></div>
+<p><strong>Response (200)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"player1@example.com"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PlayerOne"</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-26T10:00:00.000Z"</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"progress"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"xp"</span><span class="p">:</span><span class="w"> </span><span class="mi">2450</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"softCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"hardCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Почему профиль агрегирует несколько таблиц:</strong>
+клиенту нужен один запрос “всё для экрана профиля”, а не 5 запросов.</p>
+<p><strong>Архитектурная причина:</strong>
+UI профиля должен открываться быстро и детерминированно → сервер отдаёт “витрину”.</p>
+<hr>
+<h3 id="544-post-progress">5.4.4. <code>POST /progress</code> — обновление прогресса</h3>
+<p><strong>Назначение:</strong> обновить агрегированное состояние игрока (level/xp/currency).</p>
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/progress</span>
+<span class="err">Authorization: Bearer &lt;JWT&gt;</span>
+<span class="err">Content-Type: application/json</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"xp"</span><span class="p">:</span><span class="w"> </span><span class="mi">2450</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"softCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"hardCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"match_finish"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Response (200)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"updatedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-26T12:18:22.120Z"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Ошибки:</strong></p>
+<ul>
+<li><code>400 VALIDATION_ERROR</code> (level &lt; 1, currency &lt; 0)</li>
+<li><code>409 PROGRESS_CONFLICT</code> (если применяете optimistic lock)</li>
+</ul>
+<p><strong>Почему progress отдельно от event:</strong>
+progress — “снимок состояния”, event — “журнал фактов”. Их нельзя смешивать.</p>
+<p><strong>Пояснение “почему так” на примере:</strong></p>
+<ul>
+<li>событие <code>currency_change</code> говорит “почему изменилось”;</li>
+<li>progress говорит “сколько стало сейчас”.
+  Оба нужны: аудит экономики + быстрый профиль.</li>
+</ul>
+<hr>
+<h3 id="545-post-event">5.4.5. <code>POST /event</code> — отправка события</h3>
+<p><strong>Назначение:</strong> фиксировать действия игрока и (опционально) обновлять агрегаты.</p>
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/events</span>
+<span class="err">Authorization: Bearer &lt;JWT&gt;</span>
+<span class="err">Content-Type: application/json</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"match_finish"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="mi">555</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"clientTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-26T12:20:10.000Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"td"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"mapCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forest_01"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"season"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">12450</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">410</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"waveReached"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Response (200)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"accepted"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Ошибки:</strong></p>
+<ul>
+<li><code>400 VALIDATION_ERROR</code> (payload не соответствует схеме)</li>
+<li><code>429 RATE_LIMITED</code></li>
+<li><code>409 EVENT_REJECTED</code> (например, неконсистентные данные)</li>
+</ul>
+<p><strong>Почему “accepted”:</strong>
+в проде часто события пишутся асинхронно/через очередь, и важно различать “принято сервером” vs “отклонено”.</p>
+<p><strong>Дополнение для учебной практики (важно студенту):</strong></p>
+<ul>
+<li><code>userId</code> берётся только из JWT;</li>
+<li><code>createdAt</code> фиксируется сервером;</li>
+<li><code>clientTime</code> хранить можно, но доверять нельзя.</li>
+</ul>
+<hr>
+<h3 id="546-get-leaderboard">5.4.6. <code>GET /leaderboard</code> — топ по доске</h3>
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/leaderboard?boardCode=td_score&amp;season=1&amp;limit=100</span>
+<span class="err">Authorization: Bearer &lt;JWT&gt;</span>
+</code></pre></div>
+<p><strong>Response (200)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"boardCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"td_score"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"season"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"rank"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">50000</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"rank"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Lina"</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">45000</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Почему rank можно считать на сервере:</strong>
+клиенту не надо вычислять позицию — это серверная функция и зависит от правил.</p>
+<p><strong>Практический нюанс:</strong>
+Если лидерборд большой, rank лучше считать:</p>
+<ul>
+<li>window-функциями (MySQL 8), или</li>
+<li>отдельной логикой “позиции текущего игрока” (отдельный запрос).</li>
+</ul>
+<hr>
+<h3 id="547-get-stats">5.4.7. <code>GET /stats</code> — статистика игрока</h3>
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/stats?from=2026-02-01&amp;to=2026-02-26</span>
+<span class="err">Authorization: Bearer &lt;JWT&gt;</span>
+</code></pre></div>
+<p><strong>Response (200)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"from"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-01"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"to"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-26"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"daily"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"day"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-25"</span><span class="p">,</span><span class="w"> </span><span class="nt">"sessionsCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"playtimeSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span><span class="w"> </span><span class="nt">"wins"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"losses"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">"scoreSum"</span><span class="p">:</span><span class="w"> </span><span class="mi">12450</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"daysActive"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"playtimeSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">15300</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"wins"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"losses"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Почему summary отдаём сразу:</strong>
+чтобы клиент не суммировал сам и не делал лишние запросы.</p>
+<p><strong>Пояснение “почему так” на примере Unity:</strong>
+суммирование на клиенте = риск:</p>
+<ul>
+<li>разные платформы считают по-разному (округления, ошибки),</li>
+<li>больше кода в клиенте,</li>
+<li>больше багов.</li>
+</ul>
+<hr>
+<h2 id="55-swagger-openapi">5.5. Swagger / OpenAPI (что студент обязан оформить)</h2>
+<h3 id="551-openapi">5.5.1. Что должно быть в OpenAPI</h3>
+<ul>
+<li>все endpoints из MVP</li>
+<li>
+<p>схемы:</p>
+</li>
+<li>
+<p><code>RegisterRequest</code>, <code>LoginRequest</code></p>
+</li>
+<li><code>EventRequest</code> (с <code>eventType</code> + <code>payload</code>)</li>
+<li><code>ErrorResponse</code></li>
+<li>SecurityScheme: <code>bearerAuth</code></li>
+</ul>
+<p><strong>Минимальный фрагмент (пример):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nt">components</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">securitySchemes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">bearerAuth</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">      </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bearer</span>
+<span class="w">      </span><span class="nt">bearerFormat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">JWT</span>
+</code></pre></div>
+<h3 id="swagger">Пояснение “почему Swagger обязателен”</h3>
+<ol>
+<li><strong>Это “контракт”</strong>: разработчик клиента и backend работают по одному документу.</li>
+<li><strong>Это QA-инструмент</strong>: преподаватель/тестер может прогнать API без чтения кода.</li>
+<li><strong>Это дисциплина проектирования</strong>: если студент не может описать endpoint в OpenAPI — значит он сам не понимает контракт.</li>
+</ol>
+<h3 id="swagger_1">Что студент обычно забывает (и это ломает Swagger)</h3>
+<ul>
+<li>описать <code>401/403/409/429</code> как возможные ответы;</li>
+<li>описать <code>ErrorResponse</code> единообразно;</li>
+<li>добавить <code>security</code> на защищённые endpoint’ы:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="nt">security</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">bearerAuth</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.image.zoom", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../assets/js/mermaid-init.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
