@@ -59,7 +59,7 @@ docs/01-architecture.md
   * MQ — обработка событий (лог событий, аналитика, античит, уведомления).
 
 ⚠ Важно:  
-Схема должна отражать **архитектуру сопровождения игрового продукта**, а не просто “сайт + БД”.  
+Схема должна отражать **архитектуру сопровождения игрового продукта**, а не просто "сайт + БД".  
 То есть обязательно присутствует игровой сценарий: матч/бой, строительство, прогресс, экономика, события, рейтинги.
 
 ---
@@ -70,9 +70,9 @@ docs/01-architecture.md
 
 Выбрать один endpoint:
 
-* `POST /auth/login`
-* `POST /match/finish`
-* `GET /profile`
+* `POST /api/v1/auth/login`
+* `POST /api/v1/match/finish`
+* `GET /api/v1/profile`
 
 ---
 
@@ -94,11 +94,11 @@ docs/01-architecture.md
 
 При адаптации под свою игру:
 
-* Если это **RPG** → можно описать `POST /battle/complete`
-* Если это **Tower Defense** → `POST /match/finish`
-* Если это **Shooter** → `POST /session/end`
-* Если это **Idle / Simulator** → `POST /economy/collect`
-* Если это **Strategy** → `POST /city/upgrade`
+* Если это **RPG** → можно описать `POST /api/v1/battle/complete`
+* Если это **Tower Defense** → `POST /api/v1/match/finish`
+* Если это **Shooter** → `POST /api/v1/session/end`
+* Если это **Idle / Simulator** → `POST /api/v1/economy/collect`
+* Если это **Strategy** → `POST /api/v1/match/finish`
 
 Главное — показать:
 
@@ -120,25 +120,15 @@ docs/01-architecture.md
 * ORM (рекомендуется): **SQLAlchemy**
 * Миграции (рекомендуется): **Flask-Migrate**
 * Аутентификация: **JWT** (например, `flask-jwt-extended`)
+* Хэширование паролей: **bcrypt**
 * Формат обмена данными: **JSON**
 * Протокол: **HTTPS**
 
 ---
 
-### 1.4.2. Минимальные зависимости (пример `requirements.txt`)
+## 1.5. Структура проекта (Flask)
 
-```text
-Flask
-flask-jwt-extended
-flask-sqlalchemy
-flask-migrate
-pymysql
-python-dotenv
-```
-
----
-
-## 1.5. Минимальная структура проекта (Flask)
+Реальная структура проекта `strategy-support-is`:
 
 ```text
 project-root/
@@ -146,27 +136,59 @@ project-root/
 ├── docs/
 │   └── 01-architecture.md
 │
+├── db/
+│   └── schema.sql
+│
 ├── app/
-│   ├── __init__.py
-│   ├── extensions.py
+│   ├── __init__.py          ← create_app(), регистрация blueprint'ов
+│   ├── config.py            ← Config (читает .env)
+│   ├── extensions.py        ← db, jwt, cors
 │   │
 │   ├── routes/
 │   │   ├── auth.py
 │   │   ├── match.py
-│   │   └── profile.py
+│   │   ├── profile.py
+│   │   ├── events.py
+│   │   ├── leaderboard.py
+│   │   └── health.py
 │   │
-│   ├── models/
-│   │   ├── user.py
-│   │   ├── match.py
-│   │   └── progress.py
+│   ├── controllers/
+│   │   ├── auth_controller.py
+│   │   ├── match_controller.py
+│   │   ├── profile_controller.py
+│   │   ├── events_controller.py
+│   │   └── leaderboard_controller.py
 │   │
-│   └── services/
-│       └── match_service.py
+│   ├── services/
+│   │   ├── auth_service.py
+│   │   ├── match_service.py
+│   │   ├── profile_service.py
+│   │   ├── events_service.py
+│   │   └── leaderboard_service.py
+│   │
+│   ├── repositories/
+│   │   ├── users_repo.py
+│   │   ├── roles_repo.py
+│   │   ├── matches_repo.py
+│   │   ├── progress_repo.py
+│   │   ├── stats_repo.py
+│   │   ├── leaderboard_repo.py
+│   │   ├── events_repo.py
+│   │   └── dedupe_repo.py
+│   │
+│   └── middleware/
+│       ├── request_id.py
+│       ├── auth_jwt.py
+│       ├── validate_api.py
+│       └── error_handler.py
 │
-├── config.py
-├── run.py
-└── requirements.txt
+├── seed.sql
+├── test_client.html
+└── wsgi.py                  ← точка входа (python wsgi.py)
 ```
+
+> **Конфигурация** хранится в `app/config.py` и читает переменные из `.env`.  
+> Точка запуска — `wsgi.py`.
 
 ---
 
@@ -189,7 +211,7 @@ project-root/
 
 ```mermaid
 flowchart LR
-  C[Client\Unity TD Game] -->|HTTPS + JSON| A[API\nREST]
+  C[Client\nUnity TD Game] -->|HTTPS + JSON| A[API\nREST]
   A --> AU[Auth\nJWT + RBAC]
   AU --> BL[Business Logic\nMatch / Rewards]
   BL --> D[Data Layer\nMySQL 8.0]
@@ -200,12 +222,12 @@ flowchart LR
 
 ---
 
-### 1.7.2. Сценарий: `POST /match/finish`
+### 1.7.2. Сценарий: `POST /api/v1/match/finish`
 
 #### 1.7.2.1. Клиентский запрос
 
 ```http
-POST /match/finish
+POST /api/v1/match/finish
 Authorization: Bearer <JWT>
 Content-Type: application/json
 ```
@@ -294,9 +316,9 @@ WHERE id = 987654321;
 
 ```sql
 INSERT INTO battle_results
-(match_id, is_win, score, duration_seconds, wave_reached)
+(match_id, is_win, score, duration_seconds)
 VALUES
-(987654321, 1, 12450, 410, 12);
+(987654321, 1, 12450, 410);
 ```
 
 Обновление прогресса:
@@ -312,7 +334,7 @@ WHERE user_id = 15;
 
 ```sql
 INSERT INTO leaderboard_scores (user_id, board_code, season, score)
-VALUES (15, 'td_score', 1, 12450)
+VALUES (15, 'default', 1, 12450)
 ON DUPLICATE KEY UPDATE
   score = GREATEST(score, VALUES(score));
 ```
@@ -327,11 +349,12 @@ COMMIT;
 
 ```json
 {
-  "matchId": 987654321,
-  "status": "finished",
-  "rewards": {
-    "xp": 170,
-    "softCurrency": 340
+  "ok": true,
+  "data": {
+    "matchId": 987654321,
+    "isWin": true,
+    "xpGained": 170,
+    "softCurrencyGained": 340
   }
 }
 ```
@@ -351,7 +374,7 @@ COMMIT;
 ### 1.8.1. Сервер — источник истины
 
 * Нельзя доверять клиентским расчётам наград.
-* Нельзя принимать XP и валюту “как есть”.
+* Нельзя принимать XP и валюту "как есть".
 * Все расчёты должны быть воспроизводимы сервером.
 
 ---
@@ -370,7 +393,7 @@ COMMIT;
 
 * routes → только HTTP
 * services → бизнес-логика
-* models → ORM
+* repositories → SQL
 * DB → хранение
 
 ---
@@ -393,44 +416,52 @@ COMMIT;
 
 ```mermaid
 flowchart LR
-  C[Client\Unity Strategy Game] -->|HTTPS + JSON| A[REST API]
+  C[Client\nUnity Strategy Game] -->|HTTPS + JSON| A[REST API\nFlask Blueprints]
   A --> AU[Auth\nJWT + RBAC]
-  AU --> BL[Business Logic\nCity / Economy / Battle]
-  BL --> D[Data Layer\nMySQL 8.0]
+  AU --> BL[Business Logic\nMatch / Economy / City]
+  BL --> D[Data Layer\nMySQL 8.0\nstrategy_db]
 
-  BL -.cache.-> R[(Redis optional)]
-  BL -.events.-> Q[(Message Queue optional)]
+  BL -.cache optional.-> R[(Redis)]
+  BL -.events optional.-> Q[(Message Queue)]
 ```
 
 ---
 
-### 1.9.2. Сценарий: `POST /city/upgrade`
+### 1.9.2. Сценарий: `POST /api/v1/match/finish`
 
 #### 1.9.2.1. Клиентский запрос
 
 ```http
-POST /city/upgrade
+POST /api/v1/match/finish
 Authorization: Bearer <JWT>
 Content-Type: application/json
 ```
 
 ```json
 {
-  "buildingId": 12,
-  "targetLevel": 3
+  "matchId": 9,
+  "result": {
+    "isWin": true,
+    "score": 1850,
+    "durationSeconds": 1200,
+    "powerDelta": 50
+  }
 }
 ```
+
+> Матч `id=9` принадлежит пользователю `alice` (user_id=1) и имеет статус `started` согласно `seed.sql`.
 
 ---
 
 #### 1.9.2.2. Auth (JWT + RBAC)
 
-Проверяется:
+Проверяется декоратором `@auth_required(roles=["player"])` в `app/routes/match.py`:
 
-- JWT валиден
-- извлечён `userId`
-- роль пользователя = `player`
-- пользователь не заблокирован
+- `verify_jwt_in_request()` из `flask-jwt-extended`
+- извлечён `userId` через `get_jwt_identity()`
+- извлечены `roles` через `get_jwt()`
+- проверено наличие роли `player`
+- записано `g.user = {"userId": ..., "roles": [...]}`
 
 Ошибка:
 
@@ -442,40 +473,33 @@ Content-Type: application/json
 
 #### 1.9.2.3. Validation
 
-Проверяется:
+Декоратор `@validate_match_finish` в `app/middleware/validate_api.py` проверяет:
 
-- здание существует
-- здание принадлежит пользователю
-- текущий уровень = 2
-- targetLevel = 3 (последовательное улучшение)
-- хватает ресурсов
-- нет активного строительства этого здания
+- `matchId` — int
+- `result.isWin` — bool
+- `result.score` — int >= 0
+- `result.durationSeconds` — int >= 0
+- `result.powerDelta` — int или null (опционально)
 
 Ошибка:
 
 ```http
-409 Conflict
+400 Bad Request
 ```
 
 ---
 
 #### 1.9.2.4. Business Logic
 
-Для уровня 3 сервер рассчитывает:
+`app/services/match_service.py`:
+
+1. `ensure_match_ownership_started()` — проверяет владение матчем и статус `started`
+2. Рассчитывает награды по константам (клиент их не присылает):
 
 ```text
-goldCost  = 500
-woodCost  = 300
-foodCost  = 200
-buildTime = 3600 seconds
+xp_gained   = 100  (isWin = true)  / 30  (isWin = false)
+soft_gained = 50   (isWin = true)  / 10  (isWin = false)
 ```
-
-Сервер:
-
-1. Проверяет ресурсы.
-2. Списывает ресурсы.
-3. Создаёт запись строительства.
-4. Обновляет состояние здания (status = upgrading).
 
 ---
 
@@ -485,40 +509,41 @@ buildTime = 3600 seconds
 START TRANSACTION;
 ```
 
-Проверка баланса:
-
 ```sql
-SELECT gold, wood, food
-FROM player_resources
-WHERE user_id = 15
-FOR UPDATE;
+-- 1) Закрытие матча
+UPDATE matches SET status = 'finished', ended_at = NOW(3) WHERE id = 9;
 ```
 
-Списание ресурсов:
-
 ```sql
-UPDATE player_resources
-SET gold = gold - 500,
-    wood = wood - 300,
-    food = food - 200
-WHERE user_id = 15;
+-- 2) Результат
+INSERT INTO battle_results (match_id, is_win, score, duration_seconds)
+VALUES (9, 1, 1850, 1200)
+ON DUPLICATE KEY UPDATE is_win=VALUES(is_win), score=VALUES(score), duration_seconds=VALUES(duration_seconds);
 ```
 
-Создание записи строительства:
-
 ```sql
-INSERT INTO building_upgrades
-(user_id, building_id, target_level, started_at, finish_at)
-VALUES
-(15, 12, 3, NOW(), DATE_ADD(NOW(), INTERVAL 3600 SECOND));
+-- 3) Защита от гонок
+SELECT user_id FROM player_progress WHERE user_id = 1 FOR UPDATE;
 ```
 
-Обновление статуса здания:
+```sql
+-- 4) Начисление
+UPDATE player_progress SET xp = xp + 100, soft_currency = soft_currency + 50 WHERE user_id = 1;
+```
 
 ```sql
-UPDATE city_buildings
-SET status = 'upgrading'
-WHERE id = 12 AND user_id = 15;
+-- 5) Статистика
+INSERT INTO statistics_daily (user_id, day, sessions_count, events_count, playtime_seconds, wins, losses, score_sum)
+VALUES (1, CURDATE(), 0, 1, 1200, 1, 0, 1850)
+ON DUPLICATE KEY UPDATE events_count=events_count+1, playtime_seconds=playtime_seconds+VALUES(playtime_seconds),
+  wins=wins+VALUES(wins), losses=losses+VALUES(losses), score_sum=score_sum+VALUES(score_sum);
+```
+
+```sql
+-- 6) Лидерборд
+INSERT INTO leaderboard_scores (user_id, board_code, season, score)
+VALUES (1, 'default', 1, 1850)
+ON DUPLICATE KEY UPDATE score=GREATEST(score, VALUES(score)), updated_at=CURRENT_TIMESTAMP(3);
 ```
 
 ```text
@@ -531,14 +556,12 @@ COMMIT;
 
 ```json
 {
-  "buildingId": 12,
-  "status": "upgrading",
-  "targetLevel": 3,
-  "finishAt": "2026-02-26T18:45:00Z",
-  "remainingResources": {
-    "gold": 1200,
-    "wood": 850,
-    "food": 600
+  "ok": true,
+  "data": {
+    "matchId": 9,
+    "isWin": true,
+    "xpGained": 100,
+    "softCurrencyGained": 50
   }
 }
 ```
@@ -548,8 +571,9 @@ COMMIT;
 #### 1.9.2.7. Возможные ошибки (минимум 2)
 
 * `401 Unauthorized` — токен отсутствует/невалиден/просрочен.
-* `409 Conflict` — недостаточно ресурсов / здание уже улучшается / нарушена последовательность уровней.
-* `404 Not Found` — здание не принадлежит пользователю (дополнительно).
+* `409 Conflict` — матч уже завершён или статус ≠ `started`.
+* `404 Not Found` — matchId не существует.
+* `403 Forbidden` — матч принадлежит другому пользователю.
 
 ---
 
@@ -614,11 +638,9 @@ flowchart LR
 
 Примеры:
 
-- `POST /auth/login`
-- `POST /match/finish`
-- `GET /profile`
-- `POST /city/upgrade`
-- `POST /battle/complete`
+- `POST /api/v1/auth/login`
+- `POST /api/v1/match/finish`
+- `GET /api/v1/profile`
 
 ---
 
@@ -651,8 +673,12 @@ flowchart LR
 
 ```json
 {
-  "error": "...",
-  "message": "..."
+  "ok": false,
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "JWT is missing/invalid/expired",
+    "requestId": "req_abc123"
+  }
 }
 ```
 
@@ -675,8 +701,12 @@ flowchart LR
 
 ```json
 {
-  "error": "...",
-  "message": "..."
+  "ok": false,
+  "error": {
+    "code": "CONFLICT",
+    "message": "...",
+    "requestId": "req_abc123"
+  }
 }
 ```
 
@@ -745,7 +775,10 @@ Content-Type: application/json
 
 ```json
 {
-  "<ключ>": "<значение>"
+  "ok": true,
+  "data": {
+    "<ключ>": "<значение>"
+  }
 }
 ```
 
@@ -778,8 +811,9 @@ Content-Type: application/json
 1. Сервер — источник истины.
 2. Использование транзакций.
 3. Stateless REST.
-4. Разделение слоёв (routes / services / models / DB).
-5. Защита от race condition.
+4. Разделение слоёв (routes / services / repositories / DB).
+5. Защита от race condition (SELECT FOR UPDATE).
+6. Дедупликация событий (processed_events).
 
 ---
 
@@ -804,5 +838,4 @@ Content-Type: application/json
 - обеспечивается ли серверная валидация;
 - обеспечивается ли целостность данных;
 - предусмотрена ли масштабируемость.
-
 ```

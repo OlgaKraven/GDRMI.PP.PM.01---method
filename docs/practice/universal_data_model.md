@@ -49,9 +49,9 @@ DDL должен содержать:
 
 ### 2.1.3. Методическое пояснение (что именно вы сдаёте и как это сделать)
 
-**Что сдаётся “по минимуму” на этом этапе:**
+**Что сдаётся "по минимуму" на этом этапе:**
 
-* не “вся база игры”, а **универсальное ядро**, которое подходит для любого жанра;
+* не "вся база игры", а **универсальное ядро**, которое подходит для любого жанра;
 * ядро должно уметь:
 
   1. хранить пользователей и роли,
@@ -64,7 +64,7 @@ DDL должен содержать:
 **Как делать ER-ядро быстро:**
 
 1. Выпишите сущности из списка обязательных.
-2. Для каждой сущности укажите “зачем она нужна” (1 строка).
+2. Для каждой сущности укажите "зачем она нужна" (1 строка).
 3. Укажите связи в формате 1:1 / 1:M / M:N.
 4. Отметьте составные уникальности (день, сезон, доска).
 
@@ -76,26 +76,29 @@ DDL должен содержать:
 * добавляйте `INDEX` на типовые запросы: (user_id, created_at), (board_code, season, score) и т.д.;
 * CHECK в MySQL 8 работает, но важно задавать реалистичные ограничения (неотрицательные, level>=1).
 
+> **Обратите внимание:** поле пароля в таблице `users` называется `password` и хранит bcrypt-хэш (не plaintext). Это соответствует реализации в `auth_service.py`, где применяется `bcrypt.hashpw()` / `bcrypt.checkpw()`.
+
 ---
 
 ### 2.1.4. На что обратить внимание при адаптации под свою игру
 
-**1) Не “ломайте ядро” доменными сущностями.**
-Доменные таблицы (например `buildings`, `units`, `quests`, `inventory`) идут позже. Сейчас — только ядро.
+**1) Не "ломайте ядро" доменными сущностями.**
+Доменные таблицы (например `matches`, `army_units`, `city_buildings`) идут позже как жанровое расширение (раздел 3). Сейчас — только ядро.
 
 **2) События должны покрывать жанровую специфику через JSON.**
-В стратегии вы не обязаны делать отдельную таблицу “строительство” на этом этапе — вы можете логировать событие:
+В стратегии вы не обязаны делать отдельную таблицу "строительство" на этом этапе — вы можете логировать событие:
 
 * `event_type = 'building_upgrade_started'`
-* `payload_json = { buildingId, fromLevel, toLevel, cost, finishAt }`
+* `payload_json = { "buildingCode": "barracks", "fromLevel": 4, "toLevel": 5, "goldCost": 500 }`
 
 **3) Прогресс должен быть минимальным, но универсальным.**
-Даже если в игре нет “level”, он всё равно может отражать “tier/league/rank” или “stage”.
+Даже если в игре нет "level", он всё равно может отражать "tier/league/rank" или "stage".
 
 **4) LeaderboardScores — это не только PvP.**
 Подходит и для:
 
-* “макс. волна”, “макс. очки”, “время”, “доход/час”, “эффективность”.
+* "макс. волна", "макс. очки", "время", "доход/час", "эффективность".
+* в проекте используются доски `default` и `pvp` (см. `seed.sql`).
 
 **5) StatisticsDaily — это агрегаты, а не сырые события.**
 Сырые события — `game_events`. Агрегаты — заранее подсчитанные итоги (для быстрых отчётов).
@@ -111,26 +114,14 @@ DDL должен содержать:
 * База данных: **MySQL 8.0**
 * ORM (рекомендуется): **SQLAlchemy**
 * Миграции (рекомендуется): **Flask-Migrate**
-* Аутентификация: **JWT** (например, `flask-jwt-extended`)
+* Аутентификация: **JWT** (`flask-jwt-extended`)
+* Хэширование паролей: **bcrypt**
 * Формат обмена данными: **JSON**
 * Протокол: **HTTPS**
 
 ---
 
-### Минимальные зависимости (пример `requirements.txt`)
-
-```text
-Flask
-flask-jwt-extended
-flask-sqlalchemy
-flask-migrate
-pymysql
-python-dotenv
-```
-
----
-
-### Минимальная структура проекта (доработка) 
+### Структура проекта (доработка)
 
 ```text
 project-root/
@@ -141,8 +132,9 @@ project-root/
 ├── docs/
 │   └── 02-data-model.md
 │
-├── app/               (может быть пустым на этом этапе)
-└── README.md
+├── app/               (реализована)
+│   └── config.py      ← конфигурация здесь, не в корне
+└── wsgi.py            ← точка входа
 ```
 
 ---
@@ -165,11 +157,11 @@ project-root/
 # 2) Универсальная модель данных (ядро)
 
 ## Сущности ядра
-- users — аккаунты пользователей
-- roles — роли доступа (admin/moderator/player)
+- users — аккаунты пользователей (email UNIQUE, password — bcrypt-хэш)
+- roles — роли доступа (player/moderator/admin)
 - user_roles — связь users и roles (M:N)
-- game_sessions — сессии пользователя
-- game_events — события пользователя (payload в JSON)
+- game_sessions — сессии пользователя (платформа, IP, время)
+- game_events — события пользователя (payload в JSON NOT NULL)
 - player_progress — текущее состояние пользователя
 - statistics_daily — дневные агрегаты
 - leaderboard_scores — рейтинги по доскам и сезонам
@@ -190,7 +182,6 @@ project-root/
 
 ```sql
 -- MySQL 8.0+
--- Рекомендуемо:
 -- ENGINE=InnoDB, CHARSET=utf8mb4, COLLATION=utf8mb4_0900_ai_ci
 
 CREATE TABLE roles (
@@ -201,7 +192,7 @@ CREATE TABLE roles (
 CREATE TABLE users (
   id            INT AUTO_INCREMENT PRIMARY KEY,
   email         VARCHAR(255) NOT NULL UNIQUE,
-  password_hash VARCHAR(255) NOT NULL,
+  password      VARCHAR(255) NOT NULL,      -- bcrypt-хэш
   nickname      VARCHAR(64)  NOT NULL,
   created_at    DATETIME(3)  NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   last_login_at DATETIME(3)  NULL,
@@ -238,7 +229,7 @@ CREATE TABLE game_events (
   payload_json JSON NOT NULL,
   created_at   DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-  CONSTRAINT fk_events_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_events_user    FOREIGN KEY (user_id)    REFERENCES users(id)         ON DELETE CASCADE,
   CONSTRAINT fk_events_session FOREIGN KEY (session_id) REFERENCES game_sessions(id) ON DELETE SET NULL,
 
   INDEX idx_events_user_time (user_id, created_at),
@@ -255,9 +246,9 @@ CREATE TABLE player_progress (
 
   CONSTRAINT fk_progress_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   CONSTRAINT chk_level CHECK (level >= 1),
-  CONSTRAINT chk_xp CHECK (xp >= 0),
-  CONSTRAINT chk_soft CHECK (soft_currency >= 0),
-  CONSTRAINT chk_hard CHECK (hard_currency >= 0)
+  CONSTRAINT chk_xp    CHECK (xp >= 0),
+  CONSTRAINT chk_soft  CHECK (soft_currency >= 0),
+  CONSTRAINT chk_hard  CHECK (hard_currency >= 0)
 ) ENGINE=InnoDB;
 
 CREATE TABLE statistics_daily (
@@ -274,14 +265,13 @@ CREATE TABLE statistics_daily (
   CONSTRAINT fk_stats_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   UNIQUE KEY uq_stats_user_day (user_id, day),
   INDEX idx_stats_day (day),
-  INDEX idx_stats_user_day (user_id, day),
 
   CONSTRAINT chk_sessions_count CHECK (sessions_count >= 0),
-  CONSTRAINT chk_events_count CHECK (events_count >= 0),
-  CONSTRAINT chk_playtime CHECK (playtime_seconds >= 0),
-  CONSTRAINT chk_wins CHECK (wins >= 0),
-  CONSTRAINT chk_losses CHECK (losses >= 0),
-  CONSTRAINT chk_score_sum CHECK (score_sum >= 0)
+  CONSTRAINT chk_events_count   CHECK (events_count >= 0),
+  CONSTRAINT chk_playtime       CHECK (playtime_seconds >= 0),
+  CONSTRAINT chk_wins           CHECK (wins >= 0),
+  CONSTRAINT chk_losses         CHECK (losses >= 0),
+  CONSTRAINT chk_score_sum      CHECK (score_sum >= 0)
 ) ENGINE=InnoDB;
 
 CREATE TABLE leaderboard_scores (
@@ -295,10 +285,9 @@ CREATE TABLE leaderboard_scores (
   CONSTRAINT fk_lb_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   UNIQUE KEY uq_lb_user_board_season (user_id, board_code, season),
   INDEX idx_lb_board_season_score (board_code, season, score),
-  INDEX idx_lb_user (user_id),
 
   CONSTRAINT chk_season CHECK (season >= 1),
-  CONSTRAINT chk_score CHECK (score >= 0)
+  CONSTRAINT chk_score  CHECK (score >= 0)
 ) ENGINE=InnoDB;
 ```
 
@@ -314,9 +303,11 @@ INSERT INTO roles (name) VALUES ('player'), ('moderator'), ('admin');
 
 ### 2.4.2. Создать пользователя
 
+> Поле `password` хранит bcrypt-хэш. В `seed.sql` используется хэш строки `"password123"`.
+
 ```sql
-INSERT INTO users (email, password_hash, nickname)
-VALUES ('p1@example.com', 'hash_here', 'PlayerOne');
+INSERT INTO users (email, password, nickname)
+VALUES ('p1@example.com', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsxq5/Qe2', 'PlayerOne');
 ```
 
 ### 2.4.3. Назначить роль игроку
@@ -331,7 +322,7 @@ WHERE u.email='p1@example.com' AND r.name='player';
 ### 2.4.4. Создать progress
 
 ```sql
-INSERT INTO player_progress (user_id)
+INSERT IGNORE INTO player_progress (user_id)
 SELECT id FROM users WHERE email='p1@example.com';
 ```
 
@@ -339,7 +330,7 @@ SELECT id FROM users WHERE email='p1@example.com';
 
 ```sql
 INSERT INTO game_sessions (user_id, client_platform, client_version, ip)
-SELECT id, 'unity', '1.0.0', '127.0.0.1'
+SELECT id, 'unity', '1.2.0', '127.0.0.1'
 FROM users WHERE email='p1@example.com';
 ```
 
@@ -351,7 +342,7 @@ SELECT
   u.id,
   s.id,
   'match_finish',
-  JSON_OBJECT('score', 1200, 'durationSeconds', 300, 'isWin', true)
+  JSON_OBJECT('matchId', 9, 'score', 1850, 'durationSeconds', 1200, 'isWin', true)
 FROM users u
 JOIN game_sessions s ON s.user_id = u.id
 WHERE u.email='p1@example.com'
@@ -385,7 +376,6 @@ LIMIT 1;
 ```
 
 ---
- 
 
 ## 2.6. Пустой шаблон `docs/02-data-model.md` для заполнения студентом
 
@@ -433,7 +423,8 @@ LIMIT 1;
 
 ## 2.7. Пустой шаблон `db/schema.sql` (каркас, без конкретных полей)
 
-> Внимание: это каркас для заполнения. При сдаче он должен содержать PK/FK/UNIQUE/CHECK и JSON.
+> Внимание: это каркас для заполнения. При сдаче он должен содержать PK/FK/UNIQUE/CHECK и JSON.  
+> Поле пароля называется `password` (хранит bcrypt-хэш).
 
 ```sql
 -- MySQL 8.0+
@@ -447,7 +438,7 @@ CREATE TABLE roles (
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   email VARCHAR(255) NOT NULL UNIQUE,
-  password_hash VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,   -- bcrypt-хэш
   nickname VARCHAR(64) NOT NULL,
   created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   last_login_at DATETIME(3) NULL,
@@ -481,7 +472,7 @@ CREATE TABLE game_events (
   event_type VARCHAR(64) NOT NULL,
   payload_json JSON NOT NULL,
   created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id)    REFERENCES users(id)         ON DELETE CASCADE,
   FOREIGN KEY (session_id) REFERENCES game_sessions(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
@@ -494,9 +485,9 @@ CREATE TABLE player_progress (
   updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   CONSTRAINT chk_level CHECK (level >= 1),
-  CONSTRAINT chk_xp CHECK (xp >= 0),
-  CONSTRAINT chk_soft CHECK (soft_currency >= 0),
-  CONSTRAINT chk_hard CHECK (hard_currency >= 0)
+  CONSTRAINT chk_xp    CHECK (xp >= 0),
+  CONSTRAINT chk_soft  CHECK (soft_currency >= 0),
+  CONSTRAINT chk_hard  CHECK (hard_currency >= 0)
 ) ENGINE=InnoDB;
 
 CREATE TABLE statistics_daily (
@@ -512,11 +503,11 @@ CREATE TABLE statistics_daily (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   UNIQUE KEY uq_stats_user_day (user_id, day),
   CONSTRAINT chk_sessions_count CHECK (sessions_count >= 0),
-  CONSTRAINT chk_events_count CHECK (events_count >= 0),
-  CONSTRAINT chk_playtime CHECK (playtime_seconds >= 0),
-  CONSTRAINT chk_wins CHECK (wins >= 0),
-  CONSTRAINT chk_losses CHECK (losses >= 0),
-  CONSTRAINT chk_score_sum CHECK (score_sum >= 0)
+  CONSTRAINT chk_events_count   CHECK (events_count >= 0),
+  CONSTRAINT chk_playtime       CHECK (playtime_seconds >= 0),
+  CONSTRAINT chk_wins           CHECK (wins >= 0),
+  CONSTRAINT chk_losses         CHECK (losses >= 0),
+  CONSTRAINT chk_score_sum      CHECK (score_sum >= 0)
 ) ENGINE=InnoDB;
 
 CREATE TABLE leaderboard_scores (
@@ -529,8 +520,6 @@ CREATE TABLE leaderboard_scores (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   UNIQUE KEY uq_lb_user_board_season (user_id, board_code, season),
   CONSTRAINT chk_season CHECK (season >= 1),
-  CONSTRAINT chk_score CHECK (score >= 0)
+  CONSTRAINT chk_score  CHECK (score >= 0)
 ) ENGINE=InnoDB;
 ```
-
---- 

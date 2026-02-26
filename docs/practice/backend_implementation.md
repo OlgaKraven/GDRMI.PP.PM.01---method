@@ -1,4 +1,4 @@
-# 2. Практика. 4. Реализация backend’а ИС сопровождения игрового продукта (Flask)
+# 2. Практика. 4. Реализация backend'а ИС сопровождения игрового продукта (Flask)
 
 ## 4.1. Задание к разделу 4 «Backend-логика»
 
@@ -11,9 +11,10 @@
    * `validate`
    * `errorHandler`
 
-2. Реализовать **транзакционную операцию** для “итогового события” (например, `match_finish`) в **одной транзакции**:
+2. Реализовать **транзакционную операцию** для "итогового события" (например, `match_finish`) в **одной транзакции**:
 
-   * запись события в `game_events`
+   * проверка владения матчем и статуса
+   * запись результата в `battle_results`
    * обновление `player_progress`
    * upsert в `leaderboard_scores`
    * upsert в `statistics_daily`
@@ -30,10 +31,8 @@ app/
   services/
   repositories/
   middleware/
-  models/        (опционально, если используете ORM)
-run.py
-config.py
-requirements.txt
+  config.py      ← конфигурация внутри app/, не в корне
+wsgi.py          ← точка входа
 ```
 
 ---
@@ -65,25 +64,25 @@ Error → errorHandler → JSON + logging
 
 ## 4.3. Минимальные endpoints для раздела 4 (рекомендуемый набор)
 
-Для сдачи раздела достаточно реализовать один “итоговый” endpoint:
+Для сдачи раздела достаточно реализовать один "итоговый" endpoint:
 
-* `POST /match/finish` **или**
-* `POST /event` с `eventType = match_finish`
+* `POST /api/v1/match/finish`
 
-В данном минимальном примере реализуется: `POST /match/finish`.
+В данном минимальном примере реализуется: `POST /api/v1/match/finish`.
 
 ---
 
 ## 4.4. Реализация проекта (Flask) — структура и файлы
 
-### 4.4.1. Минимальная структура проекта (Flask)
+### 4.4.1. Структура проекта (Flask)
 
 ```text
 project-root/
 │
 ├── app/
-│   ├── __init__.py
-│   ├── extensions.py
+│   ├── __init__.py       ← create_app(), регистрация blueprint'ов и middleware
+│   ├── config.py         ← class Config (читает .env через python-dotenv)
+│   ├── extensions.py     ← db, jwt, cors
 │   │
 │   ├── routes/
 │   │   └── match.py
@@ -95,7 +94,7 @@ project-root/
 │   │   └── match_service.py
 │   │
 │   ├── repositories/
-│   │   ├── events_repo.py
+│   │   ├── matches_repo.py
 │   │   ├── progress_repo.py
 │   │   ├── leaderboard_repo.py
 │   │   └── stats_repo.py
@@ -103,42 +102,30 @@ project-root/
 │   └── middleware/
 │       ├── request_id.py
 │       ├── auth_jwt.py
-│       ├── validate.py
+│       ├── validate_api.py
 │       └── error_handler.py
 │
-├── config.py
-├── run.py
-└── requirements.txt
+├── seed.sql
+├── db/
+│   └── schema.sql
+└── wsgi.py               ← точка входа (python wsgi.py)
 ```
+
+> **Конфигурация** находится в `app/config.py`. Файлов `config.py` в корне и `run.py` **нет** — используется `wsgi.py`.
 
 ---
 
 ## 4.4.2. Создание файлов проекта и пример их наполнения (обязательный минимум)
 
-> Цель: получить минимально работоспособный backend, где один endpoint (`POST /match/finish`) проходит весь конвейер:
+> Цель: получить минимально работоспособный backend, где один endpoint (`POST /api/v1/match/finish`) проходит весь конвейер:
 > `requestId → authJwt → validate → controller → service (TX) → repositories (SQL) → JSON response`,
 > а ошибки всегда возвращаются единообразно.
 
 ---
 
-# A) project-root
+# A) Конфигурация
 
-## A.1. `requirements.txt`
-
-```text
-Flask
-flask-jwt-extended
-flask-sqlalchemy
-pymysql
-python-dotenv
-Flask-Migrate
-```
-
-> `Flask-Migrate` можно убрать, если миграции не используете. Но для практики обычно оставляют.
-
----
-
-## A.2. `config.py`
+## A.1. `app/config.py`
 
 ```python
 import os
@@ -150,31 +137,35 @@ load_dotenv()
 
 class Config:
     # Flask
-    # DEBUG=1 включает расширенные логи и удобнее для разработки
-    DEBUG = os.getenv("DEBUG", "1") == "1"
+    SECRET_KEY = os.environ.get("SECRET_KEY", "change-me-in-production")
 
     # MySQL + SQLAlchemy
-    # Пример: mysql+pymysql://user:pass@localhost:3306/game_db?charset=utf8mb4
-    SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI", "")
+    # Пример: mysql+pymysql://root@localhost:3306/strategy_db?charset=utf8mb4
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        os.environ.get("SQLALCHEMY_DATABASE_URI", "sqlite:///dev.db")
+    )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # JWT
     # В реальном проекте ключ обязательно хранить в .env / секретах
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "change-me")
-
-    # JSON
-    JSON_SORT_KEYS = False
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", "change-jwt-secret-in-production")
+    JWT_ACCESS_TOKEN_EXPIRES = int(os.environ.get("JWT_ACCESS_TOKEN_EXPIRES", 3600))
 ```
 
-> Рекомендуется создать `.env` (не обязателен для сдачи, но удобно):
+> Рекомендуется создать `.env` в корне проекта:
 >
-> * `SQLALCHEMY_DATABASE_URI=...`
-> * `JWT_SECRET_KEY=...`
-> * `DEBUG=1`
+> ```text
+> SQLALCHEMY_DATABASE_URI=mysql+pymysql://root@localhost:3306/strategy_db?charset=utf8mb4
+> DATABASE_URL=mysql+pymysql://root@localhost:3306/strategy_db?charset=utf8mb4
+> JWT_SECRET_KEY=my-super-secret-jwt-key-change-in-prod
+> SECRET_KEY=my-flask-secret-key
+> DEBUG=1
+> ```
 
 ---
 
-## A.3. `run.py`
+## A.2. `wsgi.py`
 
 ```python
 from app import create_app
@@ -185,7 +176,7 @@ app = create_app()
 if __name__ == "__main__":
     # Здесь НЕ пишем бизнес-логику и НЕ пишем SQL.
     # Файл отвечает только за запуск сервера.
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=5000, debug=True)
 ```
 
 ---
@@ -197,12 +188,16 @@ if __name__ == "__main__":
 ```python
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 # db — единая точка доступа к БД (SQLAlchemy)
 db = SQLAlchemy()
 
 # jwt — менеджер JWT (проверка токена, извлечение identity и claims)
 jwt = JWTManager()
+
+# cors — поддержка CORS для Unity/Web-клиентов
+cors = CORS()
 ```
 
 ---
@@ -212,23 +207,23 @@ jwt = JWTManager()
 ```python
 from flask import Flask
 
-from .extensions import db, jwt
+from .extensions import db, jwt, cors
 from .middleware.request_id import register_request_id
 from .middleware.error_handler import register_error_handlers
 from .routes.match import match_bp
-from config import Config
 
 
-def create_app() -> Flask:
+def create_app(config=None) -> Flask:
     # 1) Создаём Flask-приложение
     app = Flask(__name__)
 
-    # 2) Загружаем конфигурацию
-    app.config.from_object(Config)
+    # 2) Загружаем конфигурацию из app/config.py
+    app.config.from_object(config or "app.config.Config")
 
-    # 3) Инициализируем расширения (db, jwt)
+    # 3) Инициализируем расширения (db, jwt, cors)
     db.init_app(app)
     jwt.init_app(app)
+    cors.init_app(app, resources={r"/*": {"origins": "*"}})
 
     # 4) Регистрируем middleware и обработчики ошибок
     register_request_id(app)
@@ -244,7 +239,7 @@ def create_app() -> Flask:
 
 # C) app/middleware/
 
-> В Flask “middleware” реализуется так:
+> В Flask "middleware" реализуется так:
 >
 > * `@app.before_request` / `@app.after_request` — requestId + логирование
 > * декораторы над view-функциями — authJwt, validate
@@ -265,7 +260,7 @@ def create_app() -> Flask:
 Минимальный формат лога:
 
 ```text
-req_abc123 user=15 POST /match/finish 200 18ms
+req_abc123 user=15 POST /api/v1/match/finish 200 18ms
 ```
 
 #### Реализация (как должно работать)
@@ -275,7 +270,7 @@ req_abc123 user=15 POST /match/finish 200 18ms
   * если клиент прислал `X-Request-Id`, использовать его
   * иначе сгенерировать `req_<shortid>`
   * сохранить в `g.request_id`
-  * сохранить старт времени `g.started_at_ms`
+  * сохранить старт времени `g._start_ms`
 * В `after_request`:
 
   * добавить `X-Request-Id: <g.request_id>`
@@ -317,7 +312,7 @@ def register_request_id(app):
             user_id = g.user.get("userId", "-")
 
         # Лог по требуемому формату:
-        # req_abc123 user=15 POST /match/finish 200 18ms
+        # req_abc123 user=15 POST /api/v1/match/finish 200 18ms
         app.logger.info(
             "%s user=%s %s %s %s %sms",
             getattr(g, "request_id", "-"),
@@ -501,10 +496,12 @@ def auth_required(roles=None):
 >
 > * identity = user_id
 > * claim `roles` = список ролей
+>
+> Это формируется в `auth_service.py` при логине через `create_access_token(identity=user["id"], additional_claims={"roles": roles})`.
 
 ---
 
-## C.4. `app/middleware/validate.py`
+## C.4. `app/middleware/validate_api.py`
 
 ### `validate` middleware (Flask)
 
@@ -519,7 +516,7 @@ def auth_required(roles=None):
 * `result.isWin` — boolean
 * `result.score` — число >= 0
 * `result.durationSeconds` — число >= 0
-* `result.waveReached` — число >= 0
+* `result.powerDelta` — число или null (опционально)
 
 #### Реализация (как должно работать)
 
@@ -531,50 +528,50 @@ def auth_required(roles=None):
   * при ошибке выбрасывает `AppError(code='VALIDATION_ERROR', http_status=400, ...)`
 
 ```python
+from functools import wraps
 from flask import request
 from .error_handler import AppError
+
+
+def _bad_body(details):
+    raise AppError(code="VALIDATION_ERROR", message="Invalid request body", http_status=400, details=details)
 
 
 def validate_match_finish(fn):
     # Валидация запроса выполняется ДО контроллера/сервиса, чтобы не трогать БД при мусорном вводе
 
-    def _bad(details):
-        # Единая форма ошибки валидации
-        raise AppError(code="VALIDATION_ERROR", message="Invalid request body", http_status=400, details=details)
-
+    @wraps(fn)
     def wrapper(*args, **kwargs):
         data = request.get_json(silent=True)
 
         if not isinstance(data, dict):
-            _bad({"body": "JSON object expected"})
+            _bad_body({"body": "JSON object expected"})
 
         match_id = data.get("matchId")
         result = data.get("result")
 
         if not isinstance(match_id, int):
-            _bad({"matchId": "int required"})
+            _bad_body({"matchId": "int required"})
 
         if not isinstance(result, dict):
-            _bad({"result": "object required"})
+            _bad_body({"result": "object required"})
 
         is_win = result.get("isWin")
         score = result.get("score")
         duration = result.get("durationSeconds")
-        wave = result.get("waveReached")
+        power_delta = result.get("powerDelta")
 
         if not isinstance(is_win, bool):
-            _bad({"result.isWin": "bool required"})
+            _bad_body({"result.isWin": "bool required"})
         if not isinstance(score, int) or score < 0:
-            _bad({"result.score": "int >= 0 required"})
+            _bad_body({"result.score": "int >= 0 required"})
         if not isinstance(duration, int) or duration < 0:
-            _bad({"result.durationSeconds": "int >= 0 required"})
-        if not isinstance(wave, int) or wave < 0:
-            _bad({"result.waveReached": "int >= 0 required"})
+            _bad_body({"result.durationSeconds": "int >= 0 required"})
+        if power_delta is not None and not isinstance(power_delta, int):
+            _bad_body({"result.powerDelta": "int or null required"})
 
         return fn(*args, **kwargs)
 
-    # Сохраняем имя для Flask/debug
-    wrapper.__name__ = fn.__name__
     return wrapper
 ```
 
@@ -589,11 +586,11 @@ def validate_match_finish(fn):
 ```python
 from flask import Blueprint
 from app.middleware.auth_jwt import auth_required
-from app.middleware.validate import validate_match_finish
+from app.middleware.validate_api import validate_match_finish
 from app.controllers.match_controller import finish_match_controller
 
-# Группа маршрутов /match
-match_bp = Blueprint("match", __name__, url_prefix="/match")
+# Группа маршрутов /api/v1/match
+match_bp = Blueprint("match", __name__, url_prefix="/api/v1/match")
 
 
 @match_bp.post("/finish")
@@ -648,133 +645,107 @@ def finish_match_controller():
 Важное правило: одна транзакция на весь итог.
 
 ```python
-from datetime import datetime, timezone
-from flask import g
 from app.extensions import db
-from app.middleware.error_handler import AppError
-
-from app.repositories.events_repo import insert_game_event
-from app.repositories.progress_repo import lock_progress_row, add_progress_rewards
+from app.repositories.matches_repo import ensure_match_ownership_started, finish_match_row
+from app.repositories.progress_repo import ensure_progress_row, lock_progress_row, add_progress_rewards
 from app.repositories.stats_repo import upsert_daily_stats
 from app.repositories.leaderboard_repo import upsert_leaderboard_score
 
-
-def _calc_rewards(wave_reached: int) -> dict:
-    # Минимальная бизнес-логика начислений (пример)
-    xp = 50 + wave_reached * 10
-    soft = 100 + wave_reached * 20
-    return {"xp": xp, "softCurrency": soft}
+_XP_WIN   = 100
+_XP_LOSS  = 30
+_SOFT_WIN = 50
+_SOFT_LOSS = 10
+_BOARD_CODE = "default"
+_SEASON = 1
 
 
 def finish_match_service(user_id: int, payload: dict) -> dict:
-    # requestId нужен для идемпотентности/трассировки
-    request_id = getattr(g, "request_id", "req_unknown")
-
     match_id = payload["matchId"]
-    result = payload["result"]
-    is_win = result["isWin"]
-    score = result["score"]
+    result   = payload["result"]
+    is_win   = result["isWin"]
+    score    = result["score"]
     duration = result["durationSeconds"]
-    wave = result["waveReached"]
 
-    rewards = _calc_rewards(wave)
-
-    # Для минимума фиксируем board_code и season
-    board_code = "td_score"
-    season = 1
+    # Сервер рассчитывает награды сам — клиент их не присылает
+    xp_gained   = _XP_WIN   if is_win else _XP_LOSS
+    soft_gained = _SOFT_WIN if is_win else _SOFT_LOSS
 
     try:
         # Важно: одна транзакция на весь итог (атомарность)
-        with db.session.begin():
-            # 0) блокируем строку прогресса (защита от гонок)
-            lock_progress_row(db.session, user_id)
+        # 0) Проверка владения матчем и статуса (без блокировки)
+        ensure_match_ownership_started(db.session, match_id=match_id, user_id=user_id)
 
-            # 1) пишем событие (game_events)
-            insert_game_event(
-                db.session,
-                user_id=user_id,
-                session_id=None,
-                event_type="match_finish",
-                payload={
-                    "requestId": request_id,
-                    "matchId": match_id,
-                    "result": {
-                        "isWin": is_win,
-                        "score": score,
-                        "durationSeconds": duration,
-                        "waveReached": wave
-                    }
-                }
-            )
+        # 1) Закрытие матча + запись battle_results
+        finish_match_row(db.session, match_id=match_id, is_win=is_win, score=score, duration_seconds=duration)
 
-            # 2) обновляем прогресс (player_progress)
-            add_progress_rewards(db.session, user_id, xp=rewards["xp"], soft_currency=rewards["softCurrency"])
+        # 2) Гарантируем наличие строки прогресса
+        ensure_progress_row(db.session, user_id=user_id)
 
-            # 3) upsert statistics_daily
-            upsert_daily_stats(
-                db.session,
-                user_id=user_id,
-                playtime_seconds=duration,
-                is_win=is_win,
-                score=score
-            )
+        # 3) Блокируем строку прогресса (защита от гонок)
+        lock_progress_row(db.session, user_id=user_id)
 
-            # 4) upsert leaderboard_scores
-            upsert_leaderboard_score(
-                db.session,
-                user_id=user_id,
-                board_code=board_code,
-                season=season,
-                score=score
-            )
+        # 4) Начисляем награды
+        add_progress_rewards(db.session, user_id=user_id, xp=xp_gained, soft_currency=soft_gained)
 
-        # commit выполняется автоматически при выходе из begin()
+        # 5) Upsert статистики
+        upsert_daily_stats(db.session, user_id=user_id, playtime_seconds=duration, is_win=is_win, score=score)
 
-        return {
-            "matchId": match_id,
-            "rewards": rewards,
-            "leaderboard": {
-                "boardCode": board_code,
-                "season": season,
-                "score": score
-            },
-            "requestId": request_id,
-            "serverTime": datetime.now(timezone.utc).isoformat()
-        }
+        # 6) Upsert лидерборда
+        upsert_leaderboard_score(db.session, user_id=user_id, board_code=_BOARD_CODE, season=_SEASON, score=score)
 
-    except AppError:
-        # Контролируемые ошибки (валидация/доступ/логика) — пробрасываем наверх
-        raise
+        # Commit — всё или ничего
+        db.session.commit()
+
     except Exception:
-        # Любая другая ошибка должна привести к rollback и единому формату ответа
-        raise AppError(code="TX_FAILED", message="Transaction failed", http_status=500)
+        db.session.rollback()
+        raise
+
+    return {
+        "matchId": match_id,
+        "isWin": is_win,
+        "xpGained": xp_gained,
+        "softCurrencyGained": soft_gained,
+    }
 ```
 
 ---
 
 # G) app/repositories/
 
-> Репозитории: только SQL, никаких расчётов наград, никаких правил “как считать”.
+> Репозитории: только SQL, никаких расчётов наград, никаких правил "как считать".
 
-## G.1. `app/repositories/events_repo.py`
+## G.1. `app/repositories/matches_repo.py`
 
 ```python
-import json
 from sqlalchemy import text
+from app.middleware.error_handler import AppError
 
 
-def insert_game_event(session, user_id: int, session_id, event_type: str, payload: dict):
-    # Репозиторий выполняет только SQL (вставка события)
-    sql = text("""
-        INSERT INTO game_events (user_id, session_id, event_type, payload_json)
-        VALUES (:user_id, :session_id, :event_type, CAST(:payload AS JSON))
+def ensure_match_ownership_started(session, match_id: int, user_id: int):
+    # Проверяет, что матч существует, принадлежит пользователю и имеет статус started
+    sql = text("SELECT id, user_id, status FROM matches WHERE id = :match_id")
+    row = session.execute(sql, {"match_id": match_id}).mappings().first()
+    if row is None:
+        raise AppError(code="NOT_FOUND", message="Match not found", http_status=404)
+    if row["user_id"] != user_id:
+        raise AppError(code="FORBIDDEN", message="Match belongs to another user", http_status=403)
+    if row["status"] != "started":
+        raise AppError(code="CONFLICT", message="Match is not in started state", http_status=409)
+
+
+def finish_match_row(session, match_id: int, is_win: bool, score: int, duration_seconds: int):
+    # Закрытие матча
+    upd = text("UPDATE matches SET status='finished', ended_at=NOW(3) WHERE id=:match_id")
+    session.execute(upd, {"match_id": match_id})
+
+    # Запись результата (upsert на случай retry)
+    ins = text("""
+        INSERT INTO battle_results (match_id, is_win, score, duration_seconds)
+        VALUES (:match_id, :is_win, :score, :duration)
+        ON DUPLICATE KEY UPDATE
+          is_win=VALUES(is_win), score=VALUES(score), duration_seconds=VALUES(duration_seconds)
     """)
-    session.execute(sql, {
-        "user_id": user_id,
-        "session_id": session_id,
-        "event_type": event_type,
-        "payload": json.dumps(payload, ensure_ascii=False)
-    })
+    session.execute(ins, {"match_id": match_id, "is_win": int(is_win), "score": score, "duration": duration_seconds})
 ```
 
 ---
@@ -784,6 +755,12 @@ def insert_game_event(session, user_id: int, session_id, event_type: str, payloa
 ```python
 from sqlalchemy import text
 from app.middleware.error_handler import AppError
+
+
+def ensure_progress_row(session, user_id: int):
+    # INSERT IGNORE — создаёт строку прогресса, если её нет
+    sql = text("INSERT IGNORE INTO player_progress (user_id) VALUES (:user_id)")
+    session.execute(sql, {"user_id": user_id})
 
 
 def lock_progress_row(session, user_id: int):
@@ -796,7 +773,6 @@ def lock_progress_row(session, user_id: int):
     """)
     row = session.execute(sql, {"user_id": user_id}).fetchone()
     if row is None:
-        # Если строки прогресса нет — ошибка инициализации данных пользователя
         raise AppError(code="PROGRESS_NOT_FOUND", message="player_progress row not found", http_status=404)
 
 
@@ -820,20 +796,20 @@ from sqlalchemy import text
 
 
 def upsert_daily_stats(session, user_id: int, playtime_seconds: int, is_win: bool, score: int):
-    # Минимальная агрегация по победам/поражениям
-    wins = 1 if is_win else 0
+    wins   = 1 if is_win else 0
     losses = 0 if is_win else 1
 
     # UPSERT статистики по дню
     sql = text("""
-        INSERT INTO statistics_daily (user_id, day, sessions_count, events_count, playtime_seconds, wins, losses, score_sum)
+        INSERT INTO statistics_daily
+          (user_id, day, sessions_count, events_count, playtime_seconds, wins, losses, score_sum)
         VALUES (:user_id, CURDATE(), 0, 1, :playtime, :wins, :losses, :score)
         ON DUPLICATE KEY UPDATE
-          events_count = events_count + 1,
+          events_count     = events_count + 1,
           playtime_seconds = playtime_seconds + VALUES(playtime_seconds),
-          wins = wins + VALUES(wins),
-          losses = losses + VALUES(losses),
-          score_sum = score_sum + VALUES(score_sum);
+          wins             = wins + VALUES(wins),
+          losses           = losses + VALUES(losses),
+          score_sum        = score_sum + VALUES(score_sum)
     """)
     session.execute(sql, {
         "user_id": user_id,
@@ -858,8 +834,8 @@ def upsert_leaderboard_score(session, user_id: int, board_code: str, season: int
         INSERT INTO leaderboard_scores (user_id, board_code, season, score)
         VALUES (:user_id, :board_code, :season, :score)
         ON DUPLICATE KEY UPDATE
-          score = GREATEST(score, VALUES(score)),
-          updated_at = CURRENT_TIMESTAMP(3);
+          score      = GREATEST(score, VALUES(score)),
+          updated_at = CURRENT_TIMESTAMP(3)
     """)
     session.execute(sql, {
         "user_id": user_id,
@@ -888,64 +864,64 @@ def upsert_leaderboard_score(session, user_id: int, board_code: str, season: int
 
 Внутри одной TX выполняются:
 
-1. запись события в `game_events` (`event_type='match_finish'`)
-2. обновление `player_progress` (начисления)
-3. upsert `statistics_daily`
-4. upsert `leaderboard_scores`
-5. commit
+1. проверка матча (`ensure_match_ownership_started`)
+2. закрытие матча + запись `battle_results` (`finish_match_row`)
+3. блокировка прогресса (`lock_progress_row`)
+4. начисление наград (`add_progress_rewards`)
+5. upsert `statistics_daily`
+6. upsert `leaderboard_scores`
+7. commit
 
 ---
 
 ### 4.6.2. Что обязательно добавить (чего обычно не хватает)
 
-1. **Идемпотентность**: защита от повторного `match_finish`
-   Минимально: проверка, что матч ещё не завершён (если есть `matches`).
-   Универсально: хранить `requestId` в payload и проверять дубликаты на уровне приложения.
+1. **Idempotency — защита от повторного `match_finish`**:
+   Реализована через статус матча: `ensure_match_ownership_started()` выбрасывает `409 CONFLICT` если `status != 'started'`. Дополнительно в `events_service.py` используется `processed_events` с `UNIQUE(user_id, event_id)`.
 
 2. **Anti-cheat / ownership checks**:
-
-   * `matchId` должен принадлежать `userId` из JWT (если есть таблица matches)
-   * статус матча должен быть `started`
+   * `matchId` должен принадлежать `userId` из JWT — проверяется в `ensure_match_ownership_started()`
+   * статус матча должен быть `started` — проверяется там же
 
 3. **Блокировки для защиты от гонок**:
-
-   * `SELECT ... FOR UPDATE` на `player_progress` и (при необходимости) на `leaderboard_scores`
+   * `SELECT ... FOR UPDATE` на `player_progress` в `lock_progress_row()`
 
 4. **Атомарность**:
-
-   * любой сбой → `ROLLBACK` и единый формат ошибки
+   * любой сбой → `db.session.rollback()` в блоке `except Exception`
 
 ---
 
-### 4.6.3. Пример входного запроса (Tower Defense)
+### 4.6.3. Пример входного запроса (Strategy)
 
 ```http
-POST /match/finish
+POST /api/v1/match/finish
 Authorization: Bearer <JWT>
 Content-Type: application/json
 ```
 
 ```json
 {
-  "matchId": 987654321,
+  "matchId": 9,
   "result": {
     "isWin": true,
-    "score": 12450,
-    "durationSeconds": 410,
-    "waveReached": 12
+    "score": 1850,
+    "durationSeconds": 1200,
+    "powerDelta": 50
   }
 }
 ```
 
+> Матч `id=9` из `seed.sql` принадлежит `alice` (user_id=1), статус `started`.
+
 ---
 
-### 4.6.4. Минимальная бизнес-логика (пример начислений)
+### 4.6.4. Бизнес-логика начислений
 
-Награды рассчитываются сервером:
+Награды рассчитываются сервером в `match_service.py`:
 
 ```text
-xp = 50 + waveReached * 10
-softCurrency = 100 + waveReached * 20
+xp_gained   = 100  (isWin = true)  / 30  (isWin = false)
+soft_gained = 50   (isWin = true)  / 10  (isWin = false)
 ```
 
 ---
@@ -958,65 +934,66 @@ softCurrency = 100 + waveReached * 20
 START TRANSACTION;
 ```
 
-#### 0) Блокировка прогресса игрока (защита от гонок)
+#### 0) Проверка матча
+
+```sql
+SELECT id, user_id, status FROM matches WHERE id = 9;
+```
+
+#### 1) Закрытие матча
+
+```sql
+UPDATE matches SET status='finished', ended_at=NOW(3) WHERE id = 9;
+```
+
+#### 2) Запись результата
+
+```sql
+INSERT INTO battle_results (match_id, is_win, score, duration_seconds)
+VALUES (9, 1, 1850, 1200)
+ON DUPLICATE KEY UPDATE
+  is_win=VALUES(is_win), score=VALUES(score), duration_seconds=VALUES(duration_seconds);
+```
+
+#### 3) Блокировка прогресса (защита от гонок)
 
 ```sql
 SELECT user_id, xp, soft_currency
 FROM player_progress
-WHERE user_id = ?
+WHERE user_id = 1
 FOR UPDATE;
 ```
 
-#### 1) Запись события в `game_events`
-
-```sql
-INSERT INTO game_events (user_id, session_id, event_type, payload_json)
-VALUES (
-  ?, 
-  NULL,
-  'match_finish',
-  JSON_OBJECT(
-    'requestId', ?,
-    'matchId', ?,
-    'result', JSON_OBJECT(
-      'isWin', ?,
-      'score', ?,
-      'durationSeconds', ?,
-      'waveReached', ?
-    )
-  )
-);
-```
-
-#### 2) Обновление прогресса
+#### 4) Обновление прогресса
 
 ```sql
 UPDATE player_progress
-SET xp = xp + ?,
-    soft_currency = soft_currency + ?
-WHERE user_id = ?;
+SET xp = xp + 100,
+    soft_currency = soft_currency + 50
+WHERE user_id = 1;
 ```
 
-#### 3) Обновление дневной статистики (upsert)
+#### 5) Обновление дневной статистики (upsert)
 
 ```sql
-INSERT INTO statistics_daily (user_id, day, sessions_count, events_count, playtime_seconds, wins, losses, score_sum)
-VALUES (?, CURDATE(), 0, 1, ?, ?, ?, ?)
+INSERT INTO statistics_daily
+  (user_id, day, sessions_count, events_count, playtime_seconds, wins, losses, score_sum)
+VALUES (1, CURDATE(), 0, 1, 1200, 1, 0, 1850)
 ON DUPLICATE KEY UPDATE
-  events_count = events_count + 1,
+  events_count     = events_count + 1,
   playtime_seconds = playtime_seconds + VALUES(playtime_seconds),
-  wins = wins + VALUES(wins),
-  losses = losses + VALUES(losses),
-  score_sum = score_sum + VALUES(score_sum);
+  wins             = wins + VALUES(wins),
+  losses           = losses + VALUES(losses),
+  score_sum        = score_sum + VALUES(score_sum);
 ```
 
-#### 4) Upsert лидерборда
+#### 6) Upsert лидерборда
 
 ```sql
 INSERT INTO leaderboard_scores (user_id, board_code, season, score)
-VALUES (?, 'td_score', 1, ?)
+VALUES (1, 'default', 1, 1850)
 ON DUPLICATE KEY UPDATE
-  score = GREATEST(score, VALUES(score)),
+  score      = GREATEST(score, VALUES(score)),
   updated_at = CURRENT_TIMESTAMP(3);
 ```
 
@@ -1034,17 +1011,10 @@ COMMIT;
 {
   "ok": true,
   "data": {
-    "matchId": 987654321,
-    "rewards": {
-      "xp": 170,
-      "softCurrency": 340
-    },
-    "leaderboard": {
-      "boardCode": "td_score",
-      "season": 1,
-      "score": 12450
-    },
-    "requestId": "req_abc123"
+    "matchId": 9,
+    "isWin": true,
+    "xpGained": 100,
+    "softCurrencyGained": 50
   }
 }
 ```
@@ -1056,25 +1026,24 @@ COMMIT;
 ### 1) Запуск
 
 ```bash
-python run.py
+python wsgi.py
 ```
 
 ### 2) Запрос (пример)
 
 ```http
-POST /match/finish
+POST /api/v1/match/finish
 Authorization: Bearer <JWT>
 Content-Type: application/json
 ```
 
 ```json
 {
-  "matchId": 987654321,
+  "matchId": 9,
   "result": {
     "isWin": true,
-    "score": 12450,
-    "durationSeconds": 410,
-    "waveReached": 12
+    "score": 1850,
+    "durationSeconds": 1200
   }
 }
 ```
@@ -1086,10 +1055,12 @@ Content-Type: application/json
 * JSON `ok: true`
 * записи в:
 
-  * `game_events`
+  * `matches` (status = finished)
+  * `battle_results`
   * `player_progress`
   * `statistics_daily`
   * `leaderboard_scores`
 
----
- 
+### 3) Тестирование через test_client.html
+
+В корне проекта находится `test_client.html` — HTML-страница для ручного тестирования всех endpoint'ов через браузер без Postman.
