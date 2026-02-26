@@ -1,0 +1,2412 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../index.html">
+      
+      
+        <link rel="next" href="universal_data_model.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/icons/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Архиектурная модель - Проектирование и разработка информационных систем</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-1" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Проектирование и разработка информационных систем" class="md-header__button md-logo" aria-label="Проектирование и разработка информационных систем" data-md-component="logo">
+      
+  <img src="../assets/icons/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Проектирование и разработка информационных систем
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Архиектурная модель
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Проектирование и разработка информационных систем" class="md-nav__button md-logo" aria-label="Проектирование и разработка информационных систем" data-md-component="logo">
+      
+  <img src="../assets/icons/logo.png" alt="logo">
+
+    </a>
+    Проектирование и разработка информационных систем
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Теория
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Теория
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Архиектурная модель
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="architecture.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Архиектурная модель
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1. Что такое ИС сопровождения игрового продукта
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2. Клиент–серверная модель в игре
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-mermaid-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3. Mermaid-схема архитектуры
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-er-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4. Универсальная ER-модель данных
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-mysql-80-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5. Модификация схемы под MySQL 8.0 (вместо PostgreSQL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.5. Модификация схемы под MySQL 8.0 (вместо PostgreSQL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#151-usersrolesprogresssessionseventsstatsleaderboard-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5.1. База: Users/Roles/Progress/Sessions/Events/Stats/Leaderboard (MySQL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-strategy-tower-defense" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6. Жанровая адаптация: Strategy / Tower Defense (основной пример)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6. Жанровая адаптация: Strategy / Tower Defense (основной пример)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-strategytd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1. Дополнительные сущности (Strategy/TD)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#162" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.2. Что хранить на сервере (чтобы было “правильно”)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#163" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.3. Метрики (что считать и где)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-strategytd-er-sql-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7. Strategy/TD: расширение ER (добавочные таблицы) + SQL (MySQL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.7. Strategy/TD: расширение ER (добавочные таблицы) + SQL (MySQL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#171-mermaid-er" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7.1. Mermaid ER (добавка к базовой)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#172-strategytd-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7.2. Strategy/TD таблицы (MySQL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-sql-leaderboard-winrate-difficulty-funnel-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8. Примеры SQL-запросов: leaderboard, winrate, difficulty funnel (MySQL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.8. Примеры SQL-запросов: leaderboard, winrate, difficulty funnel (MySQL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#181-top-n-score-desc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8.1. Top N игроков по лидерборду (score DESC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#182-winrate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8.2. Winrate игрока за период
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#183-difficulty-funnel-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8.3. Difficulty funnel (где чаще всего “отваливаются”) для TD по волнам
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-rest-endpoints-strategytd-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9. Минимальные REST endpoints для Strategy/TD + JSON примеры
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.9. Минимальные REST endpoints для Strategy/TD + JSON примеры">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#191-post-matchstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9.1. POST /match/start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#192-post-matchevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9.2. POST /match/event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#193-post-matchfinish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9.3. POST /match/finish
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#194-get-matchid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9.4. GET /match/{id}
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#110-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10. Античит-валидация (что проверять на сервере)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.10. Античит-валидация (что проверять на сервере)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10.1. Общая политика доверия
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1102-matchstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10.2. Валидация на /match/start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1103-matchevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10.3. Валидация на /match/event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1104-matchfinish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10.4. Валидация на /match/finish (самое важное)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10.5. “Флаги подозрительности” (без блокировок, но для логов)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#111-finish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11. Рекомендуемая серверная транзакция на finish (логика)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="universal_data_model.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Универсальная модель данных
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="genre_adaptation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Жанровая адаптацию ИС
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="backend_implementation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Реализация backendа
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api_design.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API дизайн
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="game_integration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Интеграция с игрой
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Тестирование
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Практика
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Практика
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Архиектурная модель
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/universal_data_model.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Универсальная модель данных
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/genre_adaptation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Жанровая адаптация ИС
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/backend_implementation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Реализация backendа
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/api_design.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API дизайн
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/game_integration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Интеграция с игрой
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Тестирование
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1. Что такое ИС сопровождения игрового продукта
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2. Клиент–серверная модель в игре
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-mermaid-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3. Mermaid-схема архитектуры
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-er-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4. Универсальная ER-модель данных
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-mysql-80-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5. Модификация схемы под MySQL 8.0 (вместо PostgreSQL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.5. Модификация схемы под MySQL 8.0 (вместо PostgreSQL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#151-usersrolesprogresssessionseventsstatsleaderboard-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5.1. База: Users/Roles/Progress/Sessions/Events/Stats/Leaderboard (MySQL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-strategy-tower-defense" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6. Жанровая адаптация: Strategy / Tower Defense (основной пример)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6. Жанровая адаптация: Strategy / Tower Defense (основной пример)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#161-strategytd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.1. Дополнительные сущности (Strategy/TD)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#162" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.2. Что хранить на сервере (чтобы было “правильно”)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#163" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.3. Метрики (что считать и где)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-strategytd-er-sql-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7. Strategy/TD: расширение ER (добавочные таблицы) + SQL (MySQL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.7. Strategy/TD: расширение ER (добавочные таблицы) + SQL (MySQL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#171-mermaid-er" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7.1. Mermaid ER (добавка к базовой)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#172-strategytd-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7.2. Strategy/TD таблицы (MySQL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#18-sql-leaderboard-winrate-difficulty-funnel-mysql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8. Примеры SQL-запросов: leaderboard, winrate, difficulty funnel (MySQL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.8. Примеры SQL-запросов: leaderboard, winrate, difficulty funnel (MySQL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#181-top-n-score-desc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8.1. Top N игроков по лидерборду (score DESC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#182-winrate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8.2. Winrate игрока за период
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#183-difficulty-funnel-td" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.8.3. Difficulty funnel (где чаще всего “отваливаются”) для TD по волнам
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#19-rest-endpoints-strategytd-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9. Минимальные REST endpoints для Strategy/TD + JSON примеры
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.9. Минимальные REST endpoints для Strategy/TD + JSON примеры">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#191-post-matchstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9.1. POST /match/start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#192-post-matchevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9.2. POST /match/event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#193-post-matchfinish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9.3. POST /match/finish
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#194-get-matchid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9.4. GET /match/{id}
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#110-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10. Античит-валидация (что проверять на сервере)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.10. Античит-валидация (что проверять на сервере)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10.1. Общая политика доверия
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1102-matchstart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10.2. Валидация на /match/start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1103-matchevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10.3. Валидация на /match/event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1104-matchfinish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10.4. Валидация на /match/finish (самое важное)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1105" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.10.5. “Флаги подозрительности” (без блокировок, но для логов)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#111-finish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11. Рекомендуемая серверная транзакция на finish (логика)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="1-1">1. Теория. 1. Архитектурная модель ИС сопровождения игрового продукта</h1>
+<h2 id="11">1.1. Что такое ИС сопровождения игрового продукта</h2>
+<p>ИС сопровождения игрового продукта — это <strong>серверная часть</strong>, которая принимает данные от клиента (Unity/Web/Mobile), применяет правила, сохраняет в БД и возвращает результаты (профиль, прогресс, лидерборды, статистику).</p>
+<hr>
+<h2 id="12">1.2. Клиент–серверная модель в игре</h2>
+<ul>
+<li><strong>Клиент</strong> отвечает за UI/UX и отправку действий/событий.</li>
+<li><strong>Сервер</strong> отвечает за правила (начисления, прогресс), проверку, безопасность и хранение.</li>
+<li><strong>БД</strong> — источник истины (история событий, прогресс, достижения, метрики).</li>
+</ul>
+<hr>
+<h2 id="13-mermaid-">1.3. Mermaid-схема архитектуры</h2>
+<pre class="mermaid"><code>flowchart LR
+  %% Clients
+  subgraph C[Game Client]
+    U[Unity Client]
+    W[Web Client]
+    M[Mobile Client]
+  end
+
+  %% Transport
+  U --&gt;|HTTPS + JSON| API
+  W --&gt;|HTTPS + JSON| API
+  M --&gt;|HTTPS + JSON| API
+
+  %% Backend
+  subgraph B[REST API Backend Stateless]
+    API[API Gateway / Router]
+    AUTH[JWT Auth + RBAC]
+    VAL[Validation]
+    BL[Business Logic\nProgress / Events / Stats / Leaderboard]
+    ERR[Error Handling]
+    LOG[Logging &amp; Monitoring]
+    API --&gt; AUTH --&gt; VAL --&gt; BL --&gt; ERR --&gt; LOG
+  end
+
+  %% Storage
+  subgraph S[Data Layer]
+    DB[(Relational DB\nMySQL 8.0+)]
+    CACHE[(Redis Cache\noptional)]
+    MQ[(Message Queue\noptional)]
+    OBJ[(Object Storage\noptional)]
+  end
+
+  BL --&gt; DB
+  BL -. cache read/write .-&gt; CACHE
+  BL -. publish events .-&gt; MQ
+  LOG -. store logs/artifacts .-&gt; OBJ</code></pre>
+<hr>
+<h2 id="14-er-">1.4. Универсальная ER-модель данных</h2>
+<blockquote>
+<p>Это <strong>базовая универсальная схема</strong> под сопровождение игрового продукта (Users/Roles/Sessions/Events/Progress/Achievements/Stats/Leaderboard).
+Далее её можно расширять под жанр (в т.ч. Strategy/Tower Defense).</p>
+</blockquote>
+<pre class="mermaid"><code>erDiagram
+  USERS {
+    int id PK
+    string email
+    string password_hash
+    string nickname
+    datetime created_at
+    datetime last_login_at
+    bool is_banned
+  }
+
+  ROLES {
+    int id PK
+    string name
+  }
+
+  USER_ROLES {
+    int user_id PK, FK
+    int role_id PK, FK
+    datetime assigned_at
+  }
+
+  GAME_SESSIONS {
+    int id PK
+    int user_id FK
+    string client_platform
+    string client_version
+    string ip
+    datetime started_at
+    datetime ended_at
+  }
+
+  GAME_EVENTS {
+    bigint id PK
+    int user_id FK
+    int session_id FK
+    string event_type
+    string payload_json
+    datetime created_at
+  }
+
+  PLAYER_PROGRESS {
+    int user_id PK, FK
+    int level
+    int xp
+    int soft_currency
+    int hard_currency
+    datetime updated_at
+  }
+
+  ACHIEVEMENTS {
+    int id PK
+    string code
+    string title
+    string description
+    int points
+  }
+
+  USER_ACHIEVEMENTS {
+    int user_id PK, FK
+    int achievement_id PK, FK
+    datetime unlocked_at
+  }
+
+  STATISTICS_DAILY {
+    int id PK
+    int user_id FK
+    date day
+    int sessions_count
+    int events_count
+    int playtime_seconds
+    int wins
+    int losses
+    int score_sum
+  }
+
+  LEADERBOARD_SCORES {
+    int id PK
+    int user_id FK
+    string board_code
+    int season
+    int score
+    datetime updated_at
+  }
+
+  USERS ||--o{ USER_ROLES : has
+  ROLES ||--o{ USER_ROLES : includes
+
+  USERS ||--o{ GAME_SESSIONS : starts
+  GAME_SESSIONS ||--o{ GAME_EVENTS : contains
+  USERS ||--o{ GAME_EVENTS : produces
+
+  USERS ||--|| PLAYER_PROGRESS : owns
+
+  USERS ||--o{ USER_ACHIEVEMENTS : unlocks
+  ACHIEVEMENTS ||--o{ USER_ACHIEVEMENTS : granted
+
+  USERS ||--o{ STATISTICS_DAILY : aggregates
+  USERS ||--o{ LEADERBOARD_SCORES : ranks
+
+  %% Constraints (not supported as attributes in Mermaid erDiagram):
+  %% USERS.email UNIQUE
+  %% ROLES.name UNIQUE
+  %% ACHIEVEMENTS.code UNIQUE
+  %% STATISTICS_DAILY UNIQUE (user_id, day)
+  %% LEADERBOARD_SCORES UNIQUE (user_id, board_code, season)</code></pre>
+<hr>
+<h2 id="15-mysql-80-postgresql">1.5. Модификация схемы под MySQL 8.0 (вместо PostgreSQL)</h2>
+<p>Ниже — практичный вариант под <strong>MySQL 8.0+</strong>: <code>json</code>, <code>generated columns</code> для индексации JSON, <code>datetime(3)</code> для миллисекунд, <code>inet</code> заменяем на <code>varchar(45)</code>.</p>
+<h3 id="151-usersrolesprogresssessionseventsstatsleaderboard-mysql">1.5.1. База: Users/Roles/Progress/Sessions/Events/Stats/Leaderboard (MySQL)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">-- Рекомендуемо:</span>
+<span class="c1">-- ENGINE=InnoDB, CHARSET=utf8mb4, COLLATION=utf8mb4_0900_ai_ci</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">roles</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w">   </span><span class="nb">INT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w">            </span><span class="nb">INT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">email</span><span class="w">         </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
+<span class="w">  </span><span class="n">password_hash</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">nickname</span><span class="w">      </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span><span class="w">  </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">created_at</span><span class="w">    </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w">  </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+<span class="w">  </span><span class="n">last_login_at</span><span class="w"> </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w">  </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">is_banned</span><span class="w">     </span><span class="n">TINYINT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">user_roles</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">user_id</span><span class="w">   </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">role_id</span><span class="w">   </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">assigned_at</span><span class="w"> </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+<span class="w">  </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">role_id</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_user_roles_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_user_roles_role</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">role_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">roles</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">RESTRICT</span><span class="p">,</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_user_roles_role_id</span><span class="w"> </span><span class="p">(</span><span class="n">role_id</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">game_sessions</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w">             </span><span class="nb">INT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">user_id</span><span class="w">        </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">client_platform</span><span class="w"> </span><span class="n">ENUM</span><span class="p">(</span><span class="s1">'unity'</span><span class="p">,</span><span class="s1">'web'</span><span class="p">,</span><span class="s1">'mobile'</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">client_version</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ip</span><span class="w">             </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">started_at</span><span class="w">     </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+<span class="w">  </span><span class="n">ended_at</span><span class="w">       </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_sessions_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_sessions_user_started</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">started_at</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">game_events</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w">          </span><span class="nb">BIGINT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">user_id</span><span class="w">     </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">session_id</span><span class="w">  </span><span class="nb">INT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">event_type</span><span class="w">  </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">payload_json</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">created_at</span><span class="w">  </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_events_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_events_session</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">session_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">game_sessions</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_events_user_time</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="p">),</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_events_type_time</span><span class="w"> </span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">player_progress</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">user_id</span><span class="w">        </span><span class="nb">INT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="k">level</span><span class="w">          </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">xp</span><span class="w">             </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">soft_currency</span><span class="w">  </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">hard_currency</span><span class="w">  </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">updated_at</span><span class="w">     </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_progress_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_level</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="k">level</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_xp</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">xp</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_soft</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">soft_currency</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_hard</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">hard_currency</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">achievements</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w">          </span><span class="nb">INT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">code</span><span class="w">        </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
+<span class="w">  </span><span class="n">title</span><span class="w">       </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">128</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">description</span><span class="w"> </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">points</span><span class="w">      </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_points</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">points</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">user_achievements</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">user_id</span><span class="w">        </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">achievement_id</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">unlocked_at</span><span class="w">    </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+
+<span class="w">  </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">achievement_id</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_ua_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_ua_ach</span><span class="w">  </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">achievement_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">achievements</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_ua_ach</span><span class="w"> </span><span class="p">(</span><span class="n">achievement_id</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">statistics_daily</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w">               </span><span class="nb">INT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">user_id</span><span class="w">          </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="k">day</span><span class="w">              </span><span class="nb">DATE</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">sessions_count</span><span class="w">   </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">events_count</span><span class="w">     </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">playtime_seconds</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">wins</span><span class="w">             </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">losses</span><span class="w">           </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">score_sum</span><span class="w">        </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_stats_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">uq_stats_user_day</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="k">day</span><span class="p">),</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_stats_day</span><span class="w"> </span><span class="p">(</span><span class="k">day</span><span class="p">),</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_stats_user_day</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="k">day</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">leaderboard_scores</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w">         </span><span class="nb">INT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">user_id</span><span class="w">    </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">board_code</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">season</span><span class="w">     </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">score</span><span class="w">      </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">updated_at</span><span class="w"> </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_lb_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">uq_lb_user_board_season</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">board_code</span><span class="p">,</span><span class="w"> </span><span class="n">season</span><span class="p">),</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_lb_board_season_score</span><span class="w"> </span><span class="p">(</span><span class="n">board_code</span><span class="p">,</span><span class="w"> </span><span class="n">season</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">),</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_lb_user</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_season</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">season</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+</code></pre></div>
+<hr>
+<h2 id="16-strategy-tower-defense">1.6. Жанровая адаптация: Strategy / Tower Defense (основной пример)</h2>
+<p>Ниже — <strong>какие сущности добавляются</strong>, <strong>что хранить на сервере</strong>, <strong>какие метрики считать</strong>.
+Логика: стратегия — это набор <strong>матчей/волн</strong>, <strong>юнитов</strong>, <strong>построек</strong>, <strong>экономики</strong>, <strong>результатов боя</strong>.</p>
+<h3 id="161-strategytd">1.6.1. Дополнительные сущности (Strategy/TD)</h3>
+<p><strong>Новые таблицы (минимально необходимые):</strong></p>
+<ul>
+<li><code>matches</code> — матчи (PvE/PvP), состояние и результат</li>
+<li><code>waves</code> — волны (для TD)</li>
+<li><code>towers</code> / <code>buildings</code> — построенные объекты и их уровни</li>
+<li><code>units</code> — юниты/враги (справочник типов)</li>
+<li><code>player_inventory</code> — карты/ресурсы/улучшения</li>
+<li><code>research</code> — исследования/таланты</li>
+<li><code>battle_results</code> — итог матча (урон, потери, время, рейтинг)</li>
+</ul>
+<h3 id="162">1.6.2. Что хранить на сервере (чтобы было “правильно”)</h3>
+<p><strong>Сервер хранит и подтверждает:</strong></p>
+<ul>
+<li>результаты матча (win/lose, время, score);</li>
+<li>награды (gold, gems, опыт);</li>
+<li>апгрейды построек/юнитов;</li>
+<li>прогресс по уровням/главам/волнам;</li>
+<li>рейтинги и MMR (если PvP);</li>
+<li>античит-ограничения (лимиты ресурсов, допустимые значения).</li>
+</ul>
+<p><strong>Клиент может хранить локально (кэш):</strong></p>
+<ul>
+<li>визуальные настройки;</li>
+<li>кеши конфигов (каталог башен/юнитов), но с обновлением с сервера.</li>
+</ul>
+<h3 id="163">1.6.3. Метрики (что считать и где)</h3>
+<p><strong>Операционные (для игрока):</strong></p>
+<ul>
+<li>win rate (wins / matches)</li>
+<li>average match duration</li>
+<li>best wave reached (TD)</li>
+<li>DPS / damage dealt</li>
+<li>resources spent / earned</li>
+</ul>
+<p><strong>Продуктовые (для аналитики):</strong></p>
+<ul>
+<li>retention D1/D7/D30 (по login/session)</li>
+<li>churn (отсутствие входов N дней)</li>
+<li>conversion (если есть покупки)</li>
+<li>difficulty funnel (где чаще всего проигрывают)</li>
+<li>balance metrics (какие башни/юниты “имба”)</li>
+</ul>
+<hr>
+<h2 id="17-strategytd-er-sql-mysql">1.7. Strategy/TD: расширение ER (добавочные таблицы) + SQL (MySQL)</h2>
+<h3 id="171-mermaid-er">1.7.1. Mermaid ER (добавка к базовой)</h3>
+<pre class="mermaid"><code>erDiagram
+  MATCHES {
+    bigint id PK
+    int user_id FK
+    string mode "pve|pvp|td"
+    string map_code
+    int season
+    string status "started|finished|abandoned"
+    datetime started_at
+    datetime ended_at
+  }
+
+  MATCH_WAVES {
+    bigint id PK
+    bigint match_id FK
+    int wave_number
+    int enemies_spawned
+    int enemies_killed
+    int base_hp_left
+  }
+
+  PLAYER_BUILDINGS {
+    bigint id PK
+    int user_id FK
+    string building_code
+    int level
+    datetime updated_at
+  }
+
+  MATCH_BUILD_ACTIONS {
+    bigint id PK
+    bigint match_id FK
+    string action_type "build|upgrade|sell"
+    string building_code
+    int at_second
+    int cost
+  }
+
+  BATTLE_RESULTS {
+    bigint match_id PK, FK
+    bool is_win
+    int score
+    int damage_dealt
+    int damage_taken
+    int duration_seconds
+    int wave_reached
+  }
+
+  USERS ||--o{ MATCHES : plays
+  MATCHES ||--o{ MATCH_WAVES : contains
+  USERS ||--o{ PLAYER_BUILDINGS : owns
+  MATCHES ||--o{ MATCH_BUILD_ACTIONS : logs
+  MATCHES ||--|| BATTLE_RESULTS : ends_with</code></pre>
+<h3 id="172-strategytd-mysql">1.7.2. Strategy/TD таблицы (MySQL)</h3>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w">         </span><span class="nb">BIGINT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">user_id</span><span class="w">    </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="k">mode</span><span class="w">       </span><span class="n">ENUM</span><span class="p">(</span><span class="s1">'pve'</span><span class="p">,</span><span class="s1">'pvp'</span><span class="p">,</span><span class="s1">'td'</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">map_code</span><span class="w">   </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">season</span><span class="w">     </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">status</span><span class="w">     </span><span class="n">ENUM</span><span class="p">(</span><span class="s1">'started'</span><span class="p">,</span><span class="s1">'finished'</span><span class="p">,</span><span class="s1">'abandoned'</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="s1">'started'</span><span class="p">,</span>
+<span class="w">  </span><span class="n">started_at</span><span class="w"> </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+<span class="w">  </span><span class="n">ended_at</span><span class="w">   </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_matches_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_matches_user_time</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">started_at</span><span class="p">),</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_matches_mode_season</span><span class="w"> </span><span class="p">(</span><span class="k">mode</span><span class="p">,</span><span class="w"> </span><span class="n">season</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_match_season</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">season</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">match_waves</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w">              </span><span class="nb">BIGINT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">match_id</span><span class="w">        </span><span class="nb">BIGINT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">wave_number</span><span class="w">     </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">enemies_spawned</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">enemies_killed</span><span class="w">  </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">base_hp_left</span><span class="w">    </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_waves_match</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">match_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">matches</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">uq_wave</span><span class="w"> </span><span class="p">(</span><span class="n">match_id</span><span class="p">,</span><span class="w"> </span><span class="n">wave_number</span><span class="p">),</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_waves_match</span><span class="w"> </span><span class="p">(</span><span class="n">match_id</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_wave_number</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">wave_number</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_spawned</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">enemies_spawned</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_killed</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">enemies_killed</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_basehp</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">base_hp_left</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">player_buildings</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w">            </span><span class="nb">BIGINT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">user_id</span><span class="w">       </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">building_code</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="k">level</span><span class="w">         </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">updated_at</span><span class="w">    </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
+
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_pb_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">uq_building</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">building_code</span><span class="p">),</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_buildings_user</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_building_level</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="k">level</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">match_build_actions</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">id</span><span class="w">            </span><span class="nb">BIGINT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">match_id</span><span class="w">      </span><span class="nb">BIGINT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">action_type</span><span class="w">   </span><span class="n">ENUM</span><span class="p">(</span><span class="s1">'build'</span><span class="p">,</span><span class="s1">'upgrade'</span><span class="p">,</span><span class="s1">'sell'</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">building_code</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">at_second</span><span class="w">     </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">cost</span><span class="w">          </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_actions_match</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">match_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">matches</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_actions_match_time</span><span class="w"> </span><span class="p">(</span><span class="n">match_id</span><span class="p">,</span><span class="w"> </span><span class="n">at_second</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_at_second</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">at_second</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">battle_results</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="n">match_id</span><span class="w">         </span><span class="nb">BIGINT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<span class="w">  </span><span class="n">is_win</span><span class="w">           </span><span class="n">TINYINT</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">score</span><span class="w">            </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">damage_dealt</span><span class="w">     </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">damage_taken</span><span class="w">     </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">duration_seconds</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">wave_reached</span><span class="w">     </span><span class="nb">INT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_results_match</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">match_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">matches</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_damage_dealt</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">damage_dealt</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_damage_taken</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">damage_taken</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_duration</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">duration_seconds</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_wave_reached</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">wave_reached</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
+</code></pre></div>
+<hr>
+<h2 id="18-sql-leaderboard-winrate-difficulty-funnel-mysql">1.8. Примеры SQL-запросов: leaderboard, winrate, difficulty funnel (MySQL)</h2>
+<h3 id="181-top-n-score-desc">1.8.1. Top N игроков по лидерборду (score DESC)</h3>
+<p><strong>Топ-100 по конкретной доске и сезону:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span>
+<span class="w">  </span><span class="n">ls</span><span class="p">.</span><span class="n">user_id</span><span class="p">,</span>
+<span class="w">  </span><span class="n">u</span><span class="p">.</span><span class="n">nickname</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ls</span><span class="p">.</span><span class="n">score</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ls</span><span class="p">.</span><span class="n">updated_at</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">leaderboard_scores</span><span class="w"> </span><span class="n">ls</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ls</span><span class="p">.</span><span class="n">user_id</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">ls</span><span class="p">.</span><span class="n">board_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'td_score'</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">ls</span><span class="p">.</span><span class="n">season</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ls</span><span class="p">.</span><span class="n">score</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">ls</span><span class="p">.</span><span class="n">updated_at</span><span class="w"> </span><span class="k">ASC</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Позиция конкретного игрока (rank) — MySQL 8 window function:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="p">(</span>
+<span class="w">  </span><span class="k">SELECT</span>
+<span class="w">    </span><span class="n">ls</span><span class="p">.</span><span class="n">user_id</span><span class="p">,</span>
+<span class="w">    </span><span class="n">u</span><span class="p">.</span><span class="n">nickname</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ls</span><span class="p">.</span><span class="n">score</span><span class="p">,</span>
+<span class="w">    </span><span class="n">DENSE_RANK</span><span class="p">()</span><span class="w"> </span><span class="n">OVER</span><span class="w"> </span><span class="p">(</span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">ls</span><span class="p">.</span><span class="n">score</span><span class="w"> </span><span class="k">DESC</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">rnk</span>
+<span class="w">  </span><span class="k">FROM</span><span class="w"> </span><span class="n">leaderboard_scores</span><span class="w"> </span><span class="n">ls</span>
+<span class="w">  </span><span class="k">JOIN</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ls</span><span class="p">.</span><span class="n">user_id</span>
+<span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">ls</span><span class="p">.</span><span class="n">board_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'td_score'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">ls</span><span class="p">.</span><span class="n">season</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="p">)</span><span class="w"> </span><span class="n">t</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">t</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">;</span>
+</code></pre></div>
+<hr>
+<h3 id="182-winrate">1.8.2. Winrate игрока за период</h3>
+<p><strong>Winrate за последние 30 дней (по finished матчам):</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span>
+<span class="w">  </span><span class="n">m</span><span class="p">.</span><span class="n">user_id</span><span class="p">,</span>
+<span class="w">  </span><span class="n">u</span><span class="p">.</span><span class="n">nickname</span><span class="p">,</span>
+<span class="w">  </span><span class="k">SUM</span><span class="p">(</span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">br</span><span class="p">.</span><span class="n">is_win</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">END</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">wins</span><span class="p">,</span>
+<span class="w">  </span><span class="k">SUM</span><span class="p">(</span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">br</span><span class="p">.</span><span class="n">is_win</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">END</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">losses</span><span class="p">,</span>
+<span class="w">  </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">matches</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ROUND</span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">SUM</span><span class="p">(</span><span class="k">CASE</span><span class="w"> </span><span class="k">WHEN</span><span class="w"> </span><span class="n">br</span><span class="p">.</span><span class="n">is_win</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">THEN</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">ELSE</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">END</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">winrate_pct</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="n">m</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">battle_results</span><span class="w"> </span><span class="n">br</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">br</span><span class="p">.</span><span class="n">match_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">id</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">user_id</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'finished'</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">started_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="p">(</span><span class="n">NOW</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="k">DAY</span><span class="p">)</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="k">mode</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'td'</span><span class="p">,</span><span class="s1">'pve'</span><span class="p">,</span><span class="s1">'pvp'</span><span class="p">)</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">nickname</span>
+<span class="k">HAVING</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">5</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">winrate_pct</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+</code></pre></div>
+<hr>
+<h3 id="183-difficulty-funnel-td">1.8.3. Difficulty funnel (где чаще всего “отваливаются”) для TD по волнам</h3>
+<p>Идея: на какой волне игроки <strong>чаще всего завершают матч поражением</strong>.</p>
+<p><strong>Считаем распределение поражений по <code>wave_reached</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span>
+<span class="w">  </span><span class="n">br</span><span class="p">.</span><span class="n">wave_reached</span><span class="p">,</span>
+<span class="w">  </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">losses_count</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="n">m</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">battle_results</span><span class="w"> </span><span class="n">br</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">br</span><span class="p">.</span><span class="n">match_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">id</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="k">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'td'</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'finished'</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">br</span><span class="p">.</span><span class="n">is_win</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">season</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">br</span><span class="p">.</span><span class="n">wave_reached</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">losses_count</span><span class="w"> </span><span class="k">DESC</span><span class="p">,</span><span class="w"> </span><span class="n">br</span><span class="p">.</span><span class="n">wave_reached</span><span class="w"> </span><span class="k">ASC</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Funnel по волнам: сколько матчей “дошли хотя бы до wave N”</strong>
+(часто нужно для баланса: где резкий спад прохождения)</p>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span>
+<span class="w">  </span><span class="n">w</span><span class="p">.</span><span class="n">wave_number</span><span class="p">,</span>
+<span class="w">  </span><span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">match_id</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">matches_reached_wave</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">match_waves</span><span class="w"> </span><span class="n">w</span>
+<span class="k">JOIN</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">match_id</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="k">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'td'</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">'finished'</span><span class="p">,</span><span class="s1">'abandoned'</span><span class="p">)</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">season</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">wave_number</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">wave_number</span><span class="w"> </span><span class="k">ASC</span><span class="p">;</span>
+</code></pre></div>
+<hr>
+<h2 id="19-rest-endpoints-strategytd-json">1.9. Минимальные REST endpoints для Strategy/TD + JSON примеры</h2>
+<p>Ниже — “практический минимум” для матчей. Все запросы (кроме register/login) требуют JWT.</p>
+<h3 id="191-post-matchstart">1.9.1. POST <code>/match/start</code></h3>
+<p><strong>Назначение:</strong> создать матч, открыть сессию матча, вернуть <code>matchId</code>.</p>
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><span></span><code><span class="err">POST /match/start</span>
+<span class="err">Authorization: Bearer &lt;JWT&gt;</span>
+<span class="err">Content-Type: application/json</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"td"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"mapCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forest_01"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"season"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"clientVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.3"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Response (201)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"started"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"startedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-25T22:10:12.345Z"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Ошибки:</p>
+<ul>
+<li><code>400</code> неверные поля</li>
+<li><code>401</code> нет/невалидный JWT</li>
+<li><code>409</code> уже есть активный матч (если запрещаете параллельные)</li>
+</ul>
+<hr>
+<h3 id="192-post-matchevent">1.9.2. POST <code>/match/event</code></h3>
+<p><strong>Назначение:</strong> фиксировать события матча (строительство, апгрейд, прохождение волны, урон базе и т.д.).</p>
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><span></span><code><span class="err">POST /match/event</span>
+<span class="err">Authorization: Bearer &lt;JWT&gt;</span>
+<span class="err">Content-Type: application/json</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"wave_end"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"atSecond"</span><span class="p">:</span><span class="w"> </span><span class="mi">73</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"waveNumber"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"enemiesSpawned"</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"enemiesKilled"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"baseHpLeft"</span><span class="p">:</span><span class="w"> </span><span class="mi">85</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Response (200)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Пример события строительства:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"build"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"atSecond"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"buildingCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tower_arrow"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"cell"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"cost"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h3 id="193-post-matchfinish">1.9.3. POST <code>/match/finish</code></h3>
+<p><strong>Назначение:</strong> завершить матч, записать <code>battle_results</code>, обновить прогресс/статистику/leaderboard транзакционно.</p>
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><span></span><code><span class="err">POST /match/finish</span>
+<span class="err">Authorization: Bearer &lt;JWT&gt;</span>
+<span class="err">Content-Type: application/json</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">12450</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">410</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"waveReached"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"damageDealt"</span><span class="p">:</span><span class="w"> </span><span class="mi">56000</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"damageTaken"</span><span class="p">:</span><span class="w"> </span><span class="mi">12000</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"rewards"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"xp"</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"softCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Response (200)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"finished"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"serverAccepted"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"updatedProgress"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"xp"</span><span class="p">:</span><span class="w"> </span><span class="mi">2450</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"softCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"hardCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"leaderboardUpdate"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"boardCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"td_score"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"season"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"newScore"</span><span class="p">:</span><span class="w"> </span><span class="mi">12450</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Ошибки:</p>
+<ul>
+<li><code>400</code> неконсистентные значения</li>
+<li><code>403</code> матч не принадлежит пользователю</li>
+<li><code>409</code> матч уже завершен</li>
+</ul>
+<hr>
+<h3 id="194-get-matchid">1.9.4. GET <code>/match/{id}</code></h3>
+<p><strong>Назначение:</strong> получить детали матча (для истории, отладки, реплея, админки).</p>
+<p><strong>Request</strong></p>
+<div class="highlight"><pre><span></span><code><span class="err">GET /match/987654321</span>
+<span class="err">Authorization: Bearer &lt;JWT&gt;</span>
+</code></pre></div>
+<p><strong>Response (200)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"match"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"td"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"mapCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forest_01"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"season"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"finished"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"startedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-25T22:10:12.345Z"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"endedAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-25T22:17:02.120Z"</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">12450</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">410</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"waveReached"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"waves"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"waveNumber"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"enemiesSpawned"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"enemiesKilled"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"baseHpLeft"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nt">"waveNumber"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"enemiesSpawned"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="nt">"enemiesKilled"</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="p">,</span><span class="w"> </span><span class="nt">"baseHpLeft"</span><span class="p">:</span><span class="w"> </span><span class="mi">92</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nt">"eventsCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">57</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h2 id="110-">1.10. Античит-валидация (что проверять на сервере)</h2>
+<p>Цель: сервер должен принимать только <strong>правдоподобные</strong> и <strong>согласованные</strong> результаты. В производственной практике это обычно “базовый античит”, без ML.</p>
+<h3 id="1101">1.10.1. Общая политика доверия</h3>
+<ul>
+<li>Клиент <strong>не источник истины</strong>, клиент — “заявка”.</li>
+<li>
+<p>Сервер решает:</p>
+</li>
+<li>
+<p>можно ли принять матч;</p>
+</li>
+<li>какие награды выдать;</li>
+<li>что попадет в лидерборд.</li>
+</ul>
+<h3 id="1102-matchstart">1.10.2. Валидация на <code>/match/start</code></h3>
+<p>Проверять:</p>
+<ul>
+<li><code>mode</code>, <code>mapCode</code>, <code>season</code> существуют и разрешены.</li>
+<li>игрок не забанен (<code>users.is_banned</code>).</li>
+<li>нет активного матча (если правило “один матч одновременно”).</li>
+<li>лимит частоты: не чаще N стартов в минуту (rate limit).</li>
+</ul>
+<h3 id="1103-matchevent">1.10.3. Валидация на <code>/match/event</code></h3>
+<p>Проверять:</p>
+<ul>
+<li>матч существует, принадлежит <code>userId</code> из JWT, статус <code>started</code>.</li>
+<li><code>atSecond</code> не уходит назад (монотонность) или допускается малый лаг (±2 сек).</li>
+<li>тип события входит в белый список.</li>
+<li>
+<p>payload соответствует схеме (json schema / ручная валидация):</p>
+</li>
+<li>
+<p><code>waveNumber</code> &gt;= 1</p>
+</li>
+<li><code>enemiesKilled &lt;= enemiesSpawned</code></li>
+<li><code>baseHpLeft</code> в диапазоне [0..maxBaseHp]</li>
+<li>частота событий: не больше X событий/сек (защита от спама).</li>
+</ul>
+<p><strong>Для build/upgrade:</strong></p>
+<ul>
+<li>у игрока хватало ресурсов на момент события (сервер ведет “серверный баланс”).</li>
+<li>апгрейд возможен (уровень здания не превышает max, есть prerequisites).</li>
+<li>координаты клетки допустимы (в пределах карты, не занято).</li>
+</ul>
+<blockquote>
+<p>Практический минимум: сервер не обязан “симулировать бой”, но обязан проверять <strong>экономику</strong> и <strong>структурные ограничения</strong>.</p>
+</blockquote>
+<h3 id="1104-matchfinish">1.10.4. Валидация на <code>/match/finish</code> (самое важное)</h3>
+<p>Проверять консистентность:</p>
+<ul>
+<li>матч <code>started</code>, не завершен.</li>
+<li>
+<p><code>durationSeconds</code> согласуется с (ended_at - started_at):</p>
+</li>
+<li>
+<p>допускайте погрешность, но ловите явные фейки (например, 30 сек вместо 10 мин).</p>
+</li>
+<li>
+<p><code>waveReached</code> согласуется с последними <code>match_waves</code>:</p>
+</li>
+<li>
+<p>нельзя заявить <code>waveReached=20</code>, если событий/волн максимум 7.</p>
+</li>
+<li>
+<p><code>score</code> должен быть в допустимом диапазоне для карты/режима/длительности:</p>
+</li>
+<li>
+<p>правило “верхней границы” = простая защита от миллионов очков.</p>
+</li>
+<li><code>damageDealt</code>, <code>damageTaken</code> не должны быть отрицательными и должны быть разумными для режима.</li>
+</ul>
+<p>Проверять награды:</p>
+<ul>
+<li><strong>не принимать rewards от клиента как истину</strong>.</li>
+<li>
+<p>сервер сам рассчитывает награды по формуле:</p>
+</li>
+<li>
+<p><code>xp = baseXp(map) + k * waveReached + winBonus</code></p>
+</li>
+<li><code>softCurrency = base + waveReached * factor</code></li>
+<li>если клиент прислал rewards — используйте только как “пожелание”, но сравнивайте и режьте до серверного значения.</li>
+</ul>
+<p>Проверять обновление leaderboard:</p>
+<ul>
+<li>
+<p>в leaderboard идут только результаты:</p>
+</li>
+<li>
+<p>завершенные матчи</p>
+</li>
+<li>без флагов подозрения</li>
+<li>при необходимости — только <code>is_win=1</code> или только ranked режим</li>
+</ul>
+<h3 id="1105">1.10.5. “Флаги подозрительности” (без блокировок, но для логов)</h3>
+<p>Ставьте <code>suspicion_flags</code> (можно в таблицу <code>matches</code> или отдельную):</p>
+<ul>
+<li>слишком высокая скорость набора очков: <code>score / durationSeconds &gt; threshold</code></li>
+<li>слишком быстрый прогресс уровня</li>
+<li>слишком частые матчи/час</li>
+<li>несоответствие волн/очков/длительности</li>
+</ul>
+<p>Даже если принимаете результат, <strong>логируйте</strong>:</p>
+<ul>
+<li>userId, matchId, значения, причина флага.</li>
+</ul>
+<hr>
+<h2 id="111-finish">1.11. Рекомендуемая серверная транзакция на finish (логика)</h2>
+<p>На <code>POST /match/finish</code> делайте атомарно (в одной транзакции):</p>
+<ol>
+<li>закрыть матч (<code>matches.status='finished', ended_at=now</code>)</li>
+<li>записать <code>battle_results</code></li>
+<li>начислить награды → обновить <code>player_progress</code></li>
+<li>обновить <code>statistics_daily</code></li>
+<li>обновить <code>leaderboard_scores</code> (upsert)</li>
+</ol>
+<p>Для MySQL: <code>START TRANSACTION; ... COMMIT;</code>
+Для upsert: <code>INSERT ... ON DUPLICATE KEY UPDATE ...</code></p>
+<p>Пример upsert в лидерборд:</p>
+<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">leaderboard_scores</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">board_code</span><span class="p">,</span><span class="w"> </span><span class="n">season</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="s1">'td_score'</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">)</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">DUPLICATE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">UPDATE</span>
+<span class="w">  </span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GREATEST</span><span class="p">(</span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">score</span><span class="p">)),</span>
+<span class="w">  </span><span class="n">updated_at</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.image.zoom", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../assets/js/mermaid-init.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

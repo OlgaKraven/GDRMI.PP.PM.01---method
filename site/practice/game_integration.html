@@ -1,0 +1,2180 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="api_design.html">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/icons/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Интеграция с игрой - Проектирование и разработка информационных систем</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#6-unity-web-mobile" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Проектирование и разработка информационных систем" class="md-header__button md-logo" aria-label="Проектирование и разработка информационных систем" data-md-component="logo">
+      
+  <img src="../assets/icons/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Проектирование и разработка информационных систем
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Интеграция с игрой
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Проектирование и разработка информационных систем" class="md-nav__button md-logo" aria-label="Проектирование и разработка информационных систем" data-md-component="logo">
+      
+  <img src="../assets/icons/logo.png" alt="logo">
+
+    </a>
+    Проектирование и разработка информационных систем
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Теория
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Теория
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theory/architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Архиектурная модель
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theory/universal_data_model.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Универсальная модель данных
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theory/genre_adaptation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Жанровая адаптацию ИС
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theory/backend_implementation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Реализация backendа
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theory/api_design.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API дизайн
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theory/game_integration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Интеграция с игрой
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../theory/testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Тестирование
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Практика
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Практика
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Архиектурная модель
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="universal_data_model.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Универсальная модель данных
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="genre_adaptation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Жанровая адаптация ИС
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="backend_implementation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Реализация backendа
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api_design.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API дизайн
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Интеграция с игрой
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="game_integration.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Интеграция с игрой
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#6-unity-web-mobile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Интеграция с игрой (Unity / Web / Mobile) — подробная теория и задание (обновлено)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#61-mvp-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1. Что интегрируем: MVP-сценарии и почему они обязательны
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2. Архитектура сетевого слоя клиента: как должно быть устроено
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2. Архитектура сетевого слоя клиента: как должно быть устроено">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#621-monobehaviour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2.1. Почему нельзя делать запросы “в кнопке” или “в MonoBehaviour напрямую”
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#622" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2.2. Минимальные компоненты (обязательные)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2.2. Минимальные компоненты (обязательные)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-apiclient-networking-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) ApiClient (Networking Gateway)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-tokenstore-jwt-storage-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) TokenStore (JWT storage + lifecycle)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-eventqueue-offline-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) EventQueue (offline-first)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-errormapper-policy-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) ErrorMapper (policy layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-httpjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3. Контракт HTTP/JSON: что обязан соблюдать клиент и сервер
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3. Контракт HTTP/JSON: что обязан соблюдать клиент и сервер">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#631" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3.1. Единый формат ответа
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3.1. Единый формат ответа">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requestid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему requestId обязателен
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#632" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3.2. События и прогресс — разные сущности
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#633-eventid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3.3. Дедупликация: eventId как защита от повторов
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-unity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4. Unity интеграция: инженерный минимум (с примерами)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4. Unity интеграция: инженерный минимум (с примерами)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#641-dto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.1. DTO (обязательные классы)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#642-tokenstore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.2. TokenStore (пример)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#643-apiclient-unitywebrequest-requestid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.3. ApiClient (UnityWebRequest, единый вход, логирование, requestId)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#644-eventqueue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.4. EventQueue (пример минимальной политики)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5. Web интеграция: инженерный минимум (с примерами)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.5. Web интеграция: инженерный минимум (с примерами)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#651-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5.1. Timeout (обязателен)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#66-mobile-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6. Mobile-специфика: обязательные знания
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.6. Mobile-специфика: обязательные знания">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#661-offline-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6.1. Offline-first для событий
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#662-backoff-429" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6.2. Backoff на 429
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#67-eventqueue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7. EventQueue: минимальная реализация логики (что должен уметь студент)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#68" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8. Таблица “ошибка → действие клиента” (обязательна в отчёте)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Практическое задание (подробно)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Практическое задание (подробно)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-unity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вариант A: Unity (рекомендуется для геймдева)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вариант B: Web (быстрее для проверки)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Тестирование
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#6-unity-web-mobile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Интеграция с игрой (Unity / Web / Mobile) — подробная теория и задание (обновлено)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#61-mvp-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1. Что интегрируем: MVP-сценарии и почему они обязательны
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#62" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2. Архитектура сетевого слоя клиента: как должно быть устроено
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2. Архитектура сетевого слоя клиента: как должно быть устроено">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#621-monobehaviour" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2.1. Почему нельзя делать запросы “в кнопке” или “в MonoBehaviour напрямую”
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#622" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2.2. Минимальные компоненты (обязательные)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2.2. Минимальные компоненты (обязательные)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-apiclient-networking-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1) ApiClient (Networking Gateway)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-tokenstore-jwt-storage-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2) TokenStore (JWT storage + lifecycle)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-eventqueue-offline-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3) EventQueue (offline-first)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-errormapper-policy-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4) ErrorMapper (policy layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#63-httpjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3. Контракт HTTP/JSON: что обязан соблюдать клиент и сервер
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3. Контракт HTTP/JSON: что обязан соблюдать клиент и сервер">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#631" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3.1. Единый формат ответа
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.3.1. Единый формат ответа">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requestid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему requestId обязателен
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#632" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3.2. События и прогресс — разные сущности
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#633-eventid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3.3. Дедупликация: eventId как защита от повторов
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#64-unity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4. Unity интеграция: инженерный минимум (с примерами)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.4. Unity интеграция: инженерный минимум (с примерами)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#641-dto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.1. DTO (обязательные классы)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#642-tokenstore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.2. TokenStore (пример)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#643-apiclient-unitywebrequest-requestid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.3. ApiClient (UnityWebRequest, единый вход, логирование, requestId)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#644-eventqueue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4.4. EventQueue (пример минимальной политики)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#65-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5. Web интеграция: инженерный минимум (с примерами)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.5. Web интеграция: инженерный минимум (с примерами)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#651-timeout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5.1. Timeout (обязателен)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#66-mobile-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6. Mobile-специфика: обязательные знания
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.6. Mobile-специфика: обязательные знания">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#661-offline-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6.1. Offline-first для событий
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#662-backoff-429" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6.2. Backoff на 429
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#67-eventqueue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7. EventQueue: минимальная реализация логики (что должен уметь студент)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#68" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8. Таблица “ошибка → действие клиента” (обязательна в отчёте)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Практическое задание (подробно)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Практическое задание (подробно)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-unity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вариант A: Unity (рекомендуется для геймдева)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вариант B: Web (быстрее для проверки)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h2 id="6-unity-web-mobile">6. Интеграция с игрой (Unity / Web / Mobile) — подробная теория и задание (обновлено)</h2>
+<p>Раздел интеграции проверяет, что клиент связывается с backend <strong>как инженерная система</strong>, а не как набор разрозненных запросов: есть единый сетевой слой, токены живут централизованно, ответы парсятся по контракту, ошибки обрабатываются одинаково, события не теряются, повторная отправка не ломает данные, а <code>requestId</code> позволяет быстро связать запрос клиента с логами сервера.</p>
+<p><a href="https://www.javaguides.net/p/rest-api-tutorial.html?utm_source=chatgpt.com"><img alt="REST API Tutorial" src="https://tse2.mm.bing.net/th/id/OIP.D4eit5gVSm8KYGcCIa7TeQHaEK?pid=Api"></a></p>
+<hr>
+<h1 id="61-mvp-">6.1. Что интегрируем: MVP-сценарии и почему они обязательны</h1>
+<p>Минимальный набор сценариев (MVP) должен закрывать полный цикл данных:</p>
+<ol>
+<li><strong>Регистрация/логин</strong> → клиент получает JWT → появляется авторизованный контекст</li>
+<li><strong>Профиль</strong> → клиент получает витрину состояния игрока (<code>user + progress</code>)</li>
+<li><strong>События (телеметрия)</strong> → клиент отправляет факты (<code>session_start</code>, <code>match_finish</code>)</li>
+<li><strong>Лидерборд</strong> → клиент читает агрегированные витрины (<code>/leaderboard</code>)</li>
+<li><strong>Ошибки/лимиты/бан</strong> → клиент корректно живёт при 400/401/403/409/429/500</li>
+<li><strong>Дедупликация</strong> → повторная отправка события не даёт двойных начислений</li>
+</ol>
+<p>Почему это считается архитектурным минимумом:</p>
+<ul>
+<li>JWT показывает понимание stateless REST и того, что аутентификация идёт через заголовки.</li>
+<li>Profile проверяет чтение витрин и работу с DTO.</li>
+<li>Events проверяет журналирование фактов и устойчивость к сетевым сбоям.</li>
+<li>Leaderboard проверяет понимание “сырьё” vs “агрегаты”.</li>
+<li>Ошибки проверяют эксплуатацию: большая часть проблем в проде — это обработка краёв.</li>
+</ul>
+<hr>
+<h1 id="62">6.2. Архитектура сетевого слоя клиента: как должно быть устроено</h1>
+<h2 id="621-monobehaviour">6.2.1. Почему нельзя делать запросы “в кнопке” или “в MonoBehaviour напрямую”</h2>
+<p>Если запросы размазаны по UI/сценам:</p>
+<ul>
+<li>токен забудут добавить в часть запросов;</li>
+<li>обработка ошибок станет разной в разных местах;</li>
+<li>невозможно централизованно включить таймауты, ретраи, логирование;</li>
+<li>сложно тестировать и воспроизводить баги.</li>
+</ul>
+<p>Требование: показать <strong>минимальную архитектуру клиентского networking слоя</strong>.</p>
+<h2 id="622">6.2.2. Минимальные компоненты (обязательные)</h2>
+<h3 id="1-apiclient-networking-gateway">1) ApiClient (Networking Gateway)</h3>
+<p>Ответственность ApiClient:</p>
+<ul>
+<li>сбор URL (<code>baseUrl + path</code>)</li>
+<li>заголовки (<code>Authorization</code>, <code>Content-Type</code>, <code>X-Request-Id</code>)</li>
+<li>таймаут</li>
+<li>отправка запроса</li>
+<li>парсинг ответа в единый формат <code>ApiEnvelope&lt;T&gt;</code></li>
+<li>возврат результата в бизнес-слой</li>
+</ul>
+<p>Запрещено в ApiClient:</p>
+<ul>
+<li>UI-логика</li>
+<li>расчёт наград/геймплей</li>
+<li>хранение профиля игрока (кроме токена через TokenStore)</li>
+</ul>
+<hr>
+<h3 id="2-tokenstore-jwt-storage-lifecycle">2) TokenStore (JWT storage + lifecycle)</h3>
+<p>Ответственность TokenStore:</p>
+<ul>
+<li>сохранить токен после login</li>
+<li>загрузить токен при старте</li>
+<li>очистить токен при logout</li>
+<li>(опционально) проверить срок жизни / refresh flow</li>
+</ul>
+<p>Хранение (минимально допустимо для учебного MVP):</p>
+<ul>
+<li>Unity: <code>PlayerPrefs</code> (с пометкой “в проде нужен secure storage”)</li>
+<li>Web: <code>localStorage</code> (с пометкой “в проде предпочтительнее memory + refresh”)</li>
+</ul>
+<hr>
+<h3 id="3-eventqueue-offline-first">3) EventQueue (offline-first)</h3>
+<p>Ответственность EventQueue:</p>
+<ul>
+<li>сформировать событие (<code>eventId</code> = UUID) и добавить в очередь <strong>до отправки</strong></li>
+<li>отправить событие (по одному или пачкой)</li>
+<li>удалить из очереди только при подтверждённом успехе (<code>ok:true</code>)</li>
+<li>сохранить очередь (Unity: файл/PlayerPrefs; Web: localStorage; лучше: SQLite)</li>
+<li>реализовать политику retry/backoff, а также остановку на 401/403</li>
+</ul>
+<hr>
+<h3 id="4-errormapper-policy-layer">4) ErrorMapper (policy layer)</h3>
+<p>Ответственность ErrorMapper:</p>
+<ul>
+<li>
+<p>перевести <code>HTTP status</code> и <code>error.code</code> в действие клиента:</p>
+</li>
+<li>
+<p>logout</p>
+</li>
+<li>retry</li>
+<li>backoff</li>
+<li>refresh profile</li>
+<li>показать сообщение</li>
+<li>обеспечить единый UX ошибок для всех запросов</li>
+</ul>
+<hr>
+<h1 id="63-httpjson">6.3. Контракт HTTP/JSON: что обязан соблюдать клиент и сервер</h1>
+<h2 id="631">6.3.1. Единый формат ответа</h2>
+<p>Успех:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>Ошибка:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Field level must be &gt;= 1"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"req_01HF..."</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="requestid">Почему <code>requestId</code> обязателен</h3>
+<p><code>requestId</code> — связка клиент ↔ лог сервера:</p>
+<ul>
+<li>клиент фиксирует <code>requestId</code> в консоли/логе;</li>
+<li>по <code>requestId</code> быстро ищется запись на сервере;</li>
+<li>воспроизведение багов ускоряется.</li>
+</ul>
+<p>Требование: клиент логирует <code>requestId</code> на каждый запрос.</p>
+<hr>
+<h2 id="632">6.3.2. События и прогресс — разные сущности</h2>
+<ul>
+<li><code>/events</code> — журнал фактов: “что произошло”</li>
+<li><code>/profile</code> / <code>/progress</code> — витрина состояния: “что сейчас”</li>
+</ul>
+<p>Если смешать:</p>
+<ul>
+<li>“прогресс как событие” → придётся пересчитывать всё из логов;</li>
+<li>“события как прогресс” → теряется история и аудит.</li>
+</ul>
+<hr>
+<h2 id="633-eventid">6.3.3. Дедупликация: <code>eventId</code> как защита от повторов</h2>
+<p>Повторная отправка в мобильной сети неизбежна. Поэтому:</p>
+<ul>
+<li>каждое событие должно иметь <code>eventId</code> (UUID)</li>
+<li>при повторной отправке <code>eventId</code> не меняется</li>
+<li>сервер делает дедупликацию по <code>eventId</code> (уникальность на стороне БД или отдельный реестр обработанных requestId/eventId)</li>
+</ul>
+<p>Это защищает от:</p>
+<ul>
+<li>двойного начисления валюты</li>
+<li>двойных наград</li>
+<li>разъезжающихся статистик</li>
+</ul>
+<hr>
+<h1 id="64-unity">6.4. Unity интеграция: инженерный минимум (с примерами)</h1>
+<h2 id="641-dto">6.4.1. DTO (обязательные классы)</h2>
+<div class="highlight"><pre><span></span><code><span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ApiEnvelope</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Единый контракт API: ok + data/error</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">ApiError</span><span class="w"> </span><span class="n">error</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ApiError</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">code</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">message</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">requestId</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">LoginRequest</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">email</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">password</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">LoginData</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">accessToken</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">tokenType</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">expiresInSeconds</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ProfileData</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">UserDto</span><span class="w"> </span><span class="n">user</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">ProgressDto</span><span class="w"> </span><span class="n">progress</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">UserDto</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">email</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">nickname</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ProgressDto</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">level</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">xp</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">softCurrency</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">hardCurrency</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Комментарий: DTO разрывают связь UI ↔ JSON и обеспечивают типизацию.</p>
+<hr>
+<h2 id="642-tokenstore">6.4.2. TokenStore (пример)</h2>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">interface</span><span class="w"> </span><span class="n">ITokenStore</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="nf">GetToken</span><span class="p">();</span>
+<span class="w">    </span><span class="k">void</span><span class="w"> </span><span class="nf">SaveToken</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">token</span><span class="p">);</span>
+<span class="w">    </span><span class="k">void</span><span class="w"> </span><span class="nf">Clear</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">PlayerPrefsTokenStore</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">ITokenStore</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"jwt_token"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">GetToken</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">GetString</span><span class="p">(</span><span class="n">Key</span><span class="p">,</span><span class="w"> </span><span class="s">""</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">SaveToken</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">token</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">SetString</span><span class="p">(</span><span class="n">Key</span><span class="p">,</span><span class="w"> </span><span class="n">token</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s">""</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">Save</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Clear</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">DeleteKey</span><span class="p">(</span><span class="n">Key</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">Save</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h2 id="643-apiclient-unitywebrequest-requestid">6.4.3. ApiClient (UnityWebRequest, единый вход, логирование, requestId)</h2>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Text</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">UnityEngine.Networking</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">Newtonsoft.Json</span><span class="p">;</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ApiClient</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">_baseUrl</span><span class="p">;</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">ITokenStore</span><span class="w"> </span><span class="n">_tokenStore</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">ApiClient</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">baseUrl</span><span class="p">,</span><span class="w"> </span><span class="n">ITokenStore</span><span class="w"> </span><span class="n">tokenStore</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_baseUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">baseUrl</span><span class="p">.</span><span class="n">TrimEnd</span><span class="p">(</span><span class="sc">'/'</span><span class="p">);</span>
+<span class="w">        </span><span class="n">_tokenStore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tokenStore</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Универсальный метод: отправить запрос и получить ApiEnvelope&lt;T&gt;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">ApiEnvelope</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">SendAsync</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">method</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">path</span><span class="p">,</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">timeoutSeconds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_baseUrl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">path</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">requestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"req_"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Guid</span><span class="p">.</span><span class="n">NewGuid</span><span class="p">().</span><span class="n">ToString</span><span class="p">(</span><span class="s">"N"</span><span class="p">)[..</span><span class="m">8</span><span class="p">];</span>
+
+<span class="w">        </span><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UnityWebRequest</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="n">method</span><span class="p">);</span>
+<span class="w">        </span><span class="n">req</span><span class="p">.</span><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">timeoutSeconds</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Заголовки</span>
+<span class="w">        </span><span class="n">req</span><span class="p">.</span><span class="n">SetRequestHeader</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span><span class="w"> </span><span class="s">"application/json"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">req</span><span class="p">.</span><span class="n">SetRequestHeader</span><span class="p">(</span><span class="s">"X-Request-Id"</span><span class="p">,</span><span class="w"> </span><span class="n">requestId</span><span class="p">);</span>
+
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_tokenStore</span><span class="p">.</span><span class="n">GetToken</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="kt">string</span><span class="p">.</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="n">token</span><span class="p">))</span>
+<span class="w">            </span><span class="n">req</span><span class="p">.</span><span class="n">SetRequestHeader</span><span class="p">(</span><span class="s">"Authorization"</span><span class="p">,</span><span class="w"> </span><span class="s">"Bearer "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">token</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Тело запроса</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">body</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonConvert</span><span class="p">.</span><span class="n">SerializeObject</span><span class="p">(</span><span class="n">body</span><span class="p">);</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="n">GetBytes</span><span class="p">(</span><span class="n">json</span><span class="p">);</span>
+<span class="w">            </span><span class="n">req</span><span class="p">.</span><span class="n">uploadHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UploadHandlerRaw</span><span class="p">(</span><span class="n">bytes</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">req</span><span class="p">.</span><span class="n">downloadHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DownloadHandlerBuffer</span><span class="p">();</span>
+
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Time</span><span class="p">.</span><span class="n">realtimeSinceStartup</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">req</span><span class="p">.</span><span class="n">SendWebRequest</span><span class="p">();</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">op</span><span class="p">.</span><span class="n">isDone</span><span class="p">)</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">Yield</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">durationMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)((</span><span class="n">Time</span><span class="p">.</span><span class="n">realtimeSinceStartup</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">1000</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// requestId из ответа сервера (если сервер вернул)</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">serverRid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">req</span><span class="p">.</span><span class="n">GetResponseHeader</span><span class="p">(</span><span class="s">"X-Request-Id"</span><span class="p">)</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="n">requestId</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Логирование сетевого слоя (обязательно)</span>
+<span class="w">        </span><span class="n">Debug</span><span class="p">.</span><span class="n">Log</span><span class="p">(</span><span class="s">$"{method} {path} status={(int)req.responseCode} {durationMs}ms rid={serverRid}"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Если тело не JSON — это ошибка интеграции</span>
+<span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">req</span><span class="p">.</span><span class="n">downloadHandler</span><span class="p">.</span><span class="n">text</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">ApiEnvelope</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="n">envelope</span><span class="p">;</span>
+<span class="w">        </span><span class="k">try</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">envelope</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonConvert</span><span class="p">.</span><span class="n">DeserializeObject</span><span class="o">&lt;</span><span class="n">ApiEnvelope</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">text</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">catch</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ApiEnvelope</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span>
+<span class="w">                </span><span class="n">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ApiError</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CLIENT_PARSE_ERROR"</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Response is not valid ApiEnvelope JSON"</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">requestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">serverRid</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">};</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Даже при HTTP 200 envelope.ok может быть false (контракт)</span>
+<span class="w">        </span><span class="c1">// HTTP-статус дополнительно анализируется ErrorMapper-ом на уровне выше.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">envelope</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">envelope</span><span class="p">.</span><span class="n">error</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="kt">string</span><span class="p">.</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="n">envelope</span><span class="p">.</span><span class="n">error</span><span class="p">.</span><span class="n">requestId</span><span class="p">))</span>
+<span class="w">            </span><span class="n">envelope</span><span class="p">.</span><span class="n">error</span><span class="p">.</span><span class="n">requestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">serverRid</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">envelope</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h2 id="644-eventqueue">6.4.4. EventQueue (пример минимальной политики)</h2>
+<div class="highlight"><pre><span></span><code><span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">QueuedEvent</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">eventId</span><span class="p">;</span><span class="w">        </span><span class="c1">// UUID клиента (дедупликация)</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">eventType</span><span class="p">;</span><span class="w">      </span><span class="c1">// session_start / match_finish / ...</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int?</span><span class="w"> </span><span class="n">sessionId</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">clientTime</span><span class="p">;</span><span class="w">     </span><span class="c1">// ISO string</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">payload</span><span class="p">;</span><span class="w">        </span><span class="c1">// конкретный payload</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">attempt</span><span class="p">;</span><span class="w">           </span><span class="c1">// попытки отправки</span>
+<span class="p">}</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">EventQueue</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">ApiClient</span><span class="w"> </span><span class="n">_api</span><span class="p">;</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">ITokenStore</span><span class="w"> </span><span class="n">_tokenStore</span><span class="p">;</span>
+<span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">QueuedEvent</span><span class="o">&gt;</span><span class="w"> </span><span class="n">_queue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="nf">EventQueue</span><span class="p">(</span><span class="n">ApiClient</span><span class="w"> </span><span class="n">api</span><span class="p">,</span><span class="w"> </span><span class="n">ITokenStore</span><span class="w"> </span><span class="n">tokenStore</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">api</span><span class="p">;</span>
+<span class="w">        </span><span class="n">_tokenStore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tokenStore</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Enqueue</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="w"> </span><span class="kt">int?</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_queue</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">QueuedEvent</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">eventId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Guid</span><span class="p">.</span><span class="n">NewGuid</span><span class="p">().</span><span class="n">ToString</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">eventType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span>
+<span class="w">            </span><span class="n">sessionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span>
+<span class="w">            </span><span class="n">clientTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DateTime</span><span class="p">.</span><span class="n">UtcNow</span><span class="p">.</span><span class="n">ToString</span><span class="p">(</span><span class="s">"o"</span><span class="p">),</span>
+<span class="w">            </span><span class="n">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span>
+<span class="w">            </span><span class="n">attempt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="c1">// В учебном MVP допустимо хранить очередь в памяти,</span>
+<span class="w">        </span><span class="c1">// но для устойчивости лучше сохранять в файл/PlayerPrefs/SQLite.</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="nf">DrainAsync</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">_queue</span><span class="p">.</span><span class="n">Count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">ev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">_queue</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">            </span><span class="n">ev</span><span class="p">.</span><span class="n">attempt</span><span class="o">++</span><span class="p">;</span>
+
+<span class="w">            </span><span class="c1">// Обязательное правило: при повторе eventId не меняем</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">eventId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ev</span><span class="p">.</span><span class="n">eventId</span><span class="p">,</span>
+<span class="w">                </span><span class="n">eventType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ev</span><span class="p">.</span><span class="n">eventType</span><span class="p">,</span>
+<span class="w">                </span><span class="n">sessionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ev</span><span class="p">.</span><span class="n">sessionId</span><span class="p">,</span>
+<span class="w">                </span><span class="n">clientTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ev</span><span class="p">.</span><span class="n">clientTime</span><span class="p">,</span>
+<span class="w">                </span><span class="n">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ev</span><span class="p">.</span><span class="n">payload</span>
+<span class="w">            </span><span class="p">};</span>
+
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">_api</span><span class="p">.</span><span class="n">SendAsync</span><span class="o">&lt;</span><span class="kt">object</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"POST"</span><span class="p">,</span><span class="w"> </span><span class="s">"/api/v1/events"</span><span class="p">,</span><span class="w"> </span><span class="n">body</span><span class="p">);</span>
+
+<span class="w">            </span><span class="c1">// Успех: удалить из очереди</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">res</span><span class="p">.</span><span class="n">ok</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">_queue</span><span class="p">.</span><span class="n">RemoveAt</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">                </span><span class="n">i</span><span class="o">--</span><span class="p">;</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// Политики по ошибкам</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">res</span><span class="p">.</span><span class="n">error</span><span class="o">?.</span><span class="n">code</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s">"UNKNOWN"</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">code</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"UNAUTHORIZED"</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">code</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"USER_BANNED"</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// 401/403: остановить очередь, очистить токен</span>
+<span class="w">                </span><span class="n">_tokenStore</span><span class="p">.</span><span class="n">Clear</span><span class="p">();</span>
+<span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">code</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"RATE_LIMITED"</span><span class="p">)</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// 429: backoff (упрощённо)</span>
+<span class="w">                </span><span class="k">await</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">Delay</span><span class="p">(</span><span class="n">Math</span><span class="p">.</span><span class="n">Min</span><span class="p">(</span><span class="m">30000</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">Math</span><span class="p">.</span><span class="n">Pow</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="n">ev</span><span class="p">.</span><span class="n">attempt</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="m">1000</span><span class="p">));</span>
+<span class="w">                </span><span class="n">i</span><span class="o">--</span><span class="p">;</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// 409 (duplicate / rejected): событие не удалять автоматически без политики,</span>
+<span class="w">            </span><span class="c1">// обычно нужно запросить профиль для синхронизации и принять решение.</span>
+<span class="w">            </span><span class="c1">// network/500: оставить в очереди</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h1 id="65-web">6.5. Web интеграция: инженерный минимум (с примерами)</h1>
+<h2 id="651-timeout">6.5.1. Timeout (обязателен)</h2>
+<div class="highlight"><pre><span></span><code><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">apiFetch</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"GET"</span><span class="p">,</span><span class="w"> </span><span class="nx">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w"> </span><span class="nx">timeoutMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">8000</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">controller</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AbortController</span><span class="p">();</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">timer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">setTimeout</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">controller</span><span class="p">.</span><span class="nx">abort</span><span class="p">(),</span><span class="w"> </span><span class="nx">timeoutMs</span><span class="p">);</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">requestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`req_</span><span class="si">${</span><span class="nx">crypto</span><span class="p">.</span><span class="nx">randomUUID</span><span class="p">().</span><span class="nx">slice</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">8</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">"Content-Type"</span><span class="o">:</span><span class="w"> </span><span class="s2">"application/json"</span><span class="p">,</span><span class="w"> </span><span class="s2">"X-Request-Id"</span><span class="o">:</span><span class="w"> </span><span class="nx">requestId</span><span class="w"> </span><span class="p">};</span>
+<span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">token</span><span class="p">)</span><span class="w"> </span><span class="nx">headers</span><span class="p">[</span><span class="s2">"Authorization"</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="sb">`Bearer </span><span class="si">${</span><span class="nx">token</span><span class="si">}</span><span class="sb">`</span><span class="p">;</span>
+
+<span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">performance</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="nx">BASE_URL</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">path</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nx">method</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">headers</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="nx">body</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">body</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">      </span><span class="nx">signal</span><span class="o">:</span><span class="w"> </span><span class="nx">controller</span><span class="p">.</span><span class="nx">signal</span><span class="p">,</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">durationMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">performance</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">start</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">serverRid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">headers</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">"X-Request-Id"</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">requestId</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">method</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">path</span><span class="si">}</span><span class="sb"> status=</span><span class="si">${</span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="si">}</span><span class="sb"> </span><span class="si">${</span><span class="nx">durationMs</span><span class="si">}</span><span class="sb">ms rid=</span><span class="si">${</span><span class="nx">serverRid</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">res</span><span class="p">.</span><span class="nx">ok</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="nx">json</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kd">const</span><span class="w"> </span><span class="nx">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">json</span><span class="o">?</span><span class="p">.</span><span class="nx">error</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">code</span><span class="o">:</span><span class="w"> </span><span class="s2">"HTTP_ERROR"</span><span class="p">,</span><span class="w"> </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">"Request failed"</span><span class="p">,</span><span class="w"> </span><span class="nx">requestId</span><span class="o">:</span><span class="w"> </span><span class="nx">serverRid</span><span class="w"> </span><span class="p">};</span>
+<span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">err</span><span class="p">.</span><span class="nx">requestId</span><span class="p">)</span><span class="w"> </span><span class="nx">err</span><span class="p">.</span><span class="nx">requestId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">serverRid</span><span class="p">;</span>
+<span class="w">      </span><span class="k">throw</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">httpStatus</span><span class="o">:</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="nx">err</span><span class="w"> </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">json</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">clearTimeout</span><span class="p">(</span><span class="nx">timer</span><span class="p">);</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h1 id="66-mobile-">6.6. Mobile-специфика: обязательные знания</h1>
+<h2 id="661-offline-first">6.6.1. Offline-first для событий</h2>
+<p>Правило: события не теряются.</p>
+<p>Если нет сети:</p>
+<ul>
+<li>событие кладётся в очередь</li>
+<li>отправляется при восстановлении</li>
+<li>удаляется только после подтверждённого <code>ok:true</code></li>
+</ul>
+<h2 id="662-backoff-429">6.6.2. Backoff на 429</h2>
+<p>При <code>429 RATE_LIMITED</code>:</p>
+<ul>
+<li>запрещено спамить повтором</li>
+<li>включается экспоненциальная задержка 1 → 2 → 4 → 8 → … до 30 секунд</li>
+</ul>
+<hr>
+<h1 id="67-eventqueue">6.7. EventQueue: минимальная реализация логики (что должен уметь студент)</h1>
+<p>Очередь обязана реализовать политику:</p>
+<ol>
+<li>сформировать событие (<code>eventId</code> UUID + payload)</li>
+<li>положить в очередь</li>
+<li>попытаться отправить</li>
+<li>при успехе удалить</li>
+<li>при 401/403 остановить очередь + logout</li>
+<li>при 429 backoff</li>
+<li>при network error оставить в очереди</li>
+</ol>
+<hr>
+<h1 id="68">6.8. Таблица “ошибка → действие клиента” (обязательна в отчёте)</h1>
+<table>
+<thead>
+<tr>
+<th>Ситуация</th>
+<th>HTTP / code</th>
+<th>Действие клиента</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Данные невалидны</td>
+<td>400 / VALIDATION_ERROR</td>
+<td>показать сообщение, логировать requestId</td>
+</tr>
+<tr>
+<td>Нет токена/истёк</td>
+<td>401 / UNAUTHORIZED</td>
+<td>logout + экран login</td>
+</tr>
+<tr>
+<td>Бан пользователя</td>
+<td>403 / USER_BANNED</td>
+<td>показать “доступ запрещён”, остановить очередь</td>
+</tr>
+<tr>
+<td>Конфликт состояния</td>
+<td>409 / EVENT_REJECTED или duplicate</td>
+<td>обновить профиль (GET /profile), синхронизировать состояние</td>
+</tr>
+<tr>
+<td>Слишком часто</td>
+<td>429 / RATE_LIMITED</td>
+<td>backoff, блокировать повтор</td>
+</tr>
+<tr>
+<td>Ошибка сервера</td>
+<td>500 / INTERNAL_ERROR</td>
+<td>показать “позже”, оставить событие в очереди, логировать requestId</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h1 id="_1">Практическое задание (подробно)</h1>
+<h2 id="a-unity">Вариант A: Unity (рекомендуется для геймдева)</h2>
+<p>Сделать:</p>
+<ol>
+<li>Экран Login (email+password)</li>
+<li><code>POST /api/v1/auth/login</code> → сохранить JWT в TokenStore</li>
+<li>Экран Profile (nickname + level + currency)</li>
+<li><code>GET /api/v1/profile</code> с JWT</li>
+<li>Кнопка “Send session_start” → <code>POST /api/v1/events</code> (eventId UUID)</li>
+<li>Кнопка “Send match_finish” → <code>POST /api/v1/events</code> (eventId UUID)</li>
+<li>EventQueue: при network error событие остаётся в очереди</li>
+<li>
+<p>Ошибки:</p>
+</li>
+<li>
+<p><code>401</code> → очистить токен, вернуть на login</p>
+</li>
+<li><code>403</code> → остановить очередь</li>
+<li><code>429</code> → backoff и повтор</li>
+<li><code>409</code> → обновить профиль, не начислять повторно</li>
+</ol>
+<p>Артефакты:</p>
+<ul>
+<li><code>ApiClient.cs</code>, <code>TokenStore.cs</code>, <code>EventQueue.cs</code>, DTO</li>
+<li>видео/скриншоты Unity Console (method/path/status/duration/requestId)</li>
+<li>README со сценарием проверки</li>
+</ul>
+<hr>
+<h2 id="b-web">Вариант B: Web (быстрее для проверки)</h2>
+<p>Сделать:</p>
+<ol>
+<li>HTML форма login</li>
+<li><code>apiFetch("/api/v1/auth/login")</code> → сохранить токен</li>
+<li>Кнопка “Load profile” → <code>GET /api/v1/profile</code></li>
+<li>Кнопка “Send session_start” → <code>POST /api/v1/events</code> с eventId UUID</li>
+<li>Очередь событий (минимум: массив + localStorage)</li>
+<li>Обработка 401/429/409 как в таблице</li>
+<li>Ошибки выводить на экран (не только console)</li>
+</ol>
+<p>Артефакты:</p>
+<ul>
+<li><code>api.js</code>, <code>auth.js</code>, <code>events.js</code></li>
+<li>скрин DevTools Network (login, profile, events)</li>
+<li>README</li>
+</ul>
+<hr>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.image.zoom", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../assets/js/mermaid-init.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

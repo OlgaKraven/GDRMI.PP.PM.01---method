@@ -1,0 +1,2644 @@
+<!DOCTYPE html><html lang="ru" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="architecture.html">
+      
+      
+        <link rel="next" href="genre_adaptation.html">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/icons/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Универсальная модель данных - Проектирование и разработка информационных систем</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-2" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../index.html" title="Проектирование и разработка информационных систем" class="md-header__button md-logo" aria-label="Проектирование и разработка информационных систем" data-md-component="logo">
+      
+  <img src="../assets/icons/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Проектирование и разработка информационных систем
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Универсальная модель данных
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Проектирование и разработка информационных систем" class="md-nav__button md-logo" aria-label="Проектирование и разработка информационных систем" data-md-component="logo">
+      
+  <img src="../assets/icons/logo.png" alt="logo">
+
+    </a>
+    Проектирование и разработка информационных систем
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Теория
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Теория
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Архиектурная модель
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Универсальная модель данных
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="universal_data_model.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Универсальная модель данных
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. Архитектурный контекст и роль БД
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1. Архитектурный контекст и роль БД">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему именно такая схема (а не “клиент всё считает сам”)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевой смысл контура (логика данных)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. Концепция универсальной модели: 8 обязательных блоков ядра
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2. Концепция универсальной модели: 8 обязательных блоков ядра">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#221-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.1. Users (аккаунт)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#222-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.2. Roles (права доступа)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#223-gamesessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.3. GameSessions (сессии)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#224-gameevents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.4. GameEvents (поток событий)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#225-playerprogress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.5. PlayerProgress (состояние игрока сейчас)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#226-achievements-userachievements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.6. Achievements (справочник) + UserAchievements (факты получения)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#227-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.7. Statistics (агрегаты)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#228-leaderboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.8. Leaderboard (рейтинги)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#229" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.9. Конвейер обработки: “сырьё → продукт”
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2.9. Конвейер обработки: “сырьё → продукт”">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#match_finish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пример конвейера (match_finish)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-er-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. Логическая ER-модель (универсальное ядро)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3. Логическая ER-модель (универсальное ядро)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#262" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.2. История сессий игрока
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#263" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.3. Последние события игрока
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#264" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.4. Аналитика по типу события
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#265" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.5. Лидерборд
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7. Ограничения целостности — почему “БД должна защищать систему”
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.7. Ограничения целостности — почему “БД должна защищать систему”">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FK защищают от “висячих” данных
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UNIQUE защищают от дублей
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CHECK защищают от абсурда
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#28-mysql-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8. MySQL-специфика: что важно именно здесь
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9. Жанровая адаптация — принцип расширения (подчёркнуто практично)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#210-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10. Минимально жизнеспособное ядро (MVP) — почему этого достаточно
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.10. Минимально жизнеспособное ядро (MVP) — почему этого достаточно">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#achievementsstatistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему можно отложить achievements/statistics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#211-event_type-payload_json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11. Набор обязательных event_type + примеры payload_json (универсальный словарь событий)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.11. Набор обязательных event_type + примеры payload_json (универсальный словарь событий)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2111-payload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.1. Общая структура события (как должен выглядеть payload)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2112" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.2. Категории обязательных событий (ядро)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.11.2. Категории обязательных событий (ядро)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A) Системные события (жизненный цикл)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B) События аккаунта и авторизации
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C) Прогресс и экономика (универсально)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D) События контента (что игрок делает в игре)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-match-based" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E) Соревновательные/матчевые события (универсально для match-based)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F) Достижения
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G) Ошибки клиента (крайне рекомендовано)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2113-event_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.3. Правила проектирования event_type (чтобы не было хаоса)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#212-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12. Таблица: какой endpoint какие таблицы читает/пишет
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.12. Таблица: какой endpoint какие таблицы читает/пишет">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2121" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12.1. Где точно нужна транзакция (типовой список)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="genre_adaptation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Жанровая адаптацию ИС
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="backend_implementation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Реализация backendа
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api_design.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API дизайн
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="game_integration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Интеграция с игрой
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Тестирование
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Практика
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Практика
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/architecture.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Архиектурная модель
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/universal_data_model.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Универсальная модель данных
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/genre_adaptation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Жанровая адаптация ИС
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/backend_implementation.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Реализация backendа
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/api_design.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API дизайн
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/game_integration.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Интеграция с игрой
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../practice/testing.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Тестирование
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1. Архитектурный контекст и роль БД
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.1. Архитектурный контекст и роль БД">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему именно такая схема (а не “клиент всё считает сам”)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ключевой смысл контура (логика данных)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#22-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. Концепция универсальной модели: 8 обязательных блоков ядра
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2. Концепция универсальной модели: 8 обязательных блоков ядра">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#221-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.1. Users (аккаунт)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#222-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.2. Roles (права доступа)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#223-gamesessions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.3. GameSessions (сессии)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#224-gameevents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.4. GameEvents (поток событий)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#225-playerprogress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.5. PlayerProgress (состояние игрока сейчас)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#226-achievements-userachievements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.6. Achievements (справочник) + UserAchievements (факты получения)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#227-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.7. Statistics (агрегаты)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#228-leaderboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.8. Leaderboard (рейтинги)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#229" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.9. Конвейер обработки: “сырьё → продукт”
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2.9. Конвейер обработки: “сырьё → продукт”">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#match_finish" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Пример конвейера (match_finish)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#23-er-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. Логическая ER-модель (универсальное ядро)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3. Логическая ER-модель (универсальное ядро)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#262" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.2. История сессий игрока
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#263" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.3. Последние события игрока
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#264" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.4. Аналитика по типу события
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#265" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6.5. Лидерборд
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#27" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7. Ограничения целостности — почему “БД должна защищать систему”
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.7. Ограничения целостности — почему “БД должна защищать систему”">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FK защищают от “висячих” данных
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unique" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UNIQUE защищают от дублей
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CHECK защищают от абсурда
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#28-mysql-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8. MySQL-специфика: что важно именно здесь
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9. Жанровая адаптация — принцип расширения (подчёркнуто практично)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#210-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.10. Минимально жизнеспособное ядро (MVP) — почему этого достаточно
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.10. Минимально жизнеспособное ядро (MVP) — почему этого достаточно">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#achievementsstatistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Почему можно отложить achievements/statistics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#211-event_type-payload_json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11. Набор обязательных event_type + примеры payload_json (универсальный словарь событий)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.11. Набор обязательных event_type + примеры payload_json (универсальный словарь событий)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2111-payload" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.1. Общая структура события (как должен выглядеть payload)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2112" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.2. Категории обязательных событий (ядро)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.11.2. Категории обязательных событий (ядро)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A) Системные события (жизненный цикл)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B) События аккаунта и авторизации
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C) Прогресс и экономика (универсально)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D) События контента (что игрок делает в игре)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-match-based" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E) Соревновательные/матчевые события (универсально для match-based)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F) Достижения
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G) Ошибки клиента (крайне рекомендовано)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2113-event_type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.11.3. Правила проектирования event_type (чтобы не было хаоса)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#212-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12. Таблица: какой endpoint какие таблицы читает/пишет
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.12. Таблица: какой endpoint какие таблицы читает/пишет">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2121" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.12.1. Где точно нужна транзакция (типовой список)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="1-2">1. Теория. 2. Универсальная модель данных (адаптируемая под жанр)</h1>
+<p>Универсальная модель данных — это <strong>ядро</strong> ИС сопровождения игрового продукта. Она отвечает на 5 ключевых вопросов:</p>
+<ol>
+<li><strong>Кто</strong> играет? (Users, Roles)</li>
+<li><strong>Когда и откуда</strong> он играет? (GameSessions)</li>
+<li><strong>Что</strong> он делает? (GameEvents)</li>
+<li><strong>Какой итог</strong> это даёт “прямо сейчас”? (PlayerProgress)</li>
+<li><strong>Как это превращается</strong> в аналитику и сравнение? (Statistics, Leaderboard)</li>
+</ol>
+<p>Почему модель жанронезависимая: любой жанр (RPG/TD/VN/Survival) всё равно порождает одинаковый конвейер данных:</p>
+<p><strong>аккаунт → сессии → события → состояние → агрегаты → рейтинг</strong></p>
+<hr>
+<h2 id="21">2.1. Архитектурный контекст и роль БД</h2>
+<div class="highlight"><pre><span></span><code>Game Client (Unity / Web / Mobile)
+        ↓ JSON / HTTPS
+REST API (Stateless + JWT)
+        ↓
+Backend (Business Logic)
+        ↓
+Relational DB (MySQL 8.0+)
+</code></pre></div>
+<h3 id="_1">Почему именно такая схема (а не “клиент всё считает сам”)?</h3>
+<ul>
+<li><strong>Клиент нельзя считать источником истины</strong>: он может быть модифицирован, “накручен”, может работать офлайн или с ошибками.</li>
+<li>Сервер — место, где применяются правила: <strong>экономика, прогресс, рейтинги, античит</strong>.</li>
+<li>База данных — “память проекта”: без неё нельзя доказать, что произошло, и восстановить состояние.</li>
+</ul>
+<h3 id="_2">Ключевой смысл контура (логика данных)</h3>
+<ol>
+<li>Клиент отправляет <strong>событие</strong>: “построил башню”, “закончил матч”, “получил награду”.</li>
+<li>API проверяет: JSON валиден? JWT валиден? игрок не забанен? частота запросов нормальная?</li>
+<li>
+<p>Backend:</p>
+</li>
+<li>
+<p>записывает <strong>факт</strong> (event),</p>
+</li>
+<li>обновляет <strong>состояние</strong> (progress),</li>
+<li>обновляет <strong>агрегаты</strong> (stats),</li>
+<li>обновляет <strong>сравнение</strong> (leaderboard).</li>
+<li><strong>БД — источник истины</strong>: сервер решает, что принять, а что отклонить.</li>
+</ol>
+<hr>
+<h2 id="22-8">2.2. Концепция универсальной модели: 8 обязательных блоков ядра</h2>
+<h3 id="221-users">2.2.1. Users (аккаунт)</h3>
+<p>Храним:</p>
+<ul>
+<li>идентификатор,</li>
+<li>email (уникальный логин),</li>
+<li>password_hash (не пароль),</li>
+<li>nickname,</li>
+<li>created_at/last_login_at,</li>
+<li>is_banned.</li>
+</ul>
+<p><strong>Почему обязательно <code>is_banned</code> в users:</strong>
+бан — это “серверная политика”, которая должна мгновенно отключать доступ независимо от клиента.</p>
+<hr>
+<h3 id="222-roles">2.2.2. Roles (права доступа)</h3>
+<p>Роли нужны, потому что одна ИС обслуживает:</p>
+<ul>
+<li>игроков,</li>
+<li>модераторов (проверка логов/жалоб),</li>
+<li>админов (управление конфигами/сезонами/досками).</li>
+</ul>
+<p><strong>Почему роли — отдельная сущность, а не поле <code>users.role</code>:</strong>
+потому что:</p>
+<ul>
+<li>ролей может быть несколько (M:N),</li>
+<li>права могут меняться,</li>
+<li>админка/модерация развивается отдельно от игры.</li>
+</ul>
+<hr>
+<h3 id="223-gamesessions">2.2.3. GameSessions (сессии)</h3>
+<p>Сессия — факт запуска игры и временной интервал.</p>
+<p>Зачем сессии нужны <em>в реальных задачах</em>:</p>
+<ul>
+<li>retention D1/D7/D30 (по факту входов),</li>
+<li>playtime (время в игре),</li>
+<li>расследование “что происходило перед багом/баном”.</li>
+</ul>
+<p><strong>Почему сессия отдельно от событий:</strong>
+событий много, а сессия — “контейнер”, который упрощает аналитику и аудит.</p>
+<hr>
+<h3 id="224-gameevents">2.2.4. GameEvents (поток событий)</h3>
+<p>Events — главный “сырой источник” поведения.</p>
+<p><strong>Почему events нужны, даже если есть progress/stats:</strong></p>
+<ul>
+<li>progress показывает “что сейчас”, но не объясняет “как к этому пришли”.</li>
+<li>
+<p>events позволяют:</p>
+</li>
+<li>
+<p>восстановить историю,</p>
+</li>
+<li>расследовать,</li>
+<li>строить аналитику баланса,</li>
+<li>видеть аномалии (античит).</li>
+</ul>
+<hr>
+<h3 id="225-playerprogress">2.2.5. PlayerProgress (состояние игрока сейчас)</h3>
+<p>Progress — агрегированное “сальдо”:</p>
+<ul>
+<li>level, xp,</li>
+<li>soft/hard currency,</li>
+<li>updated_at.</li>
+</ul>
+<p><strong>Почему progress нельзя вычислять каждый раз из events:</strong>
+из-за объёма и скорости:</p>
+<ul>
+<li>events быстро растут до миллионов строк,</li>
+<li>пересчёт прогресса “на лету” убивает производительность,</li>
+<li>UI профиля должен грузиться быстро.</li>
+</ul>
+<hr>
+<h3 id="226-achievements-userachievements">2.2.6. Achievements (справочник) + UserAchievements (факты получения)</h3>
+<p>Разделение:</p>
+<ul>
+<li>achievements: “что существует”,</li>
+<li>user_achievements: “кто получил”.</li>
+</ul>
+<p><strong>Почему это важно:</strong>
+если хранить название достижения внутри <code>user_achievements</code>, любое изменение текста потребует обновлять тысячи строк.</p>
+<hr>
+<h3 id="227-statistics">2.2.7. Statistics (агрегаты)</h3>
+<p>Статистика хранится по дням/неделям/сезонам.</p>
+<p><strong>Почему агрегаты вынесены отдельно от events:</strong>
+потому что аналитические запросы типа “сколько игроков играли вчера” или “сколько времени провёл игрок за неделю” не должны сканировать всю таблицу events.</p>
+<hr>
+<h3 id="228-leaderboard">2.2.8. Leaderboard (рейтинги)</h3>
+<p>Лидерборд вынесен отдельно, потому что:</p>
+<ul>
+<li>досок много,</li>
+<li>сезоны меняются,</li>
+<li>правила рейтинга разные.</li>
+</ul>
+<hr>
+<h3 id="229">2.2.9. Конвейер обработки: “сырьё → продукт”</h3>
+<blockquote>
+<p><strong>Events</strong> — сырьё
+<strong>Progress / Stats / Leaderboard</strong> — продукты переработки</p>
+</blockquote>
+<h5 id="match_finish">Пример конвейера (match_finish)</h5>
+<ol>
+<li>приходит event: <code>match_finish</code> (score, duration, isWin)</li>
+<li>
+<p>сервер:</p>
+</li>
+<li>
+<p>записывает событие,</p>
+</li>
+<li>начисляет награды (xp/currency),</li>
+<li>обновляет progress,</li>
+<li>увеличивает статистику дня,</li>
+<li>делает upsert в leaderboard.</li>
+</ol>
+<hr>
+<h2 id="23-er-">2.3. Логическая ER-модель (универсальное ядро)</h2>
+<p>```mermaid id="z2u6kq"
+erDiagram
+  USERS {
+    int id PK
+    string email UNIQUE
+    string password_hash
+    string nickname
+    datetime created_at
+    datetime last_login_at
+    bool is_banned
+  }</p>
+<p>ROLES {
+    int id PK
+    string name UNIQUE
+  }</p>
+<p>USER_ROLES {
+    int user_id PK, FK
+    int role_id PK, FK
+    datetime assigned_at
+  }</p>
+<p>GAME_SESSIONS {
+    int id PK
+    int user_id FK
+    string client_platform
+    string client_version
+    string ip
+    datetime started_at
+    datetime ended_at
+  }</p>
+<p>GAME_EVENTS {
+    bigint id PK
+    int user_id FK
+    int session_id FK
+    string event_type
+    json payload_json
+    datetime created_at
+  }</p>
+<p>PLAYER_PROGRESS {
+    int user_id PK, FK
+    int level
+    int xp
+    int soft_currency
+    int hard_currency
+    datetime updated_at
+  }</p>
+<p>ACHIEVEMENTS {
+    int id PK
+    string code UNIQUE
+    string title
+    string description
+    int points
+  }</p>
+<p>USER_ACHIEVEMENTS {
+    int user_id PK, FK
+    int achievement_id PK, FK
+    datetime unlocked_at
+  }</p>
+<p>STATISTICS_DAILY {
+    int id PK
+    int user_id FK
+    date day
+    int sessions_count
+    int events_count
+    int playtime_seconds
+    int wins
+    int losses
+    int score_sum
+  }</p>
+<p>LEADERBOARD_SCORES {
+    int id PK
+    int user_id FK
+    string board_code
+    int season
+    int score
+    datetime updated_at
+  }</p>
+<p>USERS ||--o{ USER_ROLES : has
+  ROLES ||--o{ USER_ROLES : includes</p>
+<p>USERS ||--o{ GAME_SESSIONS : starts
+  GAME_SESSIONS ||--o{ GAME_EVENTS : contains
+  USERS ||--o{ GAME_EVENTS : produces</p>
+<p>USERS ||--|| PLAYER_PROGRESS : owns</p>
+<p>USERS ||--o{ USER_ACHIEVEMENTS : unlocks
+  ACHIEVEMENTS ||--o{ USER_ACHIEVEMENTS : granted</p>
+<p>USERS ||--o{ STATISTICS_DAILY : aggregates
+  USERS ||--o{ LEADERBOARD_SCORES : ranks
+</p><div class="highlight"><pre><span></span><code>---
+
+## 2.4. Логика связей: что они дают системе (с примерами сценариев)
+
+### 2.4.1. Users ↔ Roles (M:N)
+
+**Сценарий:** “модератор заблокировал игрока”
+
+* модератор имеет роль `moderator`,
+* сервер даёт доступ к `/admin/ban`,
+* игрок после бана не проходит auth-check.
+
+**Почему M:N:** один человек может быть и `player`, и `moderator` (например, тестировщик).
+
+---
+
+### 2.4.2. Users → GameSessions (1:M)
+
+**Сценарий:** “посчитать D7 retention”
+
+* берём пользователей, у которых есть session в день регистрации + session через 7 дней.
+
+**Почему сессии нужны отдельно:** события могут не фиксировать “вход”, а сессия — фиксирует.
+
+---
+
+### 2.4.3. GameSessions → GameEvents (1:M)
+
+**Сценарий:** “игра вылетает — какие события были перед вылетом?”
+
+* берём последнюю сессию,
+* берём последние 20 событий этой сессии,
+* видим последовательность действий.
+
+**Почему payload_json:** разные жанры требуют разные поля, а события — универсальная шина.
+
+---
+
+### 2.4.4. Users → PlayerProgress (1:1)
+
+**Сценарий:** “открыть профиль за 100 мс”
+
+* один SELECT users + один SELECT progress,
+* не нужно анализировать events.
+
+**Почему прогресс 1:1:** это текущее агрегированное состояние, оно одно.
+
+---
+
+### 2.4.5. Users ↔ Achievements (M:N)
+
+**Сценарий:** “дать достижение за 100 побед”
+
+* статистика/ивенты подтверждают условие,
+* запись в `user_achievements` фиксирует факт навсегда.
+
+**Почему справочник достижений отдельно:** меняем описание и не трогаем историю.
+
+---
+
+### 2.4.6. Users → StatisticsDaily (1:M)
+
+**Сценарий:** “аналитика: сколько времени играют по дням”
+
+* агрегаты дают быстрый ответ без событий.
+
+**Почему дневная статистика:** самый практичный базовый слой (можно дополнить weekly/monthly).
+
+---
+
+### 2.4.7. Users → LeaderboardScores (1:M)
+
+**Сценарий:** “лидерборд TD за сезон 3”
+
+* выбираем по board_code+season,
+* сортируем score DESC,
+* выдаём top-N.
+
+**Почему leaderboard отдельный продукт:** лидерборд — это не “свойство пользователя”, а отдельная бизнес-функция.
+
+---
+
+## 2.5. Нормализация до 3NF — примеры “как правильно” и “как неправильно”
+
+### Неправильно (типичный студенческий анти-паттерн)
+
+`users`:
+
+* email
+* password_hash
+* role_name
+* level
+* xp
+* soft_currency
+* best_score
+* last_10_events (текстом)
+
+Почему плохо:
+
+* при изменении роли или формата событий переписываете users;
+* дублирование и несогласованность данных;
+* невозможно масштабировать.
+
+### Правильно (3NF)
+
+* роль живёт в roles/user_roles,
+* прогресс — в player_progress,
+* лучший результат — в leaderboard_scores,
+* события — в game_events.
+
+---
+
+## 2.6. Индексация — показываем, какие запросы “поддерживает” индекс
+
+### 2.6.1. Login
+
+Запрос:
+
+```sql
+SELECT id, password_hash, is_banned
+FROM users
+WHERE email = ?;
+</code></pre></div><p></p>
+<p>Индекс: <code>UNIQUE(users.email)</code>.</p>
+<hr>
+<h3 id="262">2.6.2. История сессий игрока</h3>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">game_sessions</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">started_at</span><span class="w"> </span><span class="k">DESC</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+</code></pre></div>
+<p>Индекс: <code>(user_id, started_at)</code>.</p>
+<hr>
+<h3 id="263">2.6.3. Последние события игрока</h3>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">game_events</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="k">DESC</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">50</span><span class="p">;</span>
+</code></pre></div>
+<p>Индекс: <code>(user_id, created_at)</code>.</p>
+<hr>
+<h3 id="264">2.6.4. Аналитика по типу события</h3>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">game_events</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">event_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'purchase'</span>
+<span class="w">  </span><span class="k">AND</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">NOW</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="k">DAY</span><span class="p">;</span>
+</code></pre></div>
+<p>Индекс: <code>(event_type, created_at)</code>.</p>
+<hr>
+<h3 id="265">2.6.5. Лидерборд</h3>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">score</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">leaderboard_scores</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">board_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">season</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="k">DESC</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+</code></pre></div>
+<p>Индекс: <code>(board_code, season, score)</code>.</p>
+<hr>
+<h2 id="27">2.7. Ограничения целостности — почему “БД должна защищать систему”</h2>
+<h3 id="fk">FK защищают от “висячих” данных</h3>
+<p>Например: событие без пользователя — мусор и ошибка аналитики.</p>
+<h3 id="unique">UNIQUE защищают от дублей</h3>
+<p>Например:</p>
+<ul>
+<li>stats на (user_id, day) должны быть <strong>одни</strong>, иначе агрегаты будут неверны.</li>
+</ul>
+<h3 id="check">CHECK защищают от абсурда</h3>
+<p>Например:</p>
+<ul>
+<li>level = -5 не должен существовать даже по ошибке.</li>
+</ul>
+<hr>
+<h2 id="28-mysql-">2.8. MySQL-специфика: что важно именно здесь</h2>
+<ul>
+<li><code>utf8mb4</code> — никнеймы/эмодзи/локализация.</li>
+<li><code>datetime(3)</code> — важна точность при плотных событиях.</li>
+<li><code>JSON</code> — удобно для payload, но <strong>не заменяет</strong> индексацию по event_type/time.</li>
+<li><code>ON DUPLICATE KEY UPDATE</code> — must-have для leaderboard/stats (upsert).</li>
+</ul>
+<hr>
+<h2 id="29">2.9. Жанровая адаптация — принцип расширения (подчёркнуто практично)</h2>
+<p><strong>Правило архитектора:</strong></p>
+<ul>
+<li>ядро остаётся неизменным;</li>
+<li>
+<p>жанр добавляет “центральную сущность процесса”:</p>
+</li>
+<li>
+<p>match/run/episode/cycle,</p>
+</li>
+<li>плюс таблицы вокруг неё.</li>
+</ul>
+<p>Пример:</p>
+<ul>
+<li>TD: <code>matches</code>, <code>waves</code>, <code>battle_results</code></li>
+<li>VN: <code>story_nodes</code>, <code>user_choices</code></li>
+<li>Idle: <code>user_generators</code>, <code>offline_income</code></li>
+</ul>
+<p>И всё это всё равно привязано к <code>users</code> и логируется через <code>game_events</code>.</p>
+<hr>
+<h2 id="210-mvp">2.10. Минимально жизнеспособное ядро (MVP) — почему этого достаточно</h2>
+<p>Для запуска MVP, где есть:</p>
+<ul>
+<li>аккаунты,</li>
+<li>авторизация,</li>
+<li>прогресс,</li>
+<li>события,</li>
+<li>лидерборд,</li>
+</ul>
+<p>достаточно:</p>
+<ul>
+<li><code>users</code></li>
+<li><code>roles</code>, <code>user_roles</code></li>
+<li><code>game_sessions</code></li>
+<li><code>game_events</code></li>
+<li><code>player_progress</code></li>
+<li><code>leaderboard_scores</code></li>
+</ul>
+<h3 id="achievementsstatistics">Почему можно отложить achievements/statistics</h3>
+<ul>
+<li>достижения и статистика — это “надстройки” над событиями и прогрессом;</li>
+<li>их можно добавить итерацией №2, не ломая ядро.</li>
+</ul>
+<hr>
+<h2 id="211-event_type-payload_json">2.11. Набор обязательных <code>event_type</code> + примеры <code>payload_json</code> (универсальный словарь событий)</h2>
+<p>Цель словаря событий — задать <strong>единый контракт телеметрии</strong> между клиентом и сервером.
+Почему это важно:</p>
+<ul>
+<li><strong>единая аналитика</strong>: одинаковые события в разных жанрах дают сопоставимые метрики;</li>
+<li><strong>расследование проблем</strong>: по последовательности событий видно, что делал игрок;</li>
+<li><strong>античит-валидация</strong>: сервер проверяет допустимость параметров события;</li>
+<li><strong>расширяемость под жанры</strong>: новые события добавляются без ломки ядра.</li>
+</ul>
+<h3 id="2111-payload">2.11.1. Общая структура события (как должен выглядеть payload)</h3>
+<p>Минимальный шаблон, который рекомендуется для всех событий:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="mi">123</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"clientTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-26T12:10:05.120Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"clientVersion"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0.3"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>На сервере это превращается в запись <code>game_events</code>:</p>
+<ul>
+<li><code>user_id</code> — из JWT (не из клиента!)</li>
+<li><code>session_id</code> — из body (можно null)</li>
+<li><code>event_type</code> — строка</li>
+<li><code>payload_json</code> — объект</li>
+<li><code>created_at</code> — серверное время</li>
+</ul>
+<hr>
+<h3 id="2112">2.11.2. Категории обязательных событий (ядро)</h3>
+<p>Ниже — <strong>минимальный обязательный набор</strong> событий, достаточный для любой игры.</p>
+<h4 id="a">A) Системные события (жизненный цикл)</h4>
+<ol>
+<li><code>session_start</code> — начало игровой сессии</li>
+<li><code>session_end</code> — завершение сессии (или heartbeat)</li>
+</ol>
+<p><strong>session_start</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"platform"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unity"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"device"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"os"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Android"</span><span class="p">,</span><span class="w"> </span><span class="nt">"model"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pixel 7"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"locale"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ru-RU"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"tzOffsetMin"</span><span class="p">:</span><span class="w"> </span><span class="mi">180</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>session_end</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"user_exit"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"playtimeSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">842</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>Почему эти события нужны, если есть <code>game_sessions</code>:
+<code>game_sessions</code> фиксирует интервал на сервере, но <code>session_end</code> помогает понять <em>почему</em> завершилось (exit/crash/network).</p>
+</blockquote>
+<hr>
+<h4 id="b">B) События аккаунта и авторизации</h4>
+<ol>
+<li><code>register</code> — регистрация (опционально логировать)</li>
+<li><code>login_success</code> / <code>login_failed</code></li>
+</ol>
+<p><strong>login_failed</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"invalid_password"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"emailHash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sha256:...."</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>Важно: <strong>не хранить email в чистом виде</strong> в событиях, лучше hash/маска.</p>
+</blockquote>
+<hr>
+<h4 id="c">C) Прогресс и экономика (универсально)</h4>
+<ol>
+<li><code>progress_update</code> — изменение прогресса (если обновляете прогресс)</li>
+<li><code>currency_change</code> — изменение валюты</li>
+<li><code>item_grant</code> — выдача предмета/награды</li>
+<li><code>item_spend</code> — трата ресурса/предмета</li>
+</ol>
+<p><strong>progress_update</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"levelBefore"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"levelAfter"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"xpBefore"</span><span class="p">:</span><span class="w"> </span><span class="mi">2300</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"xpAfter"</span><span class="p">:</span><span class="w"> </span><span class="mi">2450</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"match_finish"</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>currency_change</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"currency"</span><span class="p">:</span><span class="w"> </span><span class="s2">"soft"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"delta"</span><span class="p">:</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"balanceAfter"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"reward"</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>Почему currency_change полезен даже если есть <code>player_progress</code>:
+прогресс показывает “сколько стало”, а currency_change объясняет <strong>почему изменилось</strong> (аудит экономики).</p>
+</blockquote>
+<hr>
+<h4 id="d">D) События контента (что игрок делает в игре)</h4>
+<ol>
+<li><code>level_start</code> / <code>level_complete</code> (или <code>stage_start</code>/<code>stage_complete</code>)</li>
+<li><code>quest_start</code> / <code>quest_complete</code> (если RPG/квесты)</li>
+<li><code>tutorial_step</code> (если есть обучение)</li>
+</ol>
+<p><strong>level_complete</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"levelCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"level_03"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="s2">"win"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">410</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">12450</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>tutorial_step</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"step"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"completed"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="e-match-based">E) Соревновательные/матчевые события (универсально для match-based)</h4>
+<ol>
+<li><code>match_start</code></li>
+<li><code>match_event</code> (для ключевых действий в матче)</li>
+<li><code>match_finish</code></li>
+</ol>
+<p><strong>match_start</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"td"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"mapCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forest_01"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"season"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>match_event</strong> (пример для TD build)</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"event"</span><span class="p">:</span><span class="w"> </span><span class="s2">"build"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"atSecond"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"buildingCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tower_arrow"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"cell"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"cost"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>match_finish</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">12450</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">410</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"waveReached"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>Почему выделяем match_start/finish отдельно:
+эти события почти всегда запускают транзакцию “результат → награды → статистика → лидерборд”.</p>
+</blockquote>
+<hr>
+<h4 id="f">F) Достижения</h4>
+<ol>
+<li><code>achievement_unlocked</code></li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"FIRST_WIN"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"points"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"context"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"td"</span><span class="p">,</span><span class="w"> </span><span class="nt">"season"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h4 id="g">G) Ошибки клиента (крайне рекомендовано)</h4>
+<ol>
+<li><code>client_error</code></li>
+<li><code>crash_report</code> (если интеграция есть)</li>
+</ol>
+<p><strong>client_error</strong></p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"network"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"timeout"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"endpoint"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/event"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"retryCount"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h3 id="2113-event_type">2.11.3. Правила проектирования event_type (чтобы не было хаоса)</h3>
+<p><strong>1) Именование:</strong></p>
+<ul>
+<li>lower_snake_case: <code>match_finish</code>, <code>currency_change</code></li>
+<li>стабильные имена (нельзя менять без миграций аналитики)</li>
+</ul>
+<p><strong>2) Payload должен быть “самодостаточным”:</strong></p>
+<ul>
+<li>причина изменения (<code>reason</code>)</li>
+<li>ключевые параметры результата (<code>score</code>, <code>durationSeconds</code>)</li>
+</ul>
+<p><strong>3) Серверная истина:</strong></p>
+<ul>
+<li><code>user_id</code> только из JWT</li>
+<li><code>created_at</code> только серверное время</li>
+<li>награды лучше вычислять сервером, а не принимать “как есть”</li>
+</ul>
+<hr>
+<h2 id="212-endpoint">2.12. Таблица: какой endpoint какие таблицы читает/пишет</h2>
+<p>Цель таблицы — дать студенту <strong>карту данных</strong>: что трогает каждый endpoint, где нужны транзакции, какие индексы критичны.</p>
+<blockquote>
+<p>Обозначения:
+<strong>R</strong> — Read (читает)
+<strong>W</strong> — Write (пишет)
+<strong>TX</strong> — транзакция рекомендуется/обязательна</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Таблицы (R)</th>
+<th>Таблицы (W)</th>
+<th>TX</th>
+<th>Зачем / примечания</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>POST /register</strong></td>
+<td><code>users</code> (проверка email), <code>roles</code></td>
+<td><code>users</code>, <code>user_roles</code>, (опц.) <code>player_progress</code></td>
+<td>да</td>
+<td>Создать аккаунт, назначить роль <code>player</code>, опционально создать прогресс</td>
+</tr>
+<tr>
+<td><strong>POST /login</strong></td>
+<td><code>users</code>, <code>user_roles</code>, <code>roles</code></td>
+<td><code>users</code> (обновить last_login_at), (опц.) <code>game_sessions</code></td>
+<td>нет/опц.</td>
+<td>Проверка пароля, банов, формирование JWT claims</td>
+</tr>
+<tr>
+<td><strong>GET /profile</strong></td>
+<td><code>users</code>, <code>player_progress</code>, (опц.) <code>user_achievements</code>, <code>leaderboard_scores</code></td>
+<td>—</td>
+<td>нет</td>
+<td>Витрина профиля: состояние + краткие достижения/позиции</td>
+</tr>
+<tr>
+<td><strong>POST /progress</strong></td>
+<td><code>player_progress</code> (текущее)</td>
+<td><code>player_progress</code>, <code>game_events</code> (progress_update), (опц.) <code>statistics_daily</code></td>
+<td>да</td>
+<td>Обновление прогресса должно быть атомарным с логом события</td>
+</tr>
+<tr>
+<td><strong>POST /event</strong></td>
+<td><code>game_sessions</code> (опц. проверка), (опц.) <code>player_progress</code></td>
+<td><code>game_events</code>, (опц.) <code>statistics_daily</code>, (опц.) <code>leaderboard_scores</code></td>
+<td>иногда</td>
+<td>Простые события — без TX, “итоговые” (match_finish) — лучше TX</td>
+</tr>
+<tr>
+<td><strong>GET /leaderboard</strong></td>
+<td><code>leaderboard_scores</code>, <code>users</code></td>
+<td>—</td>
+<td>нет</td>
+<td>Топ-N по board_code/season, требуется индекс (board_code, season, score)</td>
+</tr>
+<tr>
+<td><strong>GET /stats</strong></td>
+<td><code>statistics_daily</code></td>
+<td>—</td>
+<td>нет</td>
+<td>Диапазоны дат, сводка за 7/30 дней</td>
+</tr>
+<tr>
+<td><em>(опц.) POST /session/start</em></td>
+<td>—</td>
+<td><code>game_sessions</code>, <code>game_events</code> (session_start)</td>
+<td>нет</td>
+<td>Если сессии создаёте отдельным endpoint</td>
+</tr>
+<tr>
+<td><em>(опц.) POST /session/end</em></td>
+<td><code>game_sessions</code></td>
+<td><code>game_sessions</code>, <code>game_events</code> (session_end)</td>
+<td>да</td>
+<td>Закрыть сессию + зафиксировать причину завершения</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2121">2.12.1. Где точно нужна транзакция (типовой список)</h3>
+<p>Транзакция обязательна, если endpoint:</p>
+<ul>
+<li>обновляет <code>player_progress</code> <strong>и</strong> пишет в <code>leaderboard_scores</code>/<code>statistics_daily</code>;</li>
+<li>завершает матч (<code>match_finish</code>);</li>
+<li>выдаёт награды (item_grant/currency_change) и меняет баланс.</li>
+</ul>
+<p>Иначе появляются “полу-записанные” состояния:</p>
+<ul>
+<li>прогресс обновился, а лидерборд нет;</li>
+<li>событие записалось, а награда нет;</li>
+<li>статистика посчиталась дважды.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.image.zoom", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../assets/js/mermaid-init.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
