@@ -210,6 +210,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Главная
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="index.html" class="md-nav__link md-nav__link--active">
         
   
@@ -226,6 +244,91 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Направление обучения
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Название практики
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Даты практики
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Задание
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Список документов для сдачи
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Полезная литература
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -695,6 +798,80 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Направление обучения
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Название практики
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Даты практики
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Задание
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Список документов для сдачи
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Полезная литература
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -710,8 +887,35 @@
 
 
 
-<h1 id="_1">Пример проекта</h1>
-<p>Тут указывать свой текст или удалить, если меняется структура</p>
+<h1 id="_1">Производственая практика</h1>
+<h2 id="_2">Направление обучения</h2>
+<p>Специальность: 09.02.07 Информационные системы и программирование</p>
+<hr>
+<h2 id="_3">Название практики</h2>
+<p>ПМ.01 Проектирование и разработка информационных систем</p>
+<hr>
+<h2 id="_4">Даты практики</h2>
+<p>с «23» марта по «12» апреля</p>
+<hr>
+<h2 id="_5">Задание</h2>
+<p>Требуется разработать информационную систему для сопровождения игрового продукта для изучения сквозного контура системы: архитектура → модель данных → жанровая адаптация → backend → API → интеграция клиента. Студент должен спроектировать архитектурную схему (Client → API → Backend → DB) с выделением ролей компонентов и описать один полный сценарий запроса по слоям (JSON → проверки → бизнес-логика → БД → ответ). Далее требуется реализовать универсальное ядро модели данных (Users, Roles, UserRoles, GameSessions, GameEvents, PlayerProgress, StatisticsDaily, LeaderboardScores) и предоставить корректный DDL-скрипт MySQL с PK/FK/UNIQUE/CHECK и JSON для событий. На основе выбранного жанра необходимо определить единицу игрового процесса, добавить 3–5 жанровых таблиц и сформировать минимум 6 событий с примерами payload. Backend должен включать middleware (requestId, authJwt, validate, errorHandler) и содержать хотя бы одну транзакционную операцию для итогового события (например, match_finish), которая атомарно обновляет событие, прогресс, статистику и лидерборд. API должно реализовывать минимум пять endpoint’ов (register, login, profile, events, leaderboard) с единым JSON-контрактом ответов. Клиент (Unity или Web) обязан реализовать login с сохранением JWT, загрузку профиля, отправку события с UUID и обработку ошибок 401 и 429. Завершающим этапом является тестирование: выполнение минимум восьми тестов (позитивных и негативных), проверка записей в MySQL, а также обязательная проверка дедупликации событий по eventId.</p>
+<hr>
+<h2 id="_6">Список документов для сдачи</h2>
+<ul>
+<li>Аттестационный лист - docs</li>
+<li>Индивидуальное задание (подписать) - pdf</li>
+<li>Презентация - pdf</li>
+<li>Справка (от организации, брать у тьютора) - pdf</li>
+<li>Отчет - docs</li>
+</ul>
+<hr>
+<h2 id="_7">Полезная литература</h2>
+<ul>
+<li>Гринченко Н.Н. Проектирование информационных систем : учебник / Гринченко Н.Н., Громов А.Ю., Хизриева Н.И.. — Москва : КУРС, 2024. — 176 c. — ISBN 978-5-907352-30-8. — Текст : электронный // Цифровой образовательный ресурс IPR SMART : [сайт]. — URL: https://www.iprbookshop.ru/144813.html</li>
+<li>Белов В.В. Проектирование информационных систем : учебник / Белов В.В., Чистякова В.И.. — Москва : КУРС, 2024. — 400 c. — ISBN 978-5-906923-53-0. — Текст : электронный // Цифровой образовательный ресурс IPR SMART : [сайт]. — URL: https://www.iprbookshop.ru/144814.html</li>
+<li>Циперман, Г. Н. Проектирование информационных систем : практикум / Г. Н. Циперман, Н. А. Акатова. — Москва : Издательский Дом МИСиС, 2024. — 200 c. — Текст : электронный // Цифровой образовательный ресурс IPR SMART : [сайт]. — URL: https://www.iprbookshop.ru/152694.html</li>
+<li>Цехановский, В. В. Проектирование информационных систем : учебное пособие для СПО / В. В. Цехановский, А. И. Водяхо. — 2-е изд. — Саратов : Профобразование, 2025. — 256 c. — ISBN 978-5-4488-2577-4. — Текст : электронный // Цифровой образовательный ресурс IPR SMART : [сайт]. — URL: https://www.iprbookshop.ru/152769.html</li>
+</ul>
 
 
 
