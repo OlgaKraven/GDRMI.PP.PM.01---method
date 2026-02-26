@@ -788,7 +788,7 @@
   <a href="#533-json-endpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.3.3. Единый JSON-контракт (обязателен для всех endpoint’ов)
+        5.3.3. Единый JSON-контракт (обязателен для всех endpoint'ов)
       
     </span>
   </a>
@@ -997,7 +997,7 @@
   <a href="#533-json-endpoint" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.3.3. Единый JSON-контракт (обязателен для всех endpoint’ов)
+        5.3.3. Единый JSON-контракт (обязателен для всех endpoint'ов)
       
     </span>
   </a>
@@ -1044,7 +1044,7 @@
 <li>stateless REST (без серверных сессий);</li>
 <li>безопасность: JWT + RBAC + валидация;</li>
 <li>единый контракт ответов и ошибок;</li>
-<li>удобство тестирования (Postman / Swagger).</li>
+<li>удобство тестирования (Postman / <code>test_client.html</code> / Swagger).</li>
 </ul>
 <p>Ключевая идея: API — это <strong>конвейер обработки запроса</strong>, где всё разложено по слоям и каждый слой отвечает за своё.</p>
 <hr>
@@ -1064,12 +1064,12 @@
 </ol>
 <p>Опционально (если успеваете):</p>
 <ul>
-<li><code>POST /api/v1/progress</code></li>
+<li><code>POST /api/v1/match/finish</code></li>
 <li>
-<p><code>GET /api/v1/stats</code></p>
+<p><code>GET /health</code></p>
 </li>
 <li>
-<p>Реализовать <strong>единый контракт ответов</strong> для всех endpoint’ов:</p>
+<p>Реализовать <strong>единый контракт ответов</strong> для всех endpoint'ов:</p>
 </li>
 <li>
 <p>успех: <code>{ "ok": true, "data": ... }</code></p>
@@ -1086,13 +1086,13 @@
 </ul>
 <h3 id="_2">Артефакт</h3>
 <ul>
-<li>Работающий API (запускается локально и отвечает на запросы).</li>
-<li>Для сдачи достаточно Postman-проверки или Swagger UI (если подключён).</li>
+<li>Работающий API (запускается <code>python wsgi.py</code> и отвечает на запросы).</li>
+<li>Для сдачи достаточно Postman-проверки, <code>test_client.html</code> или Swagger UI (если подключён).</li>
 </ul>
 <hr>
 <h2 id="52-api">5.2. Минимальная рабочая архитектура API (обязательная логика)</h2>
 <p>API-слой должен обслуживать <strong>несколько ресурсов</strong> (auth, profile, events, leaderboard) единообразно.</p>
-<p>Конвейер обработки запросов для всех endpoint’ов:</p>
+<p>Конвейер обработки запросов для всех endpoint'ов:</p>
 <div class="highlight"><pre><span></span><code>Request
   → requestId + logging
   → authJwt (там где требуется)
@@ -1117,17 +1117,17 @@ Error → errorHandler → JSON + logging
 </li>
 <li>
 <p><strong>services/</strong> — бизнес-логика, проверки, orchestration нескольких репозиториев, правила обработки событий.
-  Назначение: точка, где реализуются бизнес-решения (например, “если eventType=match_finish — выполнить итоговую обработку”).
+  Назначение: точка, где реализуются бизнес-решения (например, "если eventType=match_finish — выполнить итоговую обработку").
   Ограничения: транзакции допускаются только здесь (если нужны); контроллеры и репозитории транзакции не открывают.</p>
 </li>
 <li>
 <p><strong>repositories/</strong> — доступ к данным: только SQL (<code>SELECT/INSERT/UPDATE/UPSERT</code>).
   Назначение: изолировать работу с БД и сделать SQL переиспользуемым.
-  Ограничения: никакой бизнес-логики, никаких “правил игры”, никаких расчётов наград.</p>
+  Ограничения: никакой бизнес-логики, никаких "правил игры", никаких расчётов наград.</p>
 </li>
 <li>
 <p><strong>middleware/</strong> — инфраструктура: requestId/auth/validate/errorHandler.
-  Назначение: единые правила для всех endpoint’ов (логирование, безопасность, валидация, ошибки).
+  Назначение: единые правила для всех endpoint'ов (логирование, безопасность, валидация, ошибки).
   Ограничения: никакого SQL.</p>
 </li>
 </ul>
@@ -1136,12 +1136,12 @@ Error → errorHandler → JSON + logging
 <h3 id="531">5.3.1. Ресурсный подход</h3>
 <ul>
 <li>плохо: <code>/doLogin</code>, <code>/sendEventCommand</code></li>
-<li>хорошо: <code>/auth/login</code>, <code>/events</code>, <code>/profile</code></li>
+<li>хорошо: <code>/api/v1/auth/login</code>, <code>/api/v1/events</code>, <code>/api/v1/profile</code></li>
 </ul>
-<p>Допустимое “действие” в игровых API — только как подресурс:</p>
+<p>Допустимое "действие" в игровых API — только как подресурс:</p>
 <ul>
-<li><code>POST /matches/{id}/finish</code></li>
-<li><code>POST /matches/{id}/events</code></li>
+<li><code>POST /api/v1/match/finish</code></li>
+<li><code>POST /api/v1/events</code></li>
 </ul>
 <hr>
 <h3 id="532-stateless">5.3.2. Stateless</h3>
@@ -1152,7 +1152,7 @@ Error → errorHandler → JSON + logging
 </ul>
 <p>Состояние игрока хранится в БД (<code>player_progress</code>, <code>matches</code>, <code>leaderboard_scores</code>, <code>statistics_daily</code>), а не в памяти процесса.</p>
 <hr>
-<h3 id="533-json-endpoint">5.3.3. Единый JSON-контракт (обязателен для всех endpoint’ов)</h3>
+<h3 id="533-json-endpoint">5.3.3. Единый JSON-контракт (обязателен для всех endpoint'ов)</h3>
 <p>Успех:</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div>
@@ -1176,30 +1176,34 @@ Error → errorHandler → JSON + logging
 <li><code>401 Unauthorized</code> — нет/невалиден JWT</li>
 <li><code>403 Forbidden</code> — нет прав / пользователь забанен</li>
 <li><code>404 Not Found</code> — ресурс не найден</li>
-<li><code>409 Conflict</code> — конфликт состояния/уникальности</li>
+<li><code>409 Conflict</code> — конфликт состояния/уникальности / дублирующееся событие</li>
 <li><code>429 Too Many Requests</code> — rate limit</li>
 <li><code>500 Internal Server Error</code> — непредвиденная ошибка</li>
 </ul>
 <hr>
 <h1 id="55-api-v1">5.5. Расширение структуры проекта под API v1</h1>
 <p>Если ранее присутствовал только один endpoint, для данного раздела требуется расширить проект по единой схеме слоёв: routes → controllers → services → repositories.</p>
-<p>Минимально добавляются модули:</p>
+<p>Структура проекта после расширения:</p>
 <div class="highlight"><pre><span></span><code>app/
+  config.py          ← конфигурация здесь, не в корне
+  __init__.py        ← create_app() регистрирует все blueprint'ы
+  extensions.py      ← db, jwt, cors
   routes/
-    match.py
     auth.py
+    match.py
     profile.py
     events.py
     leaderboard.py
+    health.py
   controllers/
-    match_controller.py
     auth_controller.py
+    match_controller.py
     profile_controller.py
     events_controller.py
     leaderboard_controller.py
   services/
-    match_service.py
     auth_service.py
+    match_service.py
     profile_service.py
     events_service.py
     leaderboard_service.py
@@ -1210,26 +1214,36 @@ Error → errorHandler → JSON + logging
     stats_repo.py
     users_repo.py
     roles_repo.py
+    matches_repo.py
+    dedupe_repo.py
+  middleware/
+    request_id.py
+    auth_jwt.py
+    validate_api.py
+    error_handler.py
+wsgi.py              ← точка входа
 </code></pre></div>
-<p>Важно: middleware остаётся общим для всех endpoint’ов (requestId/errorHandler), а <code>auth_required</code> и валидаторы подключаются там, где требуется.</p>
+<p>Важно: middleware остаётся общим для всех endpoint'ов (requestId/errorHandler), а <code>auth_required</code> и валидаторы подключаются там, где требуется.</p>
 <hr>
 <h1 id="56-api-v1">5.6. Создание файлов API v1 и пример их наполнения (обязательный минимум)</h1>
-<p>Цель: чтобы все 5 MVP endpoint’ов были реализованы архитектурно корректно (routes/controllers/services/repositories) и выдавали единый контракт.</p>
+<p>Цель: чтобы все 5 MVP endpoint'ов были реализованы архитектурно корректно (routes/controllers/services/repositories) и выдавали единый контракт.</p>
 <hr>
-<h2 id="561-blueprint-app__init__py">5.6.1. Регистрация blueprint’ов в <code>app/__init__.py</code></h2>
+<h2 id="561-blueprint-app__init__py">5.6.1. Регистрация blueprint'ов в <code>app/__init__.py</code></h2>
 <p>Назначение: подключить все группы маршрутов к приложению, чтобы endpoints реально появились.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">.routes.match</span> <span class="kn">import</span> <span class="n">match_bp</span>
 <span class="kn">from</span> <span class="nn">.routes.auth</span> <span class="kn">import</span> <span class="n">auth_bp</span>
 <span class="kn">from</span> <span class="nn">.routes.profile</span> <span class="kn">import</span> <span class="n">profile_bp</span>
 <span class="kn">from</span> <span class="nn">.routes.events</span> <span class="kn">import</span> <span class="n">events_bp</span>
 <span class="kn">from</span> <span class="nn">.routes.leaderboard</span> <span class="kn">import</span> <span class="n">leaderboard_bp</span>
+<span class="kn">from</span> <span class="nn">.routes.health</span> <span class="kn">import</span> <span class="n">health_bp</span>
 
-<span class="c1"># Регистрируем blueprint’ы, чтобы Flask начал обслуживать маршруты</span>
-<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">match_bp</span><span class="p">)</span>
+<span class="c1"># Регистрируем blueprint'ы, чтобы Flask начал обслуживать маршруты</span>
 <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">auth_bp</span><span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">profile_bp</span><span class="p">)</span>
 <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">events_bp</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">health_bp</span><span class="p">)</span>
 <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">leaderboard_bp</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">profile_bp</span><span class="p">)</span>
+<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">match_bp</span><span class="p">)</span>
 </code></pre></div>
 <p>Комментарий: если blueprint не зарегистрирован — соответствующий endpoint отсутствует в приложении и не может быть протестирован.</p>
 <hr>
@@ -1280,13 +1294,13 @@ Error → errorHandler → JSON + logging
 <span class="kn">from</span> <span class="nn">app.middleware.auth_jwt</span> <span class="kn">import</span> <span class="n">auth_required</span>
 <span class="kn">from</span> <span class="nn">app.middleware.validate_api</span> <span class="kn">import</span> <span class="n">validate_event</span>
 
-<span class="c1"># Назначение: приём игровых событий единым endpoint’ом</span>
+<span class="c1"># Назначение: приём игровых событий единым endpoint'ом</span>
 <span class="n">events_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s2">"events"</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s2">"/api/v1"</span><span class="p">)</span>
 
 
 <span class="nd">@events_bp</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/events"</span><span class="p">)</span>
 <span class="nd">@auth_required</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"player"</span><span class="p">])</span>  <span class="c1"># событие пишется только от аутентифицированного игрока</span>
-<span class="nd">@validate_event</span>                   <span class="c1"># проверка структуры eventType/sessionId/clientTime/payload</span>
+<span class="nd">@validate_event</span>                   <span class="c1"># проверка структуры eventId/eventType/sessionId/clientTime/payload</span>
 <span class="k">def</span> <span class="nf">post_event</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">post_event_controller</span><span class="p">()</span>
 </code></pre></div>
@@ -1322,7 +1336,7 @@ Error → errorHandler → JSON + logging
     <span class="c1"># JSON тела запроса должен быть уже провалидирован validate_register</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
 
-    <span class="c1"># Вся логика создания пользователя находится в сервисе</span>
+    <span class="c1"># Вся логика создания пользователя (bcrypt + роли + progress) находится в сервисе</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">register_service</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
     <span class="c1"># 201 Created — ресурс создан</span>
@@ -1332,7 +1346,7 @@ Error → errorHandler → JSON + logging
 <span class="k">def</span> <span class="nf">login_controller</span><span class="p">():</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
 
-    <span class="c1"># Вся логика проверки пароля/выдачи токена находится в сервисе</span>
+    <span class="c1"># Вся логика проверки bcrypt-пароля/выдачи токена находится в сервисе</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">login_service</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">"ok"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">:</span> <span class="n">result</span><span class="p">}),</span> <span class="mi">200</span>
@@ -1382,7 +1396,7 @@ Error → errorHandler → JSON + logging
 <span class="k">def</span> <span class="nf">leaderboard_controller</span><span class="p">():</span>
     <span class="n">board_code</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"boardCode"</span><span class="p">)</span>
     <span class="n">season</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"season"</span><span class="p">))</span>
-    <span class="n">limit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"limit"</span><span class="p">))</span>
+    <span class="n">limit</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"limit"</span><span class="p">))</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">leaderboard_service</span><span class="p">(</span><span class="n">board_code</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
 
@@ -1392,60 +1406,69 @@ Error → errorHandler → JSON + logging
 <h2 id="564-services-orchestration">5.6.4. Services (бизнес-логика + orchestration)</h2>
 <p>Назначение сервисов: реализовать правила поведения системы и управлять репозиториями.</p>
 <h3 id="appservicesauth_servicepy"><code>app/services/auth_service.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask_jwt_extended</span> <span class="kn">import</span> <span class="n">create_access_token</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">bcrypt</span>
+<span class="kn">from</span> <span class="nn">flask_jwt_extended</span> <span class="kn">import</span> <span class="n">create_access_token</span>
+<span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
-<span class="kn">from</span> <span class="nn">app.repositories.users_repo</span> <span class="kn">import</span> <span class="n">find_user_by_email</span><span class="p">,</span> <span class="n">create_user</span>
+<span class="kn">from</span> <span class="nn">app.repositories.users_repo</span> <span class="kn">import</span> <span class="n">find_user_by_email</span><span class="p">,</span> <span class="n">create_user</span><span class="p">,</span> <span class="n">get_user_roles</span>
 <span class="kn">from</span> <span class="nn">app.repositories.roles_repo</span> <span class="kn">import</span> <span class="n">assign_role_to_user</span>
+<span class="kn">from</span> <span class="nn">app.repositories.progress_repo</span> <span class="kn">import</span> <span class="n">ensure_progress_row</span>
 
 <span class="c1"># Назначение:</span>
-<span class="c1"># - register_service: создать пользователя и назначить роль player</span>
-<span class="c1"># - login_service: проверить учётные данные и выдать JWT</span>
+<span class="c1"># - register_service: создать пользователя (bcrypt-хэш), назначить роль player, создать progress</span>
+<span class="c1"># - login_service: проверить bcrypt-пароль и выдать JWT с claims.roles</span>
 
 
 <span class="k">def</span> <span class="nf">register_service</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="n">email</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"email"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">email</span>    <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"email"</span><span class="p">]</span>
     <span class="n">password</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"password"</span><span class="p">]</span>
-    <span class="n">nickname</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">nickname</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">]</span>
 
     <span class="c1"># Проверка уникальности email</span>
-    <span class="n">existing</span> <span class="o">=</span> <span class="n">find_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">existing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"EMAIL_ALREADY_EXISTS"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Email already exists"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">409</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">find_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"CONFLICT"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Email already registered"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">409</span><span class="p">)</span>
 
-    <span class="c1"># Создание пользователя (хранение пароля в открытом виде допустимо только для учебного MVP)</span>
-    <span class="c1"># Для промышленного варианта: password_hash (bcrypt/argon2)</span>
-    <span class="n">user_id</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="n">nickname</span><span class="p">)</span>
+    <span class="c1"># Хэширование пароля bcrypt</span>
+    <span class="n">hashed</span> <span class="o">=</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">hashpw</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">gensalt</span><span class="p">())</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
 
-    <span class="c1"># Назначение роли player</span>
-    <span class="n">assign_role_to_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">role_name</span><span class="o">=</span><span class="s2">"player"</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">hashed</span><span class="p">,</span> <span class="n">nickname</span><span class="o">=</span><span class="n">nickname</span><span class="p">)</span>
+        <span class="n">assign_role_to_user</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">role_name</span><span class="o">=</span><span class="s2">"player"</span><span class="p">)</span>
+        <span class="n">ensure_progress_row</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="k">raise</span>
 
-    <span class="k">return</span> <span class="p">{</span><span class="s2">"userId"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"userId"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span> <span class="s2">"email"</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span> <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">nickname</span><span class="p">}</span>
 
 
 <span class="k">def</span> <span class="nf">login_service</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="n">email</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"email"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">email</span>    <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"email"</span><span class="p">]</span>
     <span class="n">password</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"password"</span><span class="p">]</span>
 
     <span class="n">user</span> <span class="o">=</span> <span class="n">find_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"INVALID_CREDENTIALS"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid credentials"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"UNAUTHORIZED"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid credentials"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
 
-    <span class="c1"># Проверка бана (если поле is_banned есть в users)</span>
-    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"is_banned"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"USER_BANNED"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"User is banned"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+    <span class="c1"># Проверка bcrypt-хэша</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">bcrypt</span><span class="o">.</span><span class="n">checkpw</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span> <span class="n">user</span><span class="p">[</span><span class="s2">"password"</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">()):</span>
+        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"UNAUTHORIZED"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid credentials"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
 
-    <span class="c1"># Проверка пароля (для учебного MVP)</span>
-    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"password"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">password</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"INVALID_CREDENTIALS"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid credentials"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">401</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user</span><span class="p">[</span><span class="s2">"is_banned"</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"FORBIDDEN"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Account is banned"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
 
     <span class="c1"># JWT claims: roles (для RBAC)</span>
-    <span class="n">roles</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"roles"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"player"</span><span class="p">])</span>
-    <span class="n">token</span> <span class="o">=</span> <span class="n">create_access_token</span><span class="p">(</span><span class="n">identity</span><span class="o">=</span><span class="n">user</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span> <span class="n">additional_claims</span><span class="o">=</span><span class="p">{</span><span class="s2">"roles"</span><span class="p">:</span> <span class="n">roles</span><span class="p">})</span>
+    <span class="n">roles</span> <span class="o">=</span> <span class="n">get_user_roles</span><span class="p">(</span><span class="n">user</span><span class="p">[</span><span class="s2">"id"</span><span class="p">])</span>
+    <span class="n">access_token</span> <span class="o">=</span> <span class="n">create_access_token</span><span class="p">(</span>
+        <span class="n">identity</span><span class="o">=</span><span class="n">user</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
+        <span class="n">additional_claims</span><span class="o">=</span><span class="p">{</span><span class="s2">"roles"</span><span class="p">:</span> <span class="n">roles</span><span class="p">}</span>
+    <span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">"accessToken"</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
-        <span class="s2">"tokenType"</span><span class="p">:</span> <span class="s2">"Bearer"</span><span class="p">,</span>
-        <span class="s2">"expiresInSeconds"</span><span class="p">:</span> <span class="mi">3600</span>
+        <span class="s2">"accessToken"</span><span class="p">:</span> <span class="n">access_token</span><span class="p">,</span>
+        <span class="s2">"userId"</span><span class="p">:</span> <span class="n">user</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
+        <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">user</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">]</span>
     <span class="p">}</span>
 </code></pre></div>
 <hr>
@@ -1463,14 +1486,14 @@ Error → errorHandler → JSON + logging
         <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"NOT_FOUND"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"User not found"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"is_banned"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"USER_BANNED"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"User is banned"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"FORBIDDEN"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Account is banned"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
 
     <span class="n">progress</span> <span class="o">=</span> <span class="n">get_progress_by_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">"user"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"id"</span><span class="p">:</span> <span class="n">user</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
-            <span class="s2">"email"</span><span class="p">:</span> <span class="n">user</span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span>
+            <span class="s2">"id"</span><span class="p">:</span>       <span class="n">user</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
+            <span class="s2">"email"</span><span class="p">:</span>    <span class="n">user</span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span>
             <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">user</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">]</span>
         <span class="p">},</span>
         <span class="s2">"progress"</span><span class="p">:</span> <span class="n">progress</span>
@@ -1478,55 +1501,31 @@ Error → errorHandler → JSON + logging
 </code></pre></div>
 <hr>
 <h3 id="appservicesevents_servicepy"><code>app/services/events_service.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">g</span>
-<span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
-<span class="kn">from</span> <span class="nn">app.repositories.events_repo</span> <span class="kn">import</span> <span class="n">insert_game_event_api</span>
-<span class="kn">from</span> <span class="nn">app.services.match_service</span> <span class="kn">import</span> <span class="n">finish_match_service</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">app.repositories.dedupe_repo</span> <span class="kn">import</span> <span class="n">register_event_or_conflict</span>
+<span class="kn">from</span> <span class="nn">app.repositories.events_repo</span> <span class="kn">import</span> <span class="n">insert_game_event</span>
 
-<span class="c1"># Назначение: принять событие, записать его и при необходимости запустить обработку.</span>
-<span class="c1"># Требование: idempotency и возможность отклонения события (409) должны быть предусмотрены точками расширения.</span>
-<span class="c1"># Требование: возможность rate limit (429) должна быть предусмотрена точкой расширения.</span>
+<span class="c1"># Назначение: принять событие, зарегистрировать в processed_events (дедупликация) и записать в game_events.</span>
+<span class="c1"># Требование: повторный eventId → 409 EVENT_REJECTED через UNIQUE(user_id, event_id) в processed_events.</span>
 
 
 <span class="k">def</span> <span class="nf">accept_event_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="n">request_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">"request_id"</span><span class="p">,</span> <span class="s2">"req_unknown"</span><span class="p">)</span>
+    <span class="n">event_id</span>    <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"eventId"</span><span class="p">]</span>
+    <span class="n">event_type</span>  <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"eventType"</span><span class="p">]</span>
+    <span class="n">session_id</span>  <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"sessionId"</span><span class="p">)</span>
+    <span class="n">event_payload</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"payload"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{}</span>
 
-    <span class="n">event_type</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"eventType"</span><span class="p">]</span>
-    <span class="n">session_id</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"sessionId"</span><span class="p">)</span>
-    <span class="n">client_time</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"clientTime"</span><span class="p">)</span>
-    <span class="n">event_payload</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"payload"</span><span class="p">,</span> <span class="p">{})</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Дедупликация: UNIQUE(user_id, event_id) — повторный event_id → IntegrityError → 409</span>
+        <span class="n">register_event_or_conflict</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">event_id</span><span class="o">=</span><span class="n">event_id</span><span class="p">,</span> <span class="n">event_type</span><span class="o">=</span><span class="n">event_type</span><span class="p">)</span>
+        <span class="c1"># Запись события в game_events</span>
+        <span class="n">insert_game_event</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span> <span class="n">event_type</span><span class="o">=</span><span class="n">event_type</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="n">event_payload</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="k">raise</span>
 
-    <span class="c1"># Rate limit (точка расширения):</span>
-    <span class="c1"># if is_rate_limited(user_id): raise AppError(code="RATE_LIMITED", message="Too many requests", http_status=429)</span>
-
-    <span class="c1"># Идемпотентность (точка расширения):</span>
-    <span class="c1"># if is_duplicate_event(user_id, request_id, event_type):</span>
-    <span class="c1">#     raise AppError(code="EVENT_REJECTED", message="Duplicate event", http_status=409)</span>
-
-    <span class="c1"># Запись события (универсальный endpoint /events)</span>
-    <span class="n">insert_game_event_api</span><span class="p">(</span>
-        <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
-        <span class="n">session_id</span><span class="o">=</span><span class="n">session_id</span><span class="p">,</span>
-        <span class="n">event_type</span><span class="o">=</span><span class="n">event_type</span><span class="p">,</span>
-        <span class="n">request_id</span><span class="o">=</span><span class="n">request_id</span><span class="p">,</span>
-        <span class="n">client_time</span><span class="o">=</span><span class="n">client_time</span><span class="p">,</span>
-        <span class="n">payload</span><span class="o">=</span><span class="n">event_payload</span>
-    <span class="p">)</span>
-
-    <span class="c1"># Обработка итогового события через специализированную бизнес-операцию</span>
-    <span class="k">if</span> <span class="n">event_type</span> <span class="o">==</span> <span class="s2">"match_finish"</span><span class="p">:</span>
-        <span class="n">match_like_payload</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"matchId"</span><span class="p">:</span> <span class="n">event_payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"matchId"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="s2">"result"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"isWin"</span><span class="p">:</span> <span class="n">event_payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"isWin"</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
-                <span class="s2">"score"</span><span class="p">:</span> <span class="n">event_payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"score"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="s2">"durationSeconds"</span><span class="p">:</span> <span class="n">event_payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"durationSeconds"</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-                <span class="s2">"waveReached"</span><span class="p">:</span> <span class="n">event_payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"waveReached"</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="n">finish_match_service</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">payload</span><span class="o">=</span><span class="n">match_like_payload</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="p">{</span><span class="s2">"accepted"</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"eventId"</span><span class="p">:</span> <span class="n">event_id</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"accepted"</span><span class="p">}</span>
 </code></pre></div>
 <hr>
 <h3 id="appservicesleaderboard_servicepy"><code>app/services/leaderboard_service.py</code></h3>
@@ -1539,8 +1538,8 @@ Error → errorHandler → JSON + logging
     <span class="n">items</span> <span class="o">=</span> <span class="n">get_leaderboard</span><span class="p">(</span><span class="n">board_code</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">"boardCode"</span><span class="p">:</span> <span class="n">board_code</span><span class="p">,</span>
-        <span class="s2">"season"</span><span class="p">:</span> <span class="n">season</span><span class="p">,</span>
-        <span class="s2">"items"</span><span class="p">:</span> <span class="n">items</span>
+        <span class="s2">"season"</span><span class="p">:</span>    <span class="n">season</span><span class="p">,</span>
+        <span class="s2">"items"</span><span class="p">:</span>     <span class="n">items</span>
     <span class="p">}</span>
 </code></pre></div>
 <hr>
@@ -1551,9 +1550,10 @@ Error → errorHandler → JSON + logging
 <span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
 
 <span class="c1"># Назначение:</span>
-<span class="c1"># - find_user_by_email: получить пользователя по email</span>
+<span class="c1"># - find_user_by_email: получить пользователя по email (включая password для bcrypt-проверки)</span>
 <span class="c1"># - create_user: создать пользователя</span>
 <span class="c1"># - get_user_by_id: получить пользователя по id</span>
+<span class="c1"># - get_user_roles: получить список ролей пользователя</span>
 <span class="c1"># Ограничение: только SQL, никакой бизнес-логики.</span>
 
 
@@ -1562,24 +1562,21 @@ Error → errorHandler → JSON + logging
     <span class="n">row</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"email"</span><span class="p">:</span> <span class="n">email</span><span class="p">})</span><span class="o">.</span><span class="n">mappings</span><span class="p">()</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
-
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">"id"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
-        <span class="s2">"email"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span>
-        <span class="s2">"password"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"password"</span><span class="p">],</span>
-        <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">],</span>
+        <span class="s2">"id"</span><span class="p">:</span>        <span class="n">row</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
+        <span class="s2">"email"</span><span class="p">:</span>     <span class="n">row</span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span>
+        <span class="s2">"password"</span><span class="p">:</span>  <span class="n">row</span><span class="p">[</span><span class="s2">"password"</span><span class="p">],</span>
+        <span class="s2">"nickname"</span><span class="p">:</span>  <span class="n">row</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">],</span>
         <span class="s2">"is_banned"</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"is_banned"</span><span class="p">]),</span>
-        <span class="s2">"roles"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"player"</span><span class="p">]</span>
     <span class="p">}</span>
 
 
-<span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nickname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nickname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        INSERT INTO users (email, password, nickname, created_at, is_banned)</span>
-<span class="s2">        VALUES (:email, :password, :nickname, NOW(), 0)</span>
+<span class="s2">        VALUES (:email, :password, :nickname, NOW(3), 0)</span>
 <span class="s2">    """</span><span class="p">)</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"email"</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span> <span class="s2">"password"</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">nickname</span><span class="p">})</span>
-    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"email"</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span> <span class="s2">"password"</span><span class="p">:</span> <span class="n">password</span><span class="p">,</span> <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">nickname</span><span class="p">})</span>
     <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">lastrowid</span>
 
 
@@ -1588,12 +1585,18 @@ Error → errorHandler → JSON + logging
     <span class="n">row</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">})</span><span class="o">.</span><span class="n">mappings</span><span class="p">()</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">"id"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
-        <span class="s2">"email"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span>
-        <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">],</span>
-        <span class="s2">"is_banned"</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"is_banned"</span><span class="p">])</span>
-    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span> <span class="s2">"email"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span> <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">],</span> <span class="s2">"is_banned"</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"is_banned"</span><span class="p">])}</span>
+
+
+<span class="k">def</span> <span class="nf">get_user_roles</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
+<span class="s2">        SELECT r.name AS role_name</span>
+<span class="s2">        FROM user_roles ur</span>
+<span class="s2">        JOIN roles r ON r.id = ur.role_id</span>
+<span class="s2">        WHERE ur.user_id = :user_id</span>
+<span class="s2">    """</span><span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">})</span><span class="o">.</span><span class="n">mappings</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">"role_name"</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]</span> <span class="ow">or</span> <span class="p">[</span><span class="s2">"player"</span><span class="p">]</span>
 </code></pre></div>
 <hr>
 <h3 id="apprepositoriesroles_repopy"><code>app/repositories/roles_repo.py</code></h3>
@@ -1604,16 +1607,15 @@ Error → errorHandler → JSON + logging
 <span class="c1"># Ограничение: только SQL.</span>
 
 
-<span class="k">def</span> <span class="nf">assign_role_to_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">role_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">assign_role_to_user</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">role_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="c1"># Получение role_id по имени</span>
     <span class="n">role_sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"SELECT id FROM roles WHERE name = :name"</span><span class="p">)</span>
-    <span class="n">role</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">role_sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">role_name</span><span class="p">})</span><span class="o">.</span><span class="n">mappings</span><span class="p">()</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="n">role</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">role_sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">role_name</span><span class="p">})</span><span class="o">.</span><span class="n">mappings</span><span class="p">()</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">role</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># Создание роли, если её нет (упрощение для учебного MVP)</span>
+        <span class="c1"># Создание роли, если её нет</span>
         <span class="n">ins_role</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"INSERT INTO roles (name) VALUES (:name)"</span><span class="p">)</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">ins_role</span><span class="p">,</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">role_name</span><span class="p">})</span>
-        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">ins_role</span><span class="p">,</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">role_name</span><span class="p">})</span>
         <span class="n">role_id</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">lastrowid</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">role_id</span> <span class="o">=</span> <span class="n">role</span><span class="p">[</span><span class="s2">"id"</span><span class="p">]</span>
@@ -1624,8 +1626,7 @@ Error → errorHandler → JSON + logging
 <span class="s2">        VALUES (:user_id, :role_id, NOW())</span>
 <span class="s2">        ON DUPLICATE KEY UPDATE assigned_at = assigned_at</span>
 <span class="s2">    """</span><span class="p">)</span>
-    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">link_sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span> <span class="s2">"role_id"</span><span class="p">:</span> <span class="n">role_id</span><span class="p">})</span>
-    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">link_sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span> <span class="s2">"role_id"</span><span class="p">:</span> <span class="n">role_id</span><span class="p">})</span>
 </code></pre></div>
 <hr>
 <h3 id="apprepositoriesprogress_repopy"><code>app/repositories/progress_repo.py</code> (дополнение для профиля)</h3>
@@ -1647,38 +1648,52 @@ Error → errorHandler → JSON + logging
         <span class="k">return</span> <span class="p">{</span><span class="s2">"level"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"xp"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"softCurrency"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"hardCurrency"</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">"level"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"level"</span><span class="p">],</span>
-        <span class="s2">"xp"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"xp"</span><span class="p">],</span>
+        <span class="s2">"level"</span><span class="p">:</span>        <span class="n">row</span><span class="p">[</span><span class="s2">"level"</span><span class="p">],</span>
+        <span class="s2">"xp"</span><span class="p">:</span>           <span class="n">row</span><span class="p">[</span><span class="s2">"xp"</span><span class="p">],</span>
         <span class="s2">"softCurrency"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"soft_currency"</span><span class="p">],</span>
         <span class="s2">"hardCurrency"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"hard_currency"</span><span class="p">]</span>
     <span class="p">}</span>
 </code></pre></div>
 <hr>
-<h3 id="apprepositoriesevents_repopy-apiv1events"><code>app/repositories/events_repo.py</code> (дополнение для /api/v1/events)</h3>
+<h3 id="apprepositoriesevents_repopy"><code>app/repositories/events_repo.py</code></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
 <span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
 
-<span class="c1"># Назначение: записать событие в game_events в едином формате.</span>
+<span class="c1"># Назначение: записать событие в game_events.</span>
 <span class="c1"># Ограничение: только SQL.</span>
 
 
-<span class="k">def</span> <span class="nf">insert_game_event_api</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">session_id</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client_time</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">insert_game_event</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">session_id</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        INSERT INTO game_events (user_id, session_id, event_type, payload_json)</span>
 <span class="s2">        VALUES (:user_id, :session_id, :event_type, CAST(:payload AS JSON))</span>
 <span class="s2">    """</span><span class="p">)</span>
-    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span>
-        <span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s2">"user_id"</span><span class="p">:</span>    <span class="n">user_id</span><span class="p">,</span>
         <span class="s2">"session_id"</span><span class="p">:</span> <span class="n">session_id</span><span class="p">,</span>
         <span class="s2">"event_type"</span><span class="p">:</span> <span class="n">event_type</span><span class="p">,</span>
-        <span class="s2">"payload"</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
-            <span class="s2">"requestId"</span><span class="p">:</span> <span class="n">request_id</span><span class="p">,</span>
-            <span class="s2">"clientTime"</span><span class="p">:</span> <span class="n">client_time</span><span class="p">,</span>
-            <span class="s2">"payload"</span><span class="p">:</span> <span class="n">payload</span>
-        <span class="p">},</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="s2">"payload"</span><span class="p">:</span>    <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="p">})</span>
-    <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre></div>
+<hr>
+<h3 id="apprepositoriesdedupe_repopy"><code>app/repositories/dedupe_repo.py</code></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
+
+<span class="c1"># Назначение: регистрировать eventId в processed_events для защиты от дублей.</span>
+<span class="c1"># UNIQUE(user_id, event_id) → IntegrityError при повторной отправке → 409 EVENT_REJECTED</span>
+
+
+<span class="k">def</span> <span class="nf">register_event_or_conflict</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
+<span class="s2">        INSERT INTO processed_events (user_id, event_id, event_type, processed_at)</span>
+<span class="s2">        VALUES (:user_id, :event_id, :event_type, NOW(3))</span>
+<span class="s2">    """</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span> <span class="s2">"event_id"</span><span class="p">:</span> <span class="n">event_id</span><span class="p">,</span> <span class="s2">"event_type"</span><span class="p">:</span> <span class="n">event_type</span><span class="p">})</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"EVENT_REJECTED"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Duplicate eventId"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">409</span><span class="p">)</span>
 </code></pre></div>
 <hr>
 <h3 id="apprepositoriesleaderboard_repopy-get"><code>app/repositories/leaderboard_repo.py</code> (дополнение для GET)</h3>
@@ -1686,7 +1701,7 @@ Error → errorHandler → JSON + logging
 <span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
 
 <span class="c1"># Назначение: выбрать топ игроков по board_code/season с ограничением limit.</span>
-<span class="c1"># Ограничение: только SQL (с последующим преобразованием к контракту).</span>
+<span class="c1"># Ограничение: только SQL.</span>
 
 
 <span class="k">def</span> <span class="nf">get_leaderboard</span><span class="p">(</span><span class="n">board_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">season</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
@@ -1710,130 +1725,156 @@ Error → errorHandler → JSON + logging
 </code></pre></div>
 <hr>
 <h2 id="566-api-endpoints">5.6.6. Валидация для API endpoints (единый подход)</h2>
-<p>Требуется отдельный файл валидаторов API.</p>
-<p>Создать: <code>app/middleware/validate_api.py</code></p>
+<p>Файл валидаторов API: <code>app/middleware/validate_api.py</code></p>
 <p>Назначение: централизовать правила проверки входных данных до обращения к сервисам и БД.</p>
-<p>Там должны быть декораторы:</p>
+<p>Декораторы:</p>
 <ul>
 <li><code>validate_register</code></li>
 <li><code>validate_login</code></li>
-<li><code>validate_event</code></li>
+<li><code>validate_event</code> — дополнительно проверяет <code>eventId</code> (UUID-строка, обязательный для дедупликации)</li>
 <li><code>validate_leaderboard_query</code></li>
+<li><code>validate_match_finish</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
 <span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
 
-<span class="c1"># Назначение: валидировать регистрацию (email/password/nickname).</span>
-<span class="k">def</span> <span class="nf">validate_register</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">_bad</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid request body"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
 
+<span class="k">def</span> <span class="nf">_bad_body</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid request body"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_bad_query</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid query params"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">validate_register</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
 
-        <span class="n">email</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"email"</span><span class="p">)</span>
+        <span class="n">email</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"email"</span><span class="p">)</span>
         <span class="n">password</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"password"</span><span class="p">)</span>
         <span class="n">nickname</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"nickname"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"@"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">email</span><span class="p">:</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"email"</span><span class="p">:</span> <span class="s2">"valid email required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"email"</span><span class="p">:</span> <span class="s2">"valid email required"</span><span class="p">})</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">password</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">:</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"password"</span><span class="p">:</span> <span class="s2">"string length &gt;= 6 required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"password"</span><span class="p">:</span> <span class="s2">"string length &gt;= 6 required"</span><span class="p">})</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nickname</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">nickname</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"nickname"</span><span class="p">:</span> <span class="s2">"string length &gt;= 2 required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"nickname"</span><span class="p">:</span> <span class="s2">"string length &gt;= 2 required"</span><span class="p">})</span>
 
         <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="n">wrapper</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span>
     <span class="k">return</span> <span class="n">wrapper</span>
 
 
-<span class="c1"># Назначение: валидировать логин (email/password).</span>
 <span class="k">def</span> <span class="nf">validate_login</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">_bad</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid request body"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
-
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
 
-        <span class="n">email</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"email"</span><span class="p">)</span>
+        <span class="n">email</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"email"</span><span class="p">)</span>
         <span class="n">password</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"password"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">email</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">"@"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">email</span><span class="p">:</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"email"</span><span class="p">:</span> <span class="s2">"valid email required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"email"</span><span class="p">:</span> <span class="s2">"valid email required"</span><span class="p">})</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">password</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">password</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"password"</span><span class="p">:</span> <span class="s2">"string required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"password"</span><span class="p">:</span> <span class="s2">"string required"</span><span class="p">})</span>
 
         <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="n">wrapper</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span>
     <span class="k">return</span> <span class="n">wrapper</span>
 
 
-<span class="c1"># Назначение: валидировать событие (eventType/sessionId/clientTime/payload).</span>
 <span class="k">def</span> <span class="nf">validate_event</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">_bad</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid request body"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
-
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
 
+        <span class="n">event_id</span>   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"eventId"</span><span class="p">)</span>
         <span class="n">event_type</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"eventType"</span><span class="p">)</span>
         <span class="n">session_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"sessionId"</span><span class="p">)</span>
         <span class="n">client_time</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"clientTime"</span><span class="p">)</span>
-        <span class="n">payload</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"payload"</span><span class="p">)</span>
+        <span class="n">payload</span>    <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"payload"</span><span class="p">)</span>
 
+        <span class="c1"># eventId обязателен — используется для дедупликации через processed_events</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event_id</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">event_id</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"eventId"</span><span class="p">:</span> <span class="s2">"uuid string required"</span><span class="p">})</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">event_type</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"eventType"</span><span class="p">:</span> <span class="s2">"string required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"eventType"</span><span class="p">:</span> <span class="s2">"string required"</span><span class="p">})</span>
         <span class="k">if</span> <span class="n">session_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">session_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"sessionId"</span><span class="p">:</span> <span class="s2">"int or null required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"sessionId"</span><span class="p">:</span> <span class="s2">"int or null required"</span><span class="p">})</span>
         <span class="k">if</span> <span class="n">client_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">client_time</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"clientTime"</span><span class="p">:</span> <span class="s2">"string or null required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"clientTime"</span><span class="p">:</span> <span class="s2">"string or null required"</span><span class="p">})</span>
         <span class="k">if</span> <span class="n">payload</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"payload"</span><span class="p">:</span> <span class="s2">"object or null required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"payload"</span><span class="p">:</span> <span class="s2">"object or null required"</span><span class="p">})</span>
 
         <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-    <span class="n">wrapper</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span>
     <span class="k">return</span> <span class="n">wrapper</span>
 
 
-<span class="c1"># Назначение: валидировать query-параметры лидерборда (boardCode/season/limit).</span>
 <span class="k">def</span> <span class="nf">validate_leaderboard_query</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">_bad</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid query params"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
-
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">board_code</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"boardCode"</span><span class="p">)</span>
-        <span class="n">season</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"season"</span><span class="p">)</span>
-        <span class="n">limit</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"limit"</span><span class="p">)</span>
+        <span class="n">season</span>     <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"season"</span><span class="p">)</span>
+        <span class="n">limit</span>      <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"limit"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">board_code</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">board_code</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"boardCode"</span><span class="p">:</span> <span class="s2">"string required"</span><span class="p">})</span>
+            <span class="n">_bad_query</span><span class="p">({</span><span class="s2">"boardCode"</span><span class="p">:</span> <span class="s2">"string required"</span><span class="p">})</span>
         <span class="k">if</span> <span class="n">season</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">season</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"season"</span><span class="p">:</span> <span class="s2">"int required"</span><span class="p">})</span>
+            <span class="n">_bad_query</span><span class="p">({</span><span class="s2">"season"</span><span class="p">:</span> <span class="s2">"int required"</span><span class="p">})</span>
         <span class="k">if</span> <span class="n">limit</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">limit</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"limit"</span><span class="p">:</span> <span class="s2">"int required"</span><span class="p">})</span>
+            <span class="n">_bad_query</span><span class="p">({</span><span class="s2">"limit"</span><span class="p">:</span> <span class="s2">"int required"</span><span class="p">})</span>
 
         <span class="n">lim</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">lim</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">lim</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">:</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"limit"</span><span class="p">:</span> <span class="s2">"1..1000 required"</span><span class="p">})</span>
+            <span class="n">_bad_query</span><span class="p">({</span><span class="s2">"limit"</span><span class="p">:</span> <span class="s2">"1..1000 required"</span><span class="p">})</span>
 
         <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">wrapper</span>
 
-    <span class="n">wrapper</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span>
+
+<span class="k">def</span> <span class="nf">validate_match_finish</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
+
+        <span class="n">match_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"matchId"</span><span class="p">)</span>
+        <span class="n">result</span>   <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"result"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">match_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"matchId"</span><span class="p">:</span> <span class="s2">"int required"</span><span class="p">})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"result"</span><span class="p">:</span> <span class="s2">"object required"</span><span class="p">})</span>
+
+        <span class="n">is_win</span>      <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"isWin"</span><span class="p">)</span>
+        <span class="n">score</span>       <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"score"</span><span class="p">)</span>
+        <span class="n">duration</span>    <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"durationSeconds"</span><span class="p">)</span>
+        <span class="n">power_delta</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"powerDelta"</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">is_win</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"result.isWin"</span><span class="p">:</span> <span class="s2">"bool required"</span><span class="p">})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">score</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"result.score"</span><span class="p">:</span> <span class="s2">"int &gt;= 0 required"</span><span class="p">})</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">duration</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"result.durationSeconds"</span><span class="p">:</span> <span class="s2">"int &gt;= 0 required"</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">power_delta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">power_delta</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"result.powerDelta"</span><span class="p">:</span> <span class="s2">"int or null required"</span><span class="p">})</span>
+
+        <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">wrapper</span>
 </code></pre></div>
 <hr>
 <h1 id="57-mvp-endpoints">5.7. MVP endpoints — спецификация + примеры</h1>
 <h2 id="571-post-apiv1authregister">5.7.1. <code>POST /api/v1/auth/register</code></h2>
-<p><strong>Назначение:</strong> создать аккаунт, назначить роль <code>player</code>.</p>
+<p><strong>Назначение:</strong> создать аккаунт, хэшировать пароль bcrypt, назначить роль <code>player</code>, создать строку <code>player_progress</code>.</p>
 <p><strong>Request</strong></p>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/auth/register</span>
 <span class="err">Content-Type: application/json</span>
@@ -1847,24 +1888,24 @@ Error → errorHandler → JSON + logging
 <p><strong>Response (201)</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"player1@example.com"</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PlayerOne"</span><span class="w"> </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>Ошибки:</p>
 <ul>
 <li><code>400 VALIDATION_ERROR</code></li>
-<li><code>409 EMAIL_ALREADY_EXISTS</code></li>
+<li><code>409 CONFLICT</code> — email уже зарегистрирован</li>
 </ul>
 <hr>
 <h2 id="572-post-apiv1authlogin">5.7.2. <code>POST /api/v1/auth/login</code></h2>
-<p><strong>Назначение:</strong> проверить пароль и выдать JWT.</p>
+<p><strong>Назначение:</strong> проверить bcrypt-пароль и выдать JWT с claims.roles.</p>
 <p><strong>Request</strong></p>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/auth/login</span>
 <span class="err">Content-Type: application/json</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"player1@example.com"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"P@ssw0rd!"</span>
+<span class="w">  </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"alice@example.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"password123"</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response (200)</strong></p>
@@ -1872,19 +1913,19 @@ Error → errorHandler → JSON + logging
 <span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">"accessToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;JWT&gt;"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"tokenType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Bearer"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"expiresInSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">3600</span>
+<span class="w">    </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Commander_Alice"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>Ошибки:</p>
 <ul>
-<li><code>401 INVALID_CREDENTIALS</code></li>
-<li><code>403 USER_BANNED</code></li>
+<li><code>401 UNAUTHORIZED</code> — неверный пароль или пользователь не найден</li>
+<li><code>403 FORBIDDEN</code> — пользователь заблокирован (<code>is_banned = 1</code>)</li>
 </ul>
 <hr>
 <h2 id="573-get-apiv1profile">5.7.3. <code>GET /api/v1/profile</code></h2>
-<p><strong>Назначение:</strong> отдать “витрину” профиля: user + progress.</p>
+<p><strong>Назначение:</strong> отдать "витрину" профиля: user + progress.</p>
 <p><strong>Request</strong></p>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/profile</span>
 <span class="err">Authorization: Bearer &lt;JWT&gt;</span>
@@ -1893,66 +1934,63 @@ Error → errorHandler → JSON + logging
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"player1@example.com"</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PlayerOne"</span><span class="w"> </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">"progress"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="nt">"xp"</span><span class="p">:</span><span class="w"> </span><span class="mi">2450</span><span class="p">,</span><span class="w"> </span><span class="nt">"softCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span><span class="w"> </span><span class="nt">"hardCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"alice@example.com"</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Commander_Alice"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"progress"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w"> </span><span class="nt">"xp"</span><span class="p">:</span><span class="w"> </span><span class="mi">85400</span><span class="p">,</span><span class="w"> </span><span class="nt">"softCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">12500</span><span class="p">,</span><span class="w"> </span><span class="nt">"hardCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="w"> </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>Ошибки:</p>
 <ul>
 <li><code>401 UNAUTHORIZED</code></li>
-<li><code>403 USER_BANNED</code></li>
+<li><code>403 FORBIDDEN</code> — пользователь заблокирован</li>
 </ul>
 <hr>
 <h2 id="574-post-apiv1events">5.7.4. <code>POST /api/v1/events</code></h2>
-<p><strong>Назначение:</strong> записать событие (и по необходимости запустить обработку).</p>
+<p><strong>Назначение:</strong> записать событие в <code>game_events</code> с дедупликацией через <code>processed_events</code> по <code>eventId</code>.</p>
 <p><strong>Request</strong></p>
 <div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/events</span>
 <span class="err">Authorization: Bearer &lt;JWT&gt;</span>
 <span class="err">Content-Type: application/json</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"match_finish"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="mi">555</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"clientTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-26T12:20:10.000Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"eventId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"evt-a1b2c3d4-e5f6-7890"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unit_deploy"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"clientTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-27T12:20:10.000Z"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"td"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"mapCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"forest_01"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"season"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">12450</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">410</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"waveReached"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">    </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"unitCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cavalry"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"amount"</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"atSecond"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p><strong>Response (200)</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"accepted"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"eventId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"evt-a1b2c3d4-e5f6-7890"</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accepted"</span><span class="w"> </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <p>Ошибки:</p>
 <ul>
 <li><code>400 VALIDATION_ERROR</code></li>
-<li><code>429 RATE_LIMITED</code></li>
-<li><code>409 EVENT_REJECTED</code></li>
+<li><code>409 EVENT_REJECTED</code> — повторный <code>eventId</code></li>
 </ul>
 <hr>
 <h2 id="575-get-apiv1leaderboard">5.7.5. <code>GET /api/v1/leaderboard</code></h2>
 <p><strong>Request</strong></p>
-<div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/leaderboard?boardCode=td_score&amp;season=1&amp;limit=100</span>
+<div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/leaderboard?boardCode=default&amp;season=1&amp;limit=10</span>
 <span class="err">Authorization: Bearer &lt;JWT&gt;</span>
 </code></pre></div>
 <p><strong>Response (200)</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"boardCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"td_score"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"boardCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"season"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">    </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"rank"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">50000</span><span class="w"> </span><span class="p">},</span>
-<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"rank"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Lina"</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">45000</span><span class="w"> </span><span class="p">}</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"rank"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Siege_Eve"</span><span class="p">,</span><span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">9850</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"rank"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WarLord_Carol"</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">8720</span><span class="w"> </span><span class="p">}</span>
 <span class="w">    </span><span class="p">]</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -1963,59 +2001,49 @@ Error → errorHandler → JSON + logging
 <li><code>401 UNAUTHORIZED</code></li>
 </ul>
 <hr>
-<h1 id="58-postman">5.8. Требование к воспроизводимости проверок (Postman/ручные тесты)</h1>
+<h1 id="58-postman-test_clienthtml">5.8. Требование к воспроизводимости проверок (Postman / test_client.html)</h1>
 <p>Должно быть возможно проверить:</p>
 <ul>
 <li><code>201</code> при регистрации</li>
 <li><code>409</code> при повторной регистрации того же email</li>
 <li><code>200</code> при логине и получение <code>accessToken</code></li>
 <li><code>401</code> при логине с неверным паролем</li>
-<li><code>403</code> при обращении забаненного пользователя (если is_banned = 1)</li>
+<li><code>403</code> при логине заблокированного пользователя (<code>banned@example.com</code> из <code>seed.sql</code>)</li>
 <li><code>401</code> при доступе к /profile без JWT</li>
 <li><code>400</code> при неверных параметрах /leaderboard или неверном JSON /events</li>
-<li><code>429</code> при включённом rate limit правиле (точка расширения)</li>
-<li><code>409</code> при включённой проверке дубликатов/отклонении события</li>
+<li><code>409</code> при повторной отправке события с тем же <code>eventId</code></li>
 <li><code>500</code> при искусственной ошибке сервера</li>
 </ul>
+<blockquote>
+<p>Для ручного тестирования в браузере используйте <code>test_client.html</code> из корня проекта.</p>
+</blockquote>
 <hr>
-<h1 id="59-match_finish">5.9. Требования к обработке события match_finish (обязательные усиления)</h1>
-<p>Событие <code>match_finish</code> должно быть обработано так, чтобы в проекте были заложены механизмы или минимум точки расширения:</p>
+<h1 id="59-match_finish">5.9. Требования к обработке события и match_finish (обязательные усиления)</h1>
+<p>Событие <code>match_finish</code> обрабатывается через <code>POST /api/v1/match/finish</code>:</p>
 <ol>
+<li><strong>Идемпотентность</strong>:</li>
+<li>статус матча <code>started</code> — гарантирует, что повторный вызов вернёт <code>409 CONFLICT</code></li>
 <li>
-<p><strong>Идемпотентность</strong>:</p>
-</li>
-<li>
-<p>минимум: <code>requestId</code> участвует в проверке дубля</p>
-</li>
-<li>
-<p>или: отдельная таблица/уникальность по <code>requestId + eventType + userId</code></p>
+<p>дополнительно: <code>processed_events</code> с <code>UNIQUE(user_id, event_id)</code> защищает <code>/events</code> от дублей</p>
 </li>
 <li>
 <p><strong>Ownership/anti-cheat</strong>:</p>
 </li>
+<li><code>matchId</code> должен принадлежать <code>userId</code> из JWT — проверяется в <code>ensure_match_ownership_started()</code></li>
 <li>
-<p>если есть <code>matches</code>: проверка <code>matchId</code> принадлежит <code>userId</code> и статус <code>started</code></p>
+<p>статус матча должен быть <code>started</code></p>
 </li>
 <li>
 <p><strong>Блокировки</strong>:</p>
 </li>
 <li>
-<p><code>SELECT ... FOR UPDATE</code> на <code>player_progress</code> (обязательно)</p>
-</li>
-<li>
-<p>при необходимости аналогично для лидерборда</p>
+<p><code>SELECT ... FOR UPDATE</code> на <code>player_progress</code> в <code>lock_progress_row()</code> (обязательно)</p>
 </li>
 <li>
 <p><strong>Атомарность</strong>:</p>
 </li>
-<li>
-<p>сбой на любом шаге → rollback</p>
-</li>
+<li>сбой на любом шаге → <code>db.session.rollback()</code></li>
 </ol>
-<p>Проверка:</p>
-<ul>
-<li>повторный запрос с тем же <code>requestId</code> должен быть либо безопасно проигнорирован (<code>accepted=false/409</code>), либо не менять прогресс/таблицы.</li>
-</ul>
 <hr>
 <h1 id="510-swagger-openapi">5.10. Swagger / OpenAPI (если подключаете)</h1>
 <h2 id="5101">5.10.1. Что должно быть описано</h2>
@@ -2023,7 +2051,7 @@ Error → errorHandler → JSON + logging
 <li>все MVP endpoints</li>
 <li>схемы запросов/ответов (включая <code>ErrorResponse</code>)</li>
 <li>security scheme JWT bearer</li>
-<li>ответы <code>401/403/409/429</code> там, где они возможны</li>
+<li>ответы <code>401/403/409</code> там, где они возможны</li>
 </ul>
 <p>Минимальный фрагмент:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">components</span><span class="p">:</span>
