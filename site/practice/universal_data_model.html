@@ -684,21 +684,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirementstxt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Минимальные зависимости (пример requirements.txt)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Минимальная структура проекта (доработка)
+        Структура проекта (доработка)
       
     </span>
   </a>
@@ -1154,21 +1143,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirementstxt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Минимальные зависимости (пример requirements.txt)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Минимальная структура проекта (доработка)
+        Структура проекта (доработка)
       
     </span>
   </a>
@@ -1435,9 +1413,9 @@ docs/02-data-model.md
 </ul>
 <hr>
 <h3 id="213">2.1.3. Методическое пояснение (что именно вы сдаёте и как это сделать)</h3>
-<p><strong>Что сдаётся “по минимуму” на этом этапе:</strong></p>
+<p><strong>Что сдаётся "по минимуму" на этом этапе:</strong></p>
 <ul>
-<li>не “вся база игры”, а <strong>универсальное ядро</strong>, которое подходит для любого жанра;</li>
+<li>не "вся база игры", а <strong>универсальное ядро</strong>, которое подходит для любого жанра;</li>
 <li>
 <p>ядро должно уметь:</p>
 </li>
@@ -1453,7 +1431,7 @@ docs/02-data-model.md
 <p><strong>Как делать ER-ядро быстро:</strong></p>
 <ol>
 <li>Выпишите сущности из списка обязательных.</li>
-<li>Для каждой сущности укажите “зачем она нужна” (1 строка).</li>
+<li>Для каждой сущности укажите "зачем она нужна" (1 строка).</li>
 <li>Укажите связи в формате 1:1 / 1:M / M:N.</li>
 <li>Отметьте составные уникальности (день, сезон, доска).</li>
 </ol>
@@ -1465,22 +1443,26 @@ docs/02-data-model.md
 <li>добавляйте <code>INDEX</code> на типовые запросы: (user_id, created_at), (board_code, season, score) и т.д.;</li>
 <li>CHECK в MySQL 8 работает, но важно задавать реалистичные ограничения (неотрицательные, level&gt;=1).</li>
 </ul>
+<blockquote>
+<p><strong>Обратите внимание:</strong> поле пароля в таблице <code>users</code> называется <code>password</code> и хранит bcrypt-хэш (не plaintext). Это соответствует реализации в <code>auth_service.py</code>, где применяется <code>bcrypt.hashpw()</code> / <code>bcrypt.checkpw()</code>.</p>
+</blockquote>
 <hr>
 <h3 id="214">2.1.4. На что обратить внимание при адаптации под свою игру</h3>
-<p><strong>1) Не “ломайте ядро” доменными сущностями.</strong>
-Доменные таблицы (например <code>buildings</code>, <code>units</code>, <code>quests</code>, <code>inventory</code>) идут позже. Сейчас — только ядро.</p>
+<p><strong>1) Не "ломайте ядро" доменными сущностями.</strong>
+Доменные таблицы (например <code>matches</code>, <code>army_units</code>, <code>city_buildings</code>) идут позже как жанровое расширение (раздел 3). Сейчас — только ядро.</p>
 <p><strong>2) События должны покрывать жанровую специфику через JSON.</strong>
-В стратегии вы не обязаны делать отдельную таблицу “строительство” на этом этапе — вы можете логировать событие:</p>
+В стратегии вы не обязаны делать отдельную таблицу "строительство" на этом этапе — вы можете логировать событие:</p>
 <ul>
 <li><code>event_type = 'building_upgrade_started'</code></li>
-<li><code>payload_json = { buildingId, fromLevel, toLevel, cost, finishAt }</code></li>
+<li><code>payload_json = { "buildingCode": "barracks", "fromLevel": 4, "toLevel": 5, "goldCost": 500 }</code></li>
 </ul>
 <p><strong>3) Прогресс должен быть минимальным, но универсальным.</strong>
-Даже если в игре нет “level”, он всё равно может отражать “tier/league/rank” или “stage”.</p>
+Даже если в игре нет "level", он всё равно может отражать "tier/league/rank" или "stage".</p>
 <p><strong>4) LeaderboardScores — это не только PvP.</strong>
 Подходит и для:</p>
 <ul>
-<li>“макс. волна”, “макс. очки”, “время”, “доход/час”, “эффективность”.</li>
+<li>"макс. волна", "макс. очки", "время", "доход/час", "эффективность".</li>
+<li>в проекте используются доски <code>default</code> и <code>pvp</code> (см. <code>seed.sql</code>).</li>
 </ul>
 <p><strong>5) StatisticsDaily — это агрегаты, а не сырые события.</strong>
 Сырые события — <code>game_events</code>. Агрегаты — заранее подсчитанные итоги (для быстрых отчётов).</p>
@@ -1493,21 +1475,13 @@ docs/02-data-model.md
 <li>База данных: <strong>MySQL 8.0</strong></li>
 <li>ORM (рекомендуется): <strong>SQLAlchemy</strong></li>
 <li>Миграции (рекомендуется): <strong>Flask-Migrate</strong></li>
-<li>Аутентификация: <strong>JWT</strong> (например, <code>flask-jwt-extended</code>)</li>
+<li>Аутентификация: <strong>JWT</strong> (<code>flask-jwt-extended</code>)</li>
+<li>Хэширование паролей: <strong>bcrypt</strong></li>
 <li>Формат обмена данными: <strong>JSON</strong></li>
 <li>Протокол: <strong>HTTPS</strong></li>
 </ul>
 <hr>
-<h3 id="requirementstxt">Минимальные зависимости (пример <code>requirements.txt</code>)</h3>
-<div class="highlight"><pre><span></span><code>Flask
-flask-jwt-extended
-flask-sqlalchemy
-flask-migrate
-pymysql
-python-dotenv
-</code></pre></div>
-<hr>
-<h3 id="_3">Минимальная структура проекта (доработка)</h3>
+<h3 id="_3">Структура проекта (доработка)</h3>
 <div class="highlight"><pre><span></span><code>project-root/
 │
 ├── db/
@@ -1516,8 +1490,9 @@ python-dotenv
 ├── docs/
 │   └── 02-data-model.md
 │
-├── app/               (может быть пустым на этом этапе)
-└── README.md
+├── app/               (реализована)
+│   └── config.py      ← конфигурация здесь, не в корне
+└── wsgi.py            ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="_4">Как создать файлы</h3>
@@ -1534,11 +1509,11 @@ python-dotenv
 <div class="highlight"><pre><span></span><code><span class="gh"># 2) Универсальная модель данных (ядро)</span>
 
 <span class="gu">## Сущности ядра</span>
-<span class="k">-</span><span class="w"> </span>users — аккаунты пользователей
-<span class="k">-</span><span class="w"> </span>roles — роли доступа (admin/moderator/player)
+<span class="k">-</span><span class="w"> </span>users — аккаунты пользователей (email UNIQUE, password — bcrypt-хэш)
+<span class="k">-</span><span class="w"> </span>roles — роли доступа (player/moderator/admin)
 <span class="k">-</span><span class="w"> </span>user_roles — связь users и roles (M:N)
-<span class="k">-</span><span class="w"> </span>game_sessions — сессии пользователя
-<span class="k">-</span><span class="w"> </span>game_events — события пользователя (payload в JSON)
+<span class="k">-</span><span class="w"> </span>game_sessions — сессии пользователя (платформа, IP, время)
+<span class="k">-</span><span class="w"> </span>game_events — события пользователя (payload в JSON NOT NULL)
 <span class="k">-</span><span class="w"> </span>player_progress — текущее состояние пользователя
 <span class="k">-</span><span class="w"> </span>statistics_daily — дневные агрегаты
 <span class="k">-</span><span class="w"> </span>leaderboard_scores — рейтинги по доскам и сезонам
@@ -1555,7 +1530,6 @@ python-dotenv
 <hr>
 <h3 id="232-dbschemasql-mysql-80">2.3.2. Пример содержимого <code>db/schema.sql</code> (MySQL 8.0)</h3>
 <div class="highlight"><pre><span></span><code><span class="c1">-- MySQL 8.0+</span>
-<span class="c1">-- Рекомендуемо:</span>
 <span class="c1">-- ENGINE=InnoDB, CHARSET=utf8mb4, COLLATION=utf8mb4_0900_ai_ci</span>
 
 <span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">roles</span><span class="w"> </span><span class="p">(</span>
@@ -1566,7 +1540,7 @@ python-dotenv
 <span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span>
 <span class="w">  </span><span class="n">id</span><span class="w">            </span><span class="nb">INT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
 <span class="w">  </span><span class="n">email</span><span class="w">         </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
-<span class="w">  </span><span class="n">password_hash</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">password</span><span class="w">      </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">      </span><span class="c1">-- bcrypt-хэш</span>
 <span class="w">  </span><span class="n">nickname</span><span class="w">      </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span><span class="w">  </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
 <span class="w">  </span><span class="n">created_at</span><span class="w">    </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w">  </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
 <span class="w">  </span><span class="n">last_login_at</span><span class="w"> </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w">  </span><span class="k">NULL</span><span class="p">,</span>
@@ -1603,7 +1577,7 @@ python-dotenv
 <span class="w">  </span><span class="n">payload_json</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
 <span class="w">  </span><span class="n">created_at</span><span class="w">   </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
 
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_events_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_events_user</span><span class="w">    </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w">    </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w">         </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
 <span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_events_session</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">session_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">game_sessions</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
 
 <span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_events_user_time</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="p">),</span>
@@ -1620,9 +1594,9 @@ python-dotenv
 
 <span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_progress_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
 <span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_level</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="k">level</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_xp</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">xp</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_soft</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">soft_currency</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_hard</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">hard_currency</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_xp</span><span class="w">    </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">xp</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_soft</span><span class="w">  </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">soft_currency</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_hard</span><span class="w">  </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">hard_currency</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
 
 <span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">statistics_daily</span><span class="w"> </span><span class="p">(</span>
@@ -1639,14 +1613,13 @@ python-dotenv
 <span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_stats_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
 <span class="w">  </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">uq_stats_user_day</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="k">day</span><span class="p">),</span>
 <span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_stats_day</span><span class="w"> </span><span class="p">(</span><span class="k">day</span><span class="p">),</span>
-<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_stats_user_day</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="k">day</span><span class="p">),</span>
 
 <span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_sessions_count</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">sessions_count</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_events_count</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">events_count</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_playtime</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">playtime_seconds</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_wins</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">wins</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_losses</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">losses</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_score_sum</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">score_sum</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_events_count</span><span class="w">   </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">events_count</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_playtime</span><span class="w">       </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">playtime_seconds</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_wins</span><span class="w">           </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">wins</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_losses</span><span class="w">         </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">losses</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_score_sum</span><span class="w">      </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">score_sum</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
 
 <span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">leaderboard_scores</span><span class="w"> </span><span class="p">(</span>
@@ -1660,10 +1633,9 @@ python-dotenv
 <span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">fk_lb_user</span><span class="w"> </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
 <span class="w">  </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">uq_lb_user_board_season</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">board_code</span><span class="p">,</span><span class="w"> </span><span class="n">season</span><span class="p">),</span>
 <span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_lb_board_season_score</span><span class="w"> </span><span class="p">(</span><span class="n">board_code</span><span class="p">,</span><span class="w"> </span><span class="n">season</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">),</span>
-<span class="w">  </span><span class="k">INDEX</span><span class="w"> </span><span class="n">idx_lb_user</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">),</span>
 
 <span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_season</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">season</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_score</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">score</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_score</span><span class="w">  </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">score</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
 </code></pre></div>
 <hr>
@@ -1672,8 +1644,11 @@ python-dotenv
 <div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">roles</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="w"> </span><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'player'</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s1">'moderator'</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="s1">'admin'</span><span class="p">);</span>
 </code></pre></div>
 <h3 id="242">2.4.2. Создать пользователя</h3>
-<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">password_hash</span><span class="p">,</span><span class="w"> </span><span class="n">nickname</span><span class="p">)</span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'p1@example.com'</span><span class="p">,</span><span class="w"> </span><span class="s1">'hash_here'</span><span class="p">,</span><span class="w"> </span><span class="s1">'PlayerOne'</span><span class="p">);</span>
+<blockquote>
+<p>Поле <code>password</code> хранит bcrypt-хэш. В <code>seed.sql</code> используется хэш строки <code>"password123"</code>.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">,</span><span class="w"> </span><span class="n">nickname</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'p1@example.com'</span><span class="p">,</span><span class="w"> </span><span class="s1">'$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewdBPj6hsxq5/Qe2'</span><span class="p">,</span><span class="w"> </span><span class="s1">'PlayerOne'</span><span class="p">);</span>
 </code></pre></div>
 <h3 id="243">2.4.3. Назначить роль игроку</h3>
 <div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">user_roles</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">role_id</span><span class="p">)</span>
@@ -1682,12 +1657,12 @@ python-dotenv
 <span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="o">=</span><span class="s1">'p1@example.com'</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">name</span><span class="o">=</span><span class="s1">'player'</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="244-progress">2.4.4. Создать progress</h3>
-<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">player_progress</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">IGNORE</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">player_progress</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
 <span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">email</span><span class="o">=</span><span class="s1">'p1@example.com'</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="245">2.4.5. Создать сессию</h3>
 <div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">game_sessions</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">client_platform</span><span class="p">,</span><span class="w"> </span><span class="n">client_version</span><span class="p">,</span><span class="w"> </span><span class="n">ip</span><span class="p">)</span>
-<span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="s1">'unity'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1.0.0'</span><span class="p">,</span><span class="w"> </span><span class="s1">'127.0.0.1'</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="s1">'unity'</span><span class="p">,</span><span class="w"> </span><span class="s1">'1.2.0'</span><span class="p">,</span><span class="w"> </span><span class="s1">'127.0.0.1'</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">email</span><span class="o">=</span><span class="s1">'p1@example.com'</span><span class="p">;</span>
 </code></pre></div>
 <h3 id="246">2.4.6. Записать событие</h3>
@@ -1696,7 +1671,7 @@ python-dotenv
 <span class="w">  </span><span class="n">u</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
 <span class="w">  </span><span class="n">s</span><span class="p">.</span><span class="n">id</span><span class="p">,</span>
 <span class="w">  </span><span class="s1">'match_finish'</span><span class="p">,</span>
-<span class="w">  </span><span class="n">JSON_OBJECT</span><span class="p">(</span><span class="s1">'score'</span><span class="p">,</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span><span class="w"> </span><span class="s1">'durationSeconds'</span><span class="p">,</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span><span class="w"> </span><span class="s1">'isWin'</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)</span>
+<span class="w">  </span><span class="n">JSON_OBJECT</span><span class="p">(</span><span class="s1">'matchId'</span><span class="p">,</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="s1">'score'</span><span class="p">,</span><span class="w"> </span><span class="mi">1850</span><span class="p">,</span><span class="w"> </span><span class="s1">'durationSeconds'</span><span class="p">,</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span><span class="w"> </span><span class="s1">'isWin'</span><span class="p">,</span><span class="w"> </span><span class="k">true</span><span class="p">)</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="n">u</span>
 <span class="k">JOIN</span><span class="w"> </span><span class="n">game_sessions</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">id</span>
 <span class="k">WHERE</span><span class="w"> </span><span class="n">u</span><span class="p">.</span><span class="n">email</span><span class="o">=</span><span class="s1">'p1@example.com'</span>
@@ -1765,7 +1740,8 @@ python-dotenv
 <hr>
 <h2 id="27-dbschemasql">2.7. Пустой шаблон <code>db/schema.sql</code> (каркас, без конкретных полей)</h2>
 <blockquote>
-<p>Внимание: это каркас для заполнения. При сдаче он должен содержать PK/FK/UNIQUE/CHECK и JSON.</p>
+<p>Внимание: это каркас для заполнения. При сдаче он должен содержать PK/FK/UNIQUE/CHECK и JSON.<br>
+Поле пароля называется <code>password</code> (хранит bcrypt-хэш).</p>
 </blockquote>
 <div class="highlight"><pre><span></span><code><span class="c1">-- MySQL 8.0+</span>
 <span class="c1">-- ENGINE=InnoDB, CHARSET=utf8mb4, COLLATION=utf8mb4_0900_ai_ci</span>
@@ -1778,7 +1754,7 @@ python-dotenv
 <span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="p">(</span>
 <span class="w">  </span><span class="n">id</span><span class="w"> </span><span class="nb">INT</span><span class="w"> </span><span class="n">AUTO_INCREMENT</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
 <span class="w">  </span><span class="n">email</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">UNIQUE</span><span class="p">,</span>
-<span class="w">  </span><span class="n">password_hash</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
+<span class="w">  </span><span class="n">password</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">   </span><span class="c1">-- bcrypt-хэш</span>
 <span class="w">  </span><span class="n">nickname</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
 <span class="w">  </span><span class="n">created_at</span><span class="w"> </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
 <span class="w">  </span><span class="n">last_login_at</span><span class="w"> </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
@@ -1812,7 +1788,7 @@ python-dotenv
 <span class="w">  </span><span class="n">event_type</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
 <span class="w">  </span><span class="n">payload_json</span><span class="w"> </span><span class="n">JSON</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span>
 <span class="w">  </span><span class="n">created_at</span><span class="w"> </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
-<span class="w">  </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
+<span class="w">  </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w">    </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w">         </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
 <span class="w">  </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">session_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">game_sessions</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="k">NULL</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
 
@@ -1825,9 +1801,9 @@ python-dotenv
 <span class="w">  </span><span class="n">updated_at</span><span class="w"> </span><span class="n">DATETIME</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
 <span class="w">  </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
 <span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_level</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="k">level</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_xp</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">xp</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_soft</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">soft_currency</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_hard</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">hard_currency</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_xp</span><span class="w">    </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">xp</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_soft</span><span class="w">  </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">soft_currency</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_hard</span><span class="w">  </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">hard_currency</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
 
 <span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">statistics_daily</span><span class="w"> </span><span class="p">(</span>
@@ -1843,11 +1819,11 @@ python-dotenv
 <span class="w">  </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
 <span class="w">  </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">uq_stats_user_day</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="k">day</span><span class="p">),</span>
 <span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_sessions_count</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">sessions_count</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_events_count</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">events_count</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_playtime</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">playtime_seconds</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_wins</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">wins</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_losses</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">losses</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_score_sum</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">score_sum</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_events_count</span><span class="w">   </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">events_count</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_playtime</span><span class="w">       </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">playtime_seconds</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_wins</span><span class="w">           </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">wins</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_losses</span><span class="w">         </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">losses</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_score_sum</span><span class="w">      </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">score_sum</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
 
 <span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">leaderboard_scores</span><span class="w"> </span><span class="p">(</span>
@@ -1860,10 +1836,9 @@ python-dotenv
 <span class="w">  </span><span class="k">FOREIGN</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span><span class="w"> </span><span class="k">REFERENCES</span><span class="w"> </span><span class="n">users</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="k">DELETE</span><span class="w"> </span><span class="k">CASCADE</span><span class="p">,</span>
 <span class="w">  </span><span class="k">UNIQUE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="n">uq_lb_user_board_season</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">board_code</span><span class="p">,</span><span class="w"> </span><span class="n">season</span><span class="p">),</span>
 <span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_season</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">season</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
-<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_score</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">score</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">  </span><span class="k">CONSTRAINT</span><span class="w"> </span><span class="n">chk_score</span><span class="w">  </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">score</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
 <span class="p">)</span><span class="w"> </span><span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span><span class="p">;</span>
 </code></pre></div>
-<hr>
 
 
 

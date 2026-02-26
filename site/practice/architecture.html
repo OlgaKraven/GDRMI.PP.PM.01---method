@@ -700,17 +700,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#142-requirementstxt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.4.2. Минимальные зависимости (пример requirements.txt)
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -720,7 +709,7 @@
   <a href="#15-flask" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.5. Минимальная структура проекта (Flask)
+        1.5. Структура проекта (Flask)
       
     </span>
   </a>
@@ -762,15 +751,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#172-post-matchfinish" class="md-nav__link">
+  <a href="#172-post-apiv1matchfinish" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.7.2. Сценарий: POST /match/finish
+        1.7.2. Сценарий: POST /api/v1/match/finish
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1.7.2. Сценарий: POST /match/finish">
+    <nav class="md-nav" aria-label="1.7.2. Сценарий: POST /api/v1/match/finish">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -945,15 +934,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#192-post-cityupgrade" class="md-nav__link">
+  <a href="#192-post-apiv1matchfinish" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.9.2. Сценарий: POST /city/upgrade
+        1.9.2. Сценарий: POST /api/v1/match/finish
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1.9.2. Сценарий: POST /city/upgrade">
+    <nav class="md-nav" aria-label="1.9.2. Сценарий: POST /api/v1/match/finish">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1609,17 +1598,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#142-requirementstxt" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1.4.2. Минимальные зависимости (пример requirements.txt)
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1629,7 +1607,7 @@
   <a href="#15-flask" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.5. Минимальная структура проекта (Flask)
+        1.5. Структура проекта (Flask)
       
     </span>
   </a>
@@ -1671,15 +1649,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#172-post-matchfinish" class="md-nav__link">
+  <a href="#172-post-apiv1matchfinish" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.7.2. Сценарий: POST /match/finish
+        1.7.2. Сценарий: POST /api/v1/match/finish
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1.7.2. Сценарий: POST /match/finish">
+    <nav class="md-nav" aria-label="1.7.2. Сценарий: POST /api/v1/match/finish">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1854,15 +1832,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#192-post-cityupgrade" class="md-nav__link">
+  <a href="#192-post-apiv1matchfinish" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1.9.2. Сценарий: POST /city/upgrade
+        1.9.2. Сценарий: POST /api/v1/match/finish
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1.9.2. Сценарий: POST /city/upgrade">
+    <nav class="md-nav" aria-label="1.9.2. Сценарий: POST /api/v1/match/finish">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2276,16 +2254,16 @@
 <li>MQ — обработка событий (лог событий, аналитика, античит, уведомления).</li>
 </ul>
 <p>⚠ Важно:<br>
-Схема должна отражать <strong>архитектуру сопровождения игрового продукта</strong>, а не просто “сайт + БД”.<br>
+Схема должна отражать <strong>архитектуру сопровождения игрового продукта</strong>, а не просто "сайт + БД".<br>
 То есть обязательно присутствует игровой сценарий: матч/бой, строительство, прогресс, экономика, события, рейтинги.</p>
 <hr>
 <h2 id="13">1.3. Описание одного серверного сценария</h2>
 <h3 id="131-endpoint">1.3.1. Выбор endpoint</h3>
 <p>Выбрать один endpoint:</p>
 <ul>
-<li><code>POST /auth/login</code></li>
-<li><code>POST /match/finish</code></li>
-<li><code>GET /profile</code></li>
+<li><code>POST /api/v1/auth/login</code></li>
+<li><code>POST /api/v1/match/finish</code></li>
+<li><code>GET /api/v1/profile</code></li>
 </ul>
 <hr>
 <h3 id="132">1.3.2. Описание должно включать</h3>
@@ -2303,11 +2281,11 @@
 <h3 id="133">1.3.3. Методическое пояснение (как выбрать сценарий под жанр)</h3>
 <p>При адаптации под свою игру:</p>
 <ul>
-<li>Если это <strong>RPG</strong> → можно описать <code>POST /battle/complete</code></li>
-<li>Если это <strong>Tower Defense</strong> → <code>POST /match/finish</code></li>
-<li>Если это <strong>Shooter</strong> → <code>POST /session/end</code></li>
-<li>Если это <strong>Idle / Simulator</strong> → <code>POST /economy/collect</code></li>
-<li>Если это <strong>Strategy</strong> → <code>POST /city/upgrade</code></li>
+<li>Если это <strong>RPG</strong> → можно описать <code>POST /api/v1/battle/complete</code></li>
+<li>Если это <strong>Tower Defense</strong> → <code>POST /api/v1/match/finish</code></li>
+<li>Если это <strong>Shooter</strong> → <code>POST /api/v1/session/end</code></li>
+<li>Если это <strong>Idle / Simulator</strong> → <code>POST /api/v1/economy/collect</code></li>
+<li>Если это <strong>Strategy</strong> → <code>POST /api/v1/match/finish</code></li>
 </ul>
 <p>Главное — показать:</p>
 <ol>
@@ -2327,46 +2305,72 @@
 <li>ORM (рекомендуется): <strong>SQLAlchemy</strong></li>
 <li>Миграции (рекомендуется): <strong>Flask-Migrate</strong></li>
 <li>Аутентификация: <strong>JWT</strong> (например, <code>flask-jwt-extended</code>)</li>
+<li>Хэширование паролей: <strong>bcrypt</strong></li>
 <li>Формат обмена данными: <strong>JSON</strong></li>
 <li>Протокол: <strong>HTTPS</strong></li>
 </ul>
 <hr>
-<h3 id="142-requirementstxt">1.4.2. Минимальные зависимости (пример <code>requirements.txt</code>)</h3>
-<div class="highlight"><pre><span></span><code>Flask
-flask-jwt-extended
-flask-sqlalchemy
-flask-migrate
-pymysql
-python-dotenv
-</code></pre></div>
-<hr>
-<h2 id="15-flask">1.5. Минимальная структура проекта (Flask)</h2>
+<h2 id="15-flask">1.5. Структура проекта (Flask)</h2>
+<p>Реальная структура проекта <code>strategy-support-is</code>:</p>
 <div class="highlight"><pre><span></span><code>project-root/
 │
 ├── docs/
 │   └── 01-architecture.md
 │
+├── db/
+│   └── schema.sql
+│
 ├── app/
-│   ├── __init__.py
-│   ├── extensions.py
+│   ├── __init__.py          ← create_app(), регистрация blueprint'ов
+│   ├── config.py            ← Config (читает .env)
+│   ├── extensions.py        ← db, jwt, cors
 │   │
 │   ├── routes/
 │   │   ├── auth.py
 │   │   ├── match.py
-│   │   └── profile.py
+│   │   ├── profile.py
+│   │   ├── events.py
+│   │   ├── leaderboard.py
+│   │   └── health.py
 │   │
-│   ├── models/
-│   │   ├── user.py
-│   │   ├── match.py
-│   │   └── progress.py
+│   ├── controllers/
+│   │   ├── auth_controller.py
+│   │   ├── match_controller.py
+│   │   ├── profile_controller.py
+│   │   ├── events_controller.py
+│   │   └── leaderboard_controller.py
 │   │
-│   └── services/
-│       └── match_service.py
+│   ├── services/
+│   │   ├── auth_service.py
+│   │   ├── match_service.py
+│   │   ├── profile_service.py
+│   │   ├── events_service.py
+│   │   └── leaderboard_service.py
+│   │
+│   ├── repositories/
+│   │   ├── users_repo.py
+│   │   ├── roles_repo.py
+│   │   ├── matches_repo.py
+│   │   ├── progress_repo.py
+│   │   ├── stats_repo.py
+│   │   ├── leaderboard_repo.py
+│   │   ├── events_repo.py
+│   │   └── dedupe_repo.py
+│   │
+│   └── middleware/
+│       ├── request_id.py
+│       ├── auth_jwt.py
+│       ├── validate_api.py
+│       └── error_handler.py
 │
-├── config.py
-├── run.py
-└── requirements.txt
+├── seed.sql
+├── test_client.html
+└── wsgi.py                  ← точка входа (python wsgi.py)
 </code></pre></div>
+<blockquote>
+<p><strong>Конфигурация</strong> хранится в <code>app/config.py</code> и читает переменные из <code>.env</code>.<br>
+Точка запуска — <code>wsgi.py</code>.</p>
+</blockquote>
 <hr>
 <h2 id="16-docs01-architecturemd">1.6. Как создать файл <code>docs/01-architecture.md</code></h2>
 <ol>
@@ -2386,7 +2390,7 @@ python-dotenv
 <h2 id="17-tower-defense">1.7. Пример выполнения (Tower Defense)</h2>
 <h3 id="171">1.7.1. Архитектурная схема</h3>
 <pre class="mermaid"><code>flowchart LR
-  C[Client\Unity TD Game] --&gt;|HTTPS + JSON| A[API\nREST]
+  C[Client\nUnity TD Game] --&gt;|HTTPS + JSON| A[API\nREST]
   A --&gt; AU[Auth\nJWT + RBAC]
   AU --&gt; BL[Business Logic\nMatch / Rewards]
   BL --&gt; D[Data Layer\nMySQL 8.0]
@@ -2394,9 +2398,9 @@ python-dotenv
   BL -.cache.-&gt; R[(Redis optional)]
   BL -.events.-&gt; Q[(MQ optional)]</code></pre>
 <hr>
-<h3 id="172-post-matchfinish">1.7.2. Сценарий: <code>POST /match/finish</code></h3>
+<h3 id="172-post-apiv1matchfinish">1.7.2. Сценарий: <code>POST /api/v1/match/finish</code></h3>
 <h4 id="1721">1.7.2.1. Клиентский запрос</h4>
-<div class="highlight"><pre><span></span><code><span class="err">POST /match/finish</span>
+<div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/match/finish</span>
 <span class="err">Authorization: Bearer &lt;JWT&gt;</span>
 <span class="err">Content-Type: application/json</span>
 </code></pre></div>
@@ -2455,9 +2459,9 @@ softCurrency = 340
 </code></pre></div>
 <p>Запись результата:</p>
 <div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">battle_results</span>
-<span class="p">(</span><span class="n">match_id</span><span class="p">,</span><span class="w"> </span><span class="n">is_win</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="n">duration_seconds</span><span class="p">,</span><span class="w"> </span><span class="n">wave_reached</span><span class="p">)</span>
+<span class="p">(</span><span class="n">match_id</span><span class="p">,</span><span class="w"> </span><span class="n">is_win</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="n">duration_seconds</span><span class="p">)</span>
 <span class="k">VALUES</span>
-<span class="p">(</span><span class="mi">987654321</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">12450</span><span class="p">,</span><span class="w"> </span><span class="mi">410</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">);</span>
+<span class="p">(</span><span class="mi">987654321</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">12450</span><span class="p">,</span><span class="w"> </span><span class="mi">410</span><span class="p">);</span>
 </code></pre></div>
 <p>Обновление прогресса:</p>
 <div class="highlight"><pre><span></span><code><span class="k">UPDATE</span><span class="w"> </span><span class="n">player_progress</span>
@@ -2467,7 +2471,7 @@ softCurrency = 340
 </code></pre></div>
 <p>Обновление лидерборда:</p>
 <div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">leaderboard_scores</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">board_code</span><span class="p">,</span><span class="w"> </span><span class="n">season</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">)</span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="s1">'td_score'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">12450</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="s1">'default'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">12450</span><span class="p">)</span>
 <span class="k">ON</span><span class="w"> </span><span class="n">DUPLICATE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">UPDATE</span>
 <span class="w">  </span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GREATEST</span><span class="p">(</span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">score</span><span class="p">));</span>
 </code></pre></div>
@@ -2476,11 +2480,12 @@ softCurrency = 340
 <hr>
 <h4 id="1726">1.7.2.6. Ответ сервера</h4>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"finished"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"rewards"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"xp"</span><span class="p">:</span><span class="w"> </span><span class="mi">170</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"softCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">340</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"xpGained"</span><span class="p">:</span><span class="w"> </span><span class="mi">170</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"softCurrencyGained"</span><span class="p">:</span><span class="w"> </span><span class="mi">340</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -2496,7 +2501,7 @@ softCurrency = 340
 <h3 id="181">1.8.1. Сервер — источник истины</h3>
 <ul>
 <li>Нельзя доверять клиентским расчётам наград.</li>
-<li>Нельзя принимать XP и валюту “как есть”.</li>
+<li>Нельзя принимать XP и валюту "как есть".</li>
 <li>Все расчёты должны быть воспроизводимы сервером.</li>
 </ul>
 <hr>
@@ -2512,7 +2517,7 @@ softCurrency = 340
 <ul>
 <li>routes → только HTTP</li>
 <li>services → бизнес-логика</li>
-<li>models → ORM</li>
+<li>repositories → SQL</li>
 <li>DB → хранение</li>
 </ul>
 <hr>
@@ -2551,107 +2556,109 @@ softCurrency = 340
 <h2 id="19-strategy-unity-strategy-game">1.9. Пример выполнения (Strategy — Unity Strategy Game)</h2>
 <h3 id="191">1.9.1. Архитектурная схема</h3>
 <pre class="mermaid"><code>flowchart LR
-  C[Client\Unity Strategy Game] --&gt;|HTTPS + JSON| A[REST API]
+  C[Client\nUnity Strategy Game] --&gt;|HTTPS + JSON| A[REST API\nFlask Blueprints]
   A --&gt; AU[Auth\nJWT + RBAC]
-  AU --&gt; BL[Business Logic\nCity / Economy / Battle]
-  BL --&gt; D[Data Layer\nMySQL 8.0]
+  AU --&gt; BL[Business Logic\nMatch / Economy / City]
+  BL --&gt; D[Data Layer\nMySQL 8.0\nstrategy_db]
 
-  BL -.cache.-&gt; R[(Redis optional)]
-  BL -.events.-&gt; Q[(Message Queue optional)]</code></pre>
+  BL -.cache optional.-&gt; R[(Redis)]
+  BL -.events optional.-&gt; Q[(Message Queue)]</code></pre>
 <hr>
-<h3 id="192-post-cityupgrade">1.9.2. Сценарий: <code>POST /city/upgrade</code></h3>
+<h3 id="192-post-apiv1matchfinish">1.9.2. Сценарий: <code>POST /api/v1/match/finish</code></h3>
 <h4 id="1921">1.9.2.1. Клиентский запрос</h4>
-<div class="highlight"><pre><span></span><code><span class="err">POST /city/upgrade</span>
+<div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/match/finish</span>
 <span class="err">Authorization: Bearer &lt;JWT&gt;</span>
 <span class="err">Content-Type: application/json</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"buildingId"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"targetLevel"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span>
+<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">1850</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"powerDelta"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span>
+<span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<blockquote>
+<p>Матч <code>id=9</code> принадлежит пользователю <code>alice</code> (user_id=1) и имеет статус <code>started</code> согласно <code>seed.sql</code>.</p>
+</blockquote>
 <hr>
 <h4 id="1922-auth-jwt-rbac">1.9.2.2. Auth (JWT + RBAC)</h4>
-<p>Проверяется:</p>
+<p>Проверяется декоратором <code>@auth_required(roles=["player"])</code> в <code>app/routes/match.py</code>:</p>
 <ul>
-<li>JWT валиден</li>
-<li>извлечён <code>userId</code></li>
-<li>роль пользователя = <code>player</code></li>
-<li>пользователь не заблокирован</li>
+<li><code>verify_jwt_in_request()</code> из <code>flask-jwt-extended</code></li>
+<li>извлечён <code>userId</code> через <code>get_jwt_identity()</code></li>
+<li>извлечены <code>roles</code> через <code>get_jwt()</code></li>
+<li>проверено наличие роли <code>player</code></li>
+<li>записано <code>g.user = {"userId": ..., "roles": [...]}</code></li>
 </ul>
 <p>Ошибка:</p>
 <div class="highlight"><pre><span></span><code><span class="err">401 Unauthorized</span>
 </code></pre></div>
 <hr>
 <h4 id="1923-validation">1.9.2.3. Validation</h4>
-<p>Проверяется:</p>
+<p>Декоратор <code>@validate_match_finish</code> в <code>app/middleware/validate_api.py</code> проверяет:</p>
 <ul>
-<li>здание существует</li>
-<li>здание принадлежит пользователю</li>
-<li>текущий уровень = 2</li>
-<li>targetLevel = 3 (последовательное улучшение)</li>
-<li>хватает ресурсов</li>
-<li>нет активного строительства этого здания</li>
+<li><code>matchId</code> — int</li>
+<li><code>result.isWin</code> — bool</li>
+<li><code>result.score</code> — int &gt;= 0</li>
+<li><code>result.durationSeconds</code> — int &gt;= 0</li>
+<li><code>result.powerDelta</code> — int или null (опционально)</li>
 </ul>
 <p>Ошибка:</p>
-<div class="highlight"><pre><span></span><code><span class="err">409 Conflict</span>
+<div class="highlight"><pre><span></span><code><span class="err">400 Bad Request</span>
 </code></pre></div>
 <hr>
 <h4 id="1924-business-logic">1.9.2.4. Business Logic</h4>
-<p>Для уровня 3 сервер рассчитывает:</p>
-<div class="highlight"><pre><span></span><code>goldCost  = 500
-woodCost  = 300
-foodCost  = 200
-buildTime = 3600 seconds
-</code></pre></div>
-<p>Сервер:</p>
+<p><code>app/services/match_service.py</code>:</p>
 <ol>
-<li>Проверяет ресурсы.</li>
-<li>Списывает ресурсы.</li>
-<li>Создаёт запись строительства.</li>
-<li>Обновляет состояние здания (status = upgrading).</li>
+<li><code>ensure_match_ownership_started()</code> — проверяет владение матчем и статус <code>started</code></li>
+<li>Рассчитывает награды по константам (клиент их не присылает):</li>
 </ol>
+<div class="highlight"><pre><span></span><code>xp_gained   = 100  (isWin = true)  / 30  (isWin = false)
+soft_gained = 50   (isWin = true)  / 10  (isWin = false)
+</code></pre></div>
 <hr>
 <h4 id="1925-data-layer-mysql">1.9.2.5. Data Layer (MySQL, транзакция)</h4>
 <div class="highlight"><pre><span></span><code>START TRANSACTION;
 </code></pre></div>
-<p>Проверка баланса:</p>
-<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">gold</span><span class="p">,</span><span class="w"> </span><span class="n">wood</span><span class="p">,</span><span class="w"> </span><span class="n">food</span>
-<span class="k">FROM</span><span class="w"> </span><span class="n">player_resources</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span>
-<span class="k">FOR</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 1) Закрытие матча</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'finished'</span><span class="p">,</span><span class="w"> </span><span class="n">ended_at</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NOW</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span>
 </code></pre></div>
-<p>Списание ресурсов:</p>
-<div class="highlight"><pre><span></span><code><span class="k">UPDATE</span><span class="w"> </span><span class="n">player_resources</span>
-<span class="k">SET</span><span class="w"> </span><span class="n">gold</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gold</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">500</span><span class="p">,</span>
-<span class="w">    </span><span class="n">wood</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wood</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">300</span><span class="p">,</span>
-<span class="w">    </span><span class="n">food</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">food</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">200</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 2) Результат</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">battle_results</span><span class="w"> </span><span class="p">(</span><span class="n">match_id</span><span class="p">,</span><span class="w"> </span><span class="n">is_win</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="n">duration_seconds</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1850</span><span class="p">,</span><span class="w"> </span><span class="mi">1200</span><span class="p">)</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">DUPLICATE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">is_win</span><span class="o">=</span><span class="k">VALUES</span><span class="p">(</span><span class="n">is_win</span><span class="p">),</span><span class="w"> </span><span class="n">score</span><span class="o">=</span><span class="k">VALUES</span><span class="p">(</span><span class="n">score</span><span class="p">),</span><span class="w"> </span><span class="n">duration_seconds</span><span class="o">=</span><span class="k">VALUES</span><span class="p">(</span><span class="n">duration_seconds</span><span class="p">);</span>
 </code></pre></div>
-<p>Создание записи строительства:</p>
-<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">building_upgrades</span>
-<span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">building_id</span><span class="p">,</span><span class="w"> </span><span class="n">target_level</span><span class="p">,</span><span class="w"> </span><span class="n">started_at</span><span class="p">,</span><span class="w"> </span><span class="n">finish_at</span><span class="p">)</span>
-<span class="k">VALUES</span>
-<span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">NOW</span><span class="p">(),</span><span class="w"> </span><span class="n">DATE_ADD</span><span class="p">(</span><span class="n">NOW</span><span class="p">(),</span><span class="w"> </span><span class="nb">INTERVAL</span><span class="w"> </span><span class="mi">3600</span><span class="w"> </span><span class="k">SECOND</span><span class="p">));</span>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 3) Защита от гонок</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">player_progress</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">;</span>
 </code></pre></div>
-<p>Обновление статуса здания:</p>
-<div class="highlight"><pre><span></span><code><span class="k">UPDATE</span><span class="w"> </span><span class="n">city_buildings</span>
-<span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'upgrading'</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 4) Начисление</span>
+<span class="k">UPDATE</span><span class="w"> </span><span class="n">player_progress</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">xp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="n">soft_currency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">soft_currency</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">50</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 5) Статистика</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">statistics_daily</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="k">day</span><span class="p">,</span><span class="w"> </span><span class="n">sessions_count</span><span class="p">,</span><span class="w"> </span><span class="n">events_count</span><span class="p">,</span><span class="w"> </span><span class="n">playtime_seconds</span><span class="p">,</span><span class="w"> </span><span class="n">wins</span><span class="p">,</span><span class="w"> </span><span class="n">losses</span><span class="p">,</span><span class="w"> </span><span class="n">score_sum</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">CURDATE</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1850</span><span class="p">)</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">DUPLICATE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">events_count</span><span class="o">=</span><span class="n">events_count</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">playtime_seconds</span><span class="o">=</span><span class="n">playtime_seconds</span><span class="o">+</span><span class="k">VALUES</span><span class="p">(</span><span class="n">playtime_seconds</span><span class="p">),</span>
+<span class="w">  </span><span class="n">wins</span><span class="o">=</span><span class="n">wins</span><span class="o">+</span><span class="k">VALUES</span><span class="p">(</span><span class="n">wins</span><span class="p">),</span><span class="w"> </span><span class="n">losses</span><span class="o">=</span><span class="n">losses</span><span class="o">+</span><span class="k">VALUES</span><span class="p">(</span><span class="n">losses</span><span class="p">),</span><span class="w"> </span><span class="n">score_sum</span><span class="o">=</span><span class="n">score_sum</span><span class="o">+</span><span class="k">VALUES</span><span class="p">(</span><span class="n">score_sum</span><span class="p">);</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1">-- 6) Лидерборд</span>
+<span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">leaderboard_scores</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">board_code</span><span class="p">,</span><span class="w"> </span><span class="n">season</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'default'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1850</span><span class="p">)</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">DUPLICATE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="n">score</span><span class="o">=</span><span class="n">GREATEST</span><span class="p">(</span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">score</span><span class="p">)),</span><span class="w"> </span><span class="n">updated_at</span><span class="o">=</span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>COMMIT;
 </code></pre></div>
 <hr>
 <h4 id="1926">1.9.2.6. Ответ сервера</h4>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"buildingId"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"upgrading"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"targetLevel"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"finishAt"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-26T18:45:00Z"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"remainingResources"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"gold"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"wood"</span><span class="p">:</span><span class="w"> </span><span class="mi">850</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"food"</span><span class="p">:</span><span class="w"> </span><span class="mi">600</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"xpGained"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"softCurrencyGained"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -2659,8 +2666,9 @@ buildTime = 3600 seconds
 <h4 id="1927-2">1.9.2.7. Возможные ошибки (минимум 2)</h4>
 <ul>
 <li><code>401 Unauthorized</code> — токен отсутствует/невалиден/просрочен.</li>
-<li><code>409 Conflict</code> — недостаточно ресурсов / здание уже улучшается / нарушена последовательность уровней.</li>
-<li><code>404 Not Found</code> — здание не принадлежит пользователю (дополнительно).</li>
+<li><code>409 Conflict</code> — матч уже завершён или статус ≠ <code>started</code>.</li>
+<li><code>404 Not Found</code> — matchId не существует.</li>
+<li><code>403 Forbidden</code> — матч принадлежит другому пользователю.</li>
 </ul>
 <hr>
 <h2 id="110-docs01-architecturemd">1.10. Шаблон для файла <code>docs/01-architecture.md</code></h2>
@@ -2715,11 +2723,9 @@ flowchart LR
 <p><code>&lt;указать endpoint&gt;</code></p>
 <p>Примеры:</p>
 <ul>
-<li><code>POST /auth/login</code></li>
-<li><code>POST /match/finish</code></li>
-<li><code>GET /profile</code></li>
-<li><code>POST /city/upgrade</code></li>
-<li><code>POST /battle/complete</code></li>
+<li><code>POST /api/v1/auth/login</code></li>
+<li><code>POST /api/v1/match/finish</code></li>
+<li><code>GET /api/v1/profile</code></li>
 </ul>
 <hr>
 <h2 id="14-http-">1.4. HTTP-запрос</h2>
@@ -2740,8 +2746,12 @@ flowchart LR
 <div class="highlight"><pre><span></span><code><span class="err">401 Unauthorized</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UNAUTHORIZED"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"JWT is missing/invalid/expired"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"req_abc123"</span>
+<span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr>
@@ -2757,8 +2767,12 @@ flowchart LR
 <div class="highlight"><pre><span></span><code><span class="err">409 Conflict</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CONFLICT"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"req_abc123"</span>
+<span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr>
@@ -2799,7 +2813,10 @@ flowchart LR
 <span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"&lt;ключ&gt;"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;значение&gt;"</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"&lt;ключ&gt;"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;значение&gt;"</span>
+<span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr>
@@ -2819,8 +2836,9 @@ flowchart LR
 <li>Сервер — источник истины.</li>
 <li>Использование транзакций.</li>
 <li>Stateless REST.</li>
-<li>Разделение слоёв (routes / services / models / DB).</li>
-<li>Защита от race condition.</li>
+<li>Разделение слоёв (routes / services / repositories / DB).</li>
+<li>Защита от race condition (SELECT FOR UPDATE).</li>
+<li>Дедупликация событий (processed_events).</li>
 </ol>
 <hr>
 <h2 id="112">1.12. Адаптация под жанр</h2>
@@ -2862,9 +2880,9 @@ flowchart LR
   Client → API → Auth → Business Logic → DB;</li>
 <li>обеспечивается ли серверная валидация;</li>
 <li>обеспечивается ли целостность данных;</li>
-<li>предусмотрена ли масштабируемость.</li>
+<li>предусмотрена ли масштабируемость.
+```</li>
 </ul>
-<p>```</p>
 
 
 

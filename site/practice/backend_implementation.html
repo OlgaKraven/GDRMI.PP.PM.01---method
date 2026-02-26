@@ -721,7 +721,7 @@
   <a href="#441-flask" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.4.1. Минимальная структура проекта (Flask)
+        4.4.1. Структура проекта (Flask)
       
     </span>
   </a>
@@ -919,7 +919,7 @@
   <a href="#441-flask" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4.4.1. Минимальная структура проекта (Flask)
+        4.4.1. Структура проекта (Flask)
       
     </span>
   </a>
@@ -959,7 +959,7 @@
 
 
 
-<h1 id="2-4-backend-flask">2. Практика. 4. Реализация backend’а ИС сопровождения игрового продукта (Flask)</h1>
+<h1 id="2-4-backend-flask">2. Практика. 4. Реализация backend'а ИС сопровождения игрового продукта (Flask)</h1>
 <h2 id="41-4-backend-">4.1. Задание к разделу 4 «Backend-логика»</h2>
 <h3 id="_1">Необходимо выполнить</h3>
 <ol>
@@ -975,11 +975,12 @@
 <p><code>errorHandler</code></p>
 </li>
 <li>
-<p>Реализовать <strong>транзакционную операцию</strong> для “итогового события” (например, <code>match_finish</code>) в <strong>одной транзакции</strong>:</p>
+<p>Реализовать <strong>транзакционную операцию</strong> для "итогового события" (например, <code>match_finish</code>) в <strong>одной транзакции</strong>:</p>
 </li>
 <li>
-<p>запись события в <code>game_events</code></p>
+<p>проверка владения матчем и статуса</p>
 </li>
+<li>запись результата в <code>battle_results</code></li>
 <li>обновление <code>player_progress</code></li>
 <li>upsert в <code>leaderboard_scores</code></li>
 <li>upsert в <code>statistics_daily</code></li>
@@ -993,10 +994,8 @@
   services/
   repositories/
   middleware/
-  models/        (опционально, если используете ORM)
-run.py
-config.py
-requirements.txt
+  config.py      ← конфигурация внутри app/, не в корне
+wsgi.py          ← точка входа
 </code></pre></div>
 <hr>
 <h2 id="42-backend">4.2. Минимальная рабочая архитектура backend (обязательная логика)</h2>
@@ -1020,20 +1019,20 @@ Error → errorHandler → JSON + logging
 </ul>
 <hr>
 <h2 id="43-endpoints-4">4.3. Минимальные endpoints для раздела 4 (рекомендуемый набор)</h2>
-<p>Для сдачи раздела достаточно реализовать один “итоговый” endpoint:</p>
+<p>Для сдачи раздела достаточно реализовать один "итоговый" endpoint:</p>
 <ul>
-<li><code>POST /match/finish</code> <strong>или</strong></li>
-<li><code>POST /event</code> с <code>eventType = match_finish</code></li>
+<li><code>POST /api/v1/match/finish</code></li>
 </ul>
-<p>В данном минимальном примере реализуется: <code>POST /match/finish</code>.</p>
+<p>В данном минимальном примере реализуется: <code>POST /api/v1/match/finish</code>.</p>
 <hr>
 <h2 id="44-flask">4.4. Реализация проекта (Flask) — структура и файлы</h2>
-<h3 id="441-flask">4.4.1. Минимальная структура проекта (Flask)</h3>
+<h3 id="441-flask">4.4.1. Структура проекта (Flask)</h3>
 <div class="highlight"><pre><span></span><code>project-root/
 │
 ├── app/
-│   ├── __init__.py
-│   ├── extensions.py
+│   ├── __init__.py       ← create_app(), регистрация blueprint'ов и middleware
+│   ├── config.py         ← class Config (читает .env через python-dotenv)
+│   ├── extensions.py     ← db, jwt, cors
 │   │
 │   ├── routes/
 │   │   └── match.py
@@ -1045,7 +1044,7 @@ Error → errorHandler → JSON + logging
 │   │   └── match_service.py
 │   │
 │   ├── repositories/
-│   │   ├── events_repo.py
+│   │   ├── matches_repo.py
 │   │   ├── progress_repo.py
 │   │   ├── leaderboard_repo.py
 │   │   └── stats_repo.py
@@ -1053,35 +1052,27 @@ Error → errorHandler → JSON + logging
 │   └── middleware/
 │       ├── request_id.py
 │       ├── auth_jwt.py
-│       ├── validate.py
+│       ├── validate_api.py
 │       └── error_handler.py
 │
-├── config.py
-├── run.py
-└── requirements.txt
+├── seed.sql
+├── db/
+│   └── schema.sql
+└── wsgi.py               ← точка входа (python wsgi.py)
 </code></pre></div>
+<blockquote>
+<p><strong>Конфигурация</strong> находится в <code>app/config.py</code>. Файлов <code>config.py</code> в корне и <code>run.py</code> <strong>нет</strong> — используется <code>wsgi.py</code>.</p>
+</blockquote>
 <hr>
 <h2 id="442">4.4.2. Создание файлов проекта и пример их наполнения (обязательный минимум)</h2>
 <blockquote>
-<p>Цель: получить минимально работоспособный backend, где один endpoint (<code>POST /match/finish</code>) проходит весь конвейер:
+<p>Цель: получить минимально работоспособный backend, где один endpoint (<code>POST /api/v1/match/finish</code>) проходит весь конвейер:
 <code>requestId → authJwt → validate → controller → service (TX) → repositories (SQL) → JSON response</code>,
 а ошибки всегда возвращаются единообразно.</p>
 </blockquote>
 <hr>
-<h1 id="a-project-root">A) project-root</h1>
-<h2 id="a1-requirementstxt">A.1. <code>requirements.txt</code></h2>
-<div class="highlight"><pre><span></span><code>Flask
-flask-jwt-extended
-flask-sqlalchemy
-pymysql
-python-dotenv
-Flask-Migrate
-</code></pre></div>
-<blockquote>
-<p><code>Flask-Migrate</code> можно убрать, если миграции не используете. Но для практики обычно оставляют.</p>
-</blockquote>
-<hr>
-<h2 id="a2-configpy">A.2. <code>config.py</code></h2>
+<h1 id="a">A) Конфигурация</h1>
+<h2 id="a1-appconfigpy">A.1. <code>app/config.py</code></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
 
@@ -1091,31 +1082,32 @@ Flask-Migrate
 
 <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
     <span class="c1"># Flask</span>
-    <span class="c1"># DEBUG=1 включает расширенные логи и удобнее для разработки</span>
-    <span class="n">DEBUG</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"DEBUG"</span><span class="p">,</span> <span class="s2">"1"</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"1"</span>
+    <span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SECRET_KEY"</span><span class="p">,</span> <span class="s2">"change-me-in-production"</span><span class="p">)</span>
 
     <span class="c1"># MySQL + SQLAlchemy</span>
-    <span class="c1"># Пример: mysql+pymysql://user:pass@localhost:3306/game_db?charset=utf8mb4</span>
-    <span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"SQLALCHEMY_DATABASE_URI"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
+    <span class="c1"># Пример: mysql+pymysql://root@localhost:3306/strategy_db?charset=utf8mb4</span>
+    <span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+        <span class="s2">"DATABASE_URL"</span><span class="p">,</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SQLALCHEMY_DATABASE_URI"</span><span class="p">,</span> <span class="s2">"sqlite:///dev.db"</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="n">SQLALCHEMY_TRACK_MODIFICATIONS</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="c1"># JWT</span>
     <span class="c1"># В реальном проекте ключ обязательно хранить в .env / секретах</span>
-    <span class="n">JWT_SECRET_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">"JWT_SECRET_KEY"</span><span class="p">,</span> <span class="s2">"change-me"</span><span class="p">)</span>
-
-    <span class="c1"># JSON</span>
-    <span class="n">JSON_SORT_KEYS</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">JWT_SECRET_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"JWT_SECRET_KEY"</span><span class="p">,</span> <span class="s2">"change-jwt-secret-in-production"</span><span class="p">)</span>
+    <span class="n">JWT_ACCESS_TOKEN_EXPIRES</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"JWT_ACCESS_TOKEN_EXPIRES"</span><span class="p">,</span> <span class="mi">3600</span><span class="p">))</span>
 </code></pre></div>
 <blockquote>
-<p>Рекомендуется создать <code>.env</code> (не обязателен для сдачи, но удобно):</p>
-<ul>
-<li><code>SQLALCHEMY_DATABASE_URI=...</code></li>
-<li><code>JWT_SECRET_KEY=...</code></li>
-<li><code>DEBUG=1</code></li>
-</ul>
+<p>Рекомендуется создать <code>.env</code> в корне проекта:</p>
+<div class="highlight"><pre><span></span><code>SQLALCHEMY_DATABASE_URI=mysql+pymysql://root@localhost:3306/strategy_db?charset=utf8mb4
+DATABASE_URL=mysql+pymysql://root@localhost:3306/strategy_db?charset=utf8mb4
+JWT_SECRET_KEY=my-super-secret-jwt-key-change-in-prod
+SECRET_KEY=my-flask-secret-key
+DEBUG=1
+</code></pre></div>
 </blockquote>
 <hr>
-<h2 id="a3-runpy">A.3. <code>run.py</code></h2>
+<h2 id="a2-wsgipy">A.2. <code>wsgi.py</code></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">create_app</span>
 
 <span class="c1"># Создание Flask-приложения (регистрация middleware и маршрутов)</span>
@@ -1124,41 +1116,45 @@ Flask-Migrate
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
     <span class="c1"># Здесь НЕ пишем бизнес-логику и НЕ пишем SQL.</span>
     <span class="c1"># Файл отвечает только за запуск сервера.</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">"0.0.0.0"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </code></pre></div>
 <hr>
 <h1 id="b-app">B) app/</h1>
 <h2 id="b1-appextensionspy">B.1. <code>app/extensions.py</code></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask_sqlalchemy</span> <span class="kn">import</span> <span class="n">SQLAlchemy</span>
 <span class="kn">from</span> <span class="nn">flask_jwt_extended</span> <span class="kn">import</span> <span class="n">JWTManager</span>
+<span class="kn">from</span> <span class="nn">flask_cors</span> <span class="kn">import</span> <span class="n">CORS</span>
 
 <span class="c1"># db — единая точка доступа к БД (SQLAlchemy)</span>
 <span class="n">db</span> <span class="o">=</span> <span class="n">SQLAlchemy</span><span class="p">()</span>
 
 <span class="c1"># jwt — менеджер JWT (проверка токена, извлечение identity и claims)</span>
 <span class="n">jwt</span> <span class="o">=</span> <span class="n">JWTManager</span><span class="p">()</span>
+
+<span class="c1"># cors — поддержка CORS для Unity/Web-клиентов</span>
+<span class="n">cors</span> <span class="o">=</span> <span class="n">CORS</span><span class="p">()</span>
 </code></pre></div>
 <hr>
 <h2 id="b2-app__init__py">B.2. <code>app/__init__.py</code></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
 
-<span class="kn">from</span> <span class="nn">.extensions</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">jwt</span>
+<span class="kn">from</span> <span class="nn">.extensions</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">jwt</span><span class="p">,</span> <span class="n">cors</span>
 <span class="kn">from</span> <span class="nn">.middleware.request_id</span> <span class="kn">import</span> <span class="n">register_request_id</span>
 <span class="kn">from</span> <span class="nn">.middleware.error_handler</span> <span class="kn">import</span> <span class="n">register_error_handlers</span>
 <span class="kn">from</span> <span class="nn">.routes.match</span> <span class="kn">import</span> <span class="n">match_bp</span>
-<span class="kn">from</span> <span class="nn">config</span> <span class="kn">import</span> <span class="n">Config</span>
 
 
-<span class="k">def</span> <span class="nf">create_app</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Flask</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flask</span><span class="p">:</span>
     <span class="c1"># 1) Создаём Flask-приложение</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-    <span class="c1"># 2) Загружаем конфигурацию</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="n">Config</span><span class="p">)</span>
+    <span class="c1"># 2) Загружаем конфигурацию из app/config.py</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="n">config</span> <span class="ow">or</span> <span class="s2">"app.config.Config"</span><span class="p">)</span>
 
-    <span class="c1"># 3) Инициализируем расширения (db, jwt)</span>
+    <span class="c1"># 3) Инициализируем расширения (db, jwt, cors)</span>
     <span class="n">db</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
     <span class="n">jwt</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="n">cors</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="p">{</span><span class="sa">r</span><span class="s2">"/*"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"origins"</span><span class="p">:</span> <span class="s2">"*"</span><span class="p">}})</span>
 
     <span class="c1"># 4) Регистрируем middleware и обработчики ошибок</span>
     <span class="n">register_request_id</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
@@ -1172,7 +1168,7 @@ Flask-Migrate
 <hr>
 <h1 id="c-appmiddleware">C) app/middleware/</h1>
 <blockquote>
-<p>В Flask “middleware” реализуется так:</p>
+<p>В Flask "middleware" реализуется так:</p>
 <ul>
 <li><code>@app.before_request</code> / <code>@app.after_request</code> — requestId + логирование</li>
 <li>декораторы над view-функциями — authJwt, validate</li>
@@ -1189,7 +1185,7 @@ Flask-Migrate
 <li>логирует <code>requestId</code>, метод, путь, статус, duration</li>
 </ul>
 <p>Минимальный формат лога:</p>
-<div class="highlight"><pre><span></span><code>req_abc123 user=15 POST /match/finish 200 18ms
+<div class="highlight"><pre><span></span><code>req_abc123 user=15 POST /api/v1/match/finish 200 18ms
 </code></pre></div>
 <h4 id="_3">Реализация (как должно работать)</h4>
 <ul>
@@ -1201,7 +1197,7 @@ Flask-Migrate
 </li>
 <li>иначе сгенерировать <code>req_&lt;shortid&gt;</code></li>
 <li>сохранить в <code>g.request_id</code></li>
-<li>сохранить старт времени <code>g.started_at_ms</code></li>
+<li>сохранить старт времени <code>g._start_ms</code></li>
 <li>
 <p>В <code>after_request</code>:</p>
 </li>
@@ -1245,7 +1241,7 @@ Flask-Migrate
             <span class="n">user_id</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"userId"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)</span>
 
         <span class="c1"># Лог по требуемому формату:</span>
-        <span class="c1"># req_abc123 user=15 POST /match/finish 200 18ms</span>
+        <span class="c1"># req_abc123 user=15 POST /api/v1/match/finish 200 18ms</span>
         <span class="n">app</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="s2">"</span><span class="si">%s</span><span class="s2"> user=</span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">ms"</span><span class="p">,</span>
             <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">"request_id"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">),</span>
@@ -1432,9 +1428,10 @@ Flask-Migrate
 <li>identity = user_id</li>
 <li>claim <code>roles</code> = список ролей</li>
 </ul>
+<p>Это формируется в <code>auth_service.py</code> при логине через <code>create_access_token(identity=user["id"], additional_claims={"roles": roles})</code>.</p>
 </blockquote>
 <hr>
-<h2 id="c4-appmiddlewarevalidatepy">C.4. <code>app/middleware/validate.py</code></h2>
+<h2 id="c4-appmiddlewarevalidate_apipy">C.4. <code>app/middleware/validate_api.py</code></h2>
 <h3 id="validate-middleware-flask"><code>validate</code> middleware (Flask)</h3>
 <p>Требования:</p>
 <ul>
@@ -1447,7 +1444,7 @@ Flask-Migrate
 <li><code>result.isWin</code> — boolean</li>
 <li><code>result.score</code> — число &gt;= 0</li>
 <li><code>result.durationSeconds</code> — число &gt;= 0</li>
-<li><code>result.waveReached</code> — число &gt;= 0</li>
+<li><code>result.powerDelta</code> — число или null (опционально)</li>
 </ul>
 <h4 id="_6">Реализация (как должно работать)</h4>
 <ul>
@@ -1461,50 +1458,50 @@ Flask-Migrate
 <li>проверяет наличие ключей/типов</li>
 <li>при ошибке выбрасывает <code>AppError(code='VALIDATION_ERROR', http_status=400, ...)</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
 <span class="kn">from</span> <span class="nn">.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
+
+
+<span class="k">def</span> <span class="nf">_bad_body</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
+    <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid request body"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">validate_match_finish</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
     <span class="c1"># Валидация запроса выполняется ДО контроллера/сервиса, чтобы не трогать БД при мусорном вводе</span>
 
-    <span class="k">def</span> <span class="nf">_bad</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
-        <span class="c1"># Единая форма ошибки валидации</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid request body"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
-
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
 
         <span class="n">match_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"matchId"</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"result"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">match_id</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"matchId"</span><span class="p">:</span> <span class="s2">"int required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"matchId"</span><span class="p">:</span> <span class="s2">"int required"</span><span class="p">})</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"result"</span><span class="p">:</span> <span class="s2">"object required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"result"</span><span class="p">:</span> <span class="s2">"object required"</span><span class="p">})</span>
 
         <span class="n">is_win</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"isWin"</span><span class="p">)</span>
         <span class="n">score</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"score"</span><span class="p">)</span>
         <span class="n">duration</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"durationSeconds"</span><span class="p">)</span>
-        <span class="n">wave</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"waveReached"</span><span class="p">)</span>
+        <span class="n">power_delta</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"powerDelta"</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">is_win</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"result.isWin"</span><span class="p">:</span> <span class="s2">"bool required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"result.isWin"</span><span class="p">:</span> <span class="s2">"bool required"</span><span class="p">})</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">score</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"result.score"</span><span class="p">:</span> <span class="s2">"int &gt;= 0 required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"result.score"</span><span class="p">:</span> <span class="s2">"int &gt;= 0 required"</span><span class="p">})</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">duration</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">duration</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"result.durationSeconds"</span><span class="p">:</span> <span class="s2">"int &gt;= 0 required"</span><span class="p">})</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wave</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">or</span> <span class="n">wave</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">_bad</span><span class="p">({</span><span class="s2">"result.waveReached"</span><span class="p">:</span> <span class="s2">"int &gt;= 0 required"</span><span class="p">})</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"result.durationSeconds"</span><span class="p">:</span> <span class="s2">"int &gt;= 0 required"</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">power_delta</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">power_delta</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"result.powerDelta"</span><span class="p">:</span> <span class="s2">"int or null required"</span><span class="p">})</span>
 
         <span class="k">return</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="c1"># Сохраняем имя для Flask/debug</span>
-    <span class="n">wrapper</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="n">fn</span><span class="o">.</span><span class="vm">__name__</span>
     <span class="k">return</span> <span class="n">wrapper</span>
 </code></pre></div>
 <hr>
@@ -1513,11 +1510,11 @@ Flask-Migrate
 <p>Файл маршрутов связывает URL с контроллером и подключает middleware-декораторы.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
 <span class="kn">from</span> <span class="nn">app.middleware.auth_jwt</span> <span class="kn">import</span> <span class="n">auth_required</span>
-<span class="kn">from</span> <span class="nn">app.middleware.validate</span> <span class="kn">import</span> <span class="n">validate_match_finish</span>
+<span class="kn">from</span> <span class="nn">app.middleware.validate_api</span> <span class="kn">import</span> <span class="n">validate_match_finish</span>
 <span class="kn">from</span> <span class="nn">app.controllers.match_controller</span> <span class="kn">import</span> <span class="n">finish_match_controller</span>
 
-<span class="c1"># Группа маршрутов /match</span>
-<span class="n">match_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s2">"match"</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s2">"/match"</span><span class="p">)</span>
+<span class="c1"># Группа маршрутов /api/v1/match</span>
+<span class="n">match_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s2">"match"</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s2">"/api/v1/match"</span><span class="p">)</span>
 
 
 <span class="nd">@match_bp</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/finish"</span><span class="p">)</span>
@@ -1559,134 +1556,114 @@ SQL и транзакций тут быть не должно.</p>
 <h2 id="f1-appservicesmatch_servicepy">F.1. <code>app/services/match_service.py</code></h2>
 <p>Сервис: бизнес-логика + транзакция + orchestration репозиториев.</p>
 <p>Важное правило: одна транзакция на весь итог.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">g</span>
-<span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
-<span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
-
-<span class="kn">from</span> <span class="nn">app.repositories.events_repo</span> <span class="kn">import</span> <span class="n">insert_game_event</span>
-<span class="kn">from</span> <span class="nn">app.repositories.progress_repo</span> <span class="kn">import</span> <span class="n">lock_progress_row</span><span class="p">,</span> <span class="n">add_progress_rewards</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">app.repositories.matches_repo</span> <span class="kn">import</span> <span class="n">ensure_match_ownership_started</span><span class="p">,</span> <span class="n">finish_match_row</span>
+<span class="kn">from</span> <span class="nn">app.repositories.progress_repo</span> <span class="kn">import</span> <span class="n">ensure_progress_row</span><span class="p">,</span> <span class="n">lock_progress_row</span><span class="p">,</span> <span class="n">add_progress_rewards</span>
 <span class="kn">from</span> <span class="nn">app.repositories.stats_repo</span> <span class="kn">import</span> <span class="n">upsert_daily_stats</span>
 <span class="kn">from</span> <span class="nn">app.repositories.leaderboard_repo</span> <span class="kn">import</span> <span class="n">upsert_leaderboard_score</span>
 
-
-<span class="k">def</span> <span class="nf">_calc_rewards</span><span class="p">(</span><span class="n">wave_reached</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="c1"># Минимальная бизнес-логика начислений (пример)</span>
-    <span class="n">xp</span> <span class="o">=</span> <span class="mi">50</span> <span class="o">+</span> <span class="n">wave_reached</span> <span class="o">*</span> <span class="mi">10</span>
-    <span class="n">soft</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">+</span> <span class="n">wave_reached</span> <span class="o">*</span> <span class="mi">20</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">"xp"</span><span class="p">:</span> <span class="n">xp</span><span class="p">,</span> <span class="s2">"softCurrency"</span><span class="p">:</span> <span class="n">soft</span><span class="p">}</span>
+<span class="n">_XP_WIN</span>   <span class="o">=</span> <span class="mi">100</span>
+<span class="n">_XP_LOSS</span>  <span class="o">=</span> <span class="mi">30</span>
+<span class="n">_SOFT_WIN</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">_SOFT_LOSS</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">_BOARD_CODE</span> <span class="o">=</span> <span class="s2">"default"</span>
+<span class="n">_SEASON</span> <span class="o">=</span> <span class="mi">1</span>
 
 
 <span class="k">def</span> <span class="nf">finish_match_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-    <span class="c1"># requestId нужен для идемпотентности/трассировки</span>
-    <span class="n">request_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">"request_id"</span><span class="p">,</span> <span class="s2">"req_unknown"</span><span class="p">)</span>
-
     <span class="n">match_id</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"matchId"</span><span class="p">]</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"result"</span><span class="p">]</span>
-    <span class="n">is_win</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">"isWin"</span><span class="p">]</span>
-    <span class="n">score</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">"score"</span><span class="p">]</span>
+    <span class="n">result</span>   <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"result"</span><span class="p">]</span>
+    <span class="n">is_win</span>   <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">"isWin"</span><span class="p">]</span>
+    <span class="n">score</span>    <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">"score"</span><span class="p">]</span>
     <span class="n">duration</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">"durationSeconds"</span><span class="p">]</span>
-    <span class="n">wave</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">"waveReached"</span><span class="p">]</span>
 
-    <span class="n">rewards</span> <span class="o">=</span> <span class="n">_calc_rewards</span><span class="p">(</span><span class="n">wave</span><span class="p">)</span>
-
-    <span class="c1"># Для минимума фиксируем board_code и season</span>
-    <span class="n">board_code</span> <span class="o">=</span> <span class="s2">"td_score"</span>
-    <span class="n">season</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># Сервер рассчитывает награды сам — клиент их не присылает</span>
+    <span class="n">xp_gained</span>   <span class="o">=</span> <span class="n">_XP_WIN</span>   <span class="k">if</span> <span class="n">is_win</span> <span class="k">else</span> <span class="n">_XP_LOSS</span>
+    <span class="n">soft_gained</span> <span class="o">=</span> <span class="n">_SOFT_WIN</span> <span class="k">if</span> <span class="n">is_win</span> <span class="k">else</span> <span class="n">_SOFT_LOSS</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># Важно: одна транзакция на весь итог (атомарность)</span>
-        <span class="k">with</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">begin</span><span class="p">():</span>
-            <span class="c1"># 0) блокируем строку прогресса (защита от гонок)</span>
-            <span class="n">lock_progress_row</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+        <span class="c1"># 0) Проверка владения матчем и статуса (без блокировки)</span>
+        <span class="n">ensure_match_ownership_started</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="o">=</span><span class="n">match_id</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
 
-            <span class="c1"># 1) пишем событие (game_events)</span>
-            <span class="n">insert_game_event</span><span class="p">(</span>
-                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
-                <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
-                <span class="n">session_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">event_type</span><span class="o">=</span><span class="s2">"match_finish"</span><span class="p">,</span>
-                <span class="n">payload</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">"requestId"</span><span class="p">:</span> <span class="n">request_id</span><span class="p">,</span>
-                    <span class="s2">"matchId"</span><span class="p">:</span> <span class="n">match_id</span><span class="p">,</span>
-                    <span class="s2">"result"</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="s2">"isWin"</span><span class="p">:</span> <span class="n">is_win</span><span class="p">,</span>
-                        <span class="s2">"score"</span><span class="p">:</span> <span class="n">score</span><span class="p">,</span>
-                        <span class="s2">"durationSeconds"</span><span class="p">:</span> <span class="n">duration</span><span class="p">,</span>
-                        <span class="s2">"waveReached"</span><span class="p">:</span> <span class="n">wave</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-            <span class="p">)</span>
+        <span class="c1"># 1) Закрытие матча + запись battle_results</span>
+        <span class="n">finish_match_row</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="o">=</span><span class="n">match_id</span><span class="p">,</span> <span class="n">is_win</span><span class="o">=</span><span class="n">is_win</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">,</span> <span class="n">duration_seconds</span><span class="o">=</span><span class="n">duration</span><span class="p">)</span>
 
-            <span class="c1"># 2) обновляем прогресс (player_progress)</span>
-            <span class="n">add_progress_rewards</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">rewards</span><span class="p">[</span><span class="s2">"xp"</span><span class="p">],</span> <span class="n">soft_currency</span><span class="o">=</span><span class="n">rewards</span><span class="p">[</span><span class="s2">"softCurrency"</span><span class="p">])</span>
+        <span class="c1"># 2) Гарантируем наличие строки прогресса</span>
+        <span class="n">ensure_progress_row</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
 
-            <span class="c1"># 3) upsert statistics_daily</span>
-            <span class="n">upsert_daily_stats</span><span class="p">(</span>
-                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
-                <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
-                <span class="n">playtime_seconds</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span>
-                <span class="n">is_win</span><span class="o">=</span><span class="n">is_win</span><span class="p">,</span>
-                <span class="n">score</span><span class="o">=</span><span class="n">score</span>
-            <span class="p">)</span>
+        <span class="c1"># 3) Блокируем строку прогресса (защита от гонок)</span>
+        <span class="n">lock_progress_row</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span>
 
-            <span class="c1"># 4) upsert leaderboard_scores</span>
-            <span class="n">upsert_leaderboard_score</span><span class="p">(</span>
-                <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span>
-                <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span>
-                <span class="n">board_code</span><span class="o">=</span><span class="n">board_code</span><span class="p">,</span>
-                <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
-                <span class="n">score</span><span class="o">=</span><span class="n">score</span>
-            <span class="p">)</span>
+        <span class="c1"># 4) Начисляем награды</span>
+        <span class="n">add_progress_rewards</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">xp</span><span class="o">=</span><span class="n">xp_gained</span><span class="p">,</span> <span class="n">soft_currency</span><span class="o">=</span><span class="n">soft_gained</span><span class="p">)</span>
 
-        <span class="c1"># commit выполняется автоматически при выходе из begin()</span>
+        <span class="c1"># 5) Upsert статистики</span>
+        <span class="n">upsert_daily_stats</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">playtime_seconds</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">is_win</span><span class="o">=</span><span class="n">is_win</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">"matchId"</span><span class="p">:</span> <span class="n">match_id</span><span class="p">,</span>
-            <span class="s2">"rewards"</span><span class="p">:</span> <span class="n">rewards</span><span class="p">,</span>
-            <span class="s2">"leaderboard"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"boardCode"</span><span class="p">:</span> <span class="n">board_code</span><span class="p">,</span>
-                <span class="s2">"season"</span><span class="p">:</span> <span class="n">season</span><span class="p">,</span>
-                <span class="s2">"score"</span><span class="p">:</span> <span class="n">score</span>
-            <span class="p">},</span>
-            <span class="s2">"requestId"</span><span class="p">:</span> <span class="n">request_id</span><span class="p">,</span>
-            <span class="s2">"serverTime"</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
-        <span class="p">}</span>
+        <span class="c1"># 6) Upsert лидерборда</span>
+        <span class="n">upsert_leaderboard_score</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">,</span> <span class="n">board_code</span><span class="o">=</span><span class="n">_BOARD_CODE</span><span class="p">,</span> <span class="n">season</span><span class="o">=</span><span class="n">_SEASON</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="n">score</span><span class="p">)</span>
 
-    <span class="k">except</span> <span class="n">AppError</span><span class="p">:</span>
-        <span class="c1"># Контролируемые ошибки (валидация/доступ/логика) — пробрасываем наверх</span>
-        <span class="k">raise</span>
+        <span class="c1"># Commit — всё или ничего</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
     <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-        <span class="c1"># Любая другая ошибка должна привести к rollback и единому формату ответа</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"TX_FAILED"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Transaction failed"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">rollback</span><span class="p">()</span>
+        <span class="k">raise</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"matchId"</span><span class="p">:</span> <span class="n">match_id</span><span class="p">,</span>
+        <span class="s2">"isWin"</span><span class="p">:</span> <span class="n">is_win</span><span class="p">,</span>
+        <span class="s2">"xpGained"</span><span class="p">:</span> <span class="n">xp_gained</span><span class="p">,</span>
+        <span class="s2">"softCurrencyGained"</span><span class="p">:</span> <span class="n">soft_gained</span><span class="p">,</span>
+    <span class="p">}</span>
 </code></pre></div>
 <hr>
 <h1 id="g-apprepositories">G) app/repositories/</h1>
 <blockquote>
-<p>Репозитории: только SQL, никаких расчётов наград, никаких правил “как считать”.</p>
+<p>Репозитории: только SQL, никаких расчётов наград, никаких правил "как считать".</p>
 </blockquote>
-<h2 id="g1-apprepositoriesevents_repopy">G.1. <code>app/repositories/events_repo.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<h2 id="g1-apprepositoriesmatches_repopy">G.1. <code>app/repositories/matches_repo.py</code></h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
 
 
-<span class="k">def</span> <span class="nf">insert_game_event</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">session_id</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-    <span class="c1"># Репозиторий выполняет только SQL (вставка события)</span>
-    <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
-<span class="s2">        INSERT INTO game_events (user_id, session_id, event_type, payload_json)</span>
-<span class="s2">        VALUES (:user_id, :session_id, :event_type, CAST(:payload AS JSON))</span>
+<span class="k">def</span> <span class="nf">ensure_match_ownership_started</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="c1"># Проверяет, что матч существует, принадлежит пользователю и имеет статус started</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"SELECT id, user_id, status FROM matches WHERE id = :match_id"</span><span class="p">)</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"match_id"</span><span class="p">:</span> <span class="n">match_id</span><span class="p">})</span><span class="o">.</span><span class="n">mappings</span><span class="p">()</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"NOT_FOUND"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Match not found"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">"user_id"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">user_id</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"FORBIDDEN"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Match belongs to another user"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">"status"</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"started"</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"CONFLICT"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Match is not in started state"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">409</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">finish_match_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_win</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duration_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="c1"># Закрытие матча</span>
+    <span class="n">upd</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"UPDATE matches SET status='finished', ended_at=NOW(3) WHERE id=:match_id"</span><span class="p">)</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">upd</span><span class="p">,</span> <span class="p">{</span><span class="s2">"match_id"</span><span class="p">:</span> <span class="n">match_id</span><span class="p">})</span>
+
+    <span class="c1"># Запись результата (upsert на случай retry)</span>
+    <span class="n">ins</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
+<span class="s2">        INSERT INTO battle_results (match_id, is_win, score, duration_seconds)</span>
+<span class="s2">        VALUES (:match_id, :is_win, :score, :duration)</span>
+<span class="s2">        ON DUPLICATE KEY UPDATE</span>
+<span class="s2">          is_win=VALUES(is_win), score=VALUES(score), duration_seconds=VALUES(duration_seconds)</span>
 <span class="s2">    """</span><span class="p">)</span>
-    <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span>
-        <span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
-        <span class="s2">"session_id"</span><span class="p">:</span> <span class="n">session_id</span><span class="p">,</span>
-        <span class="s2">"event_type"</span><span class="p">:</span> <span class="n">event_type</span><span class="p">,</span>
-        <span class="s2">"payload"</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">payload</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="p">})</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">ins</span><span class="p">,</span> <span class="p">{</span><span class="s2">"match_id"</span><span class="p">:</span> <span class="n">match_id</span><span class="p">,</span> <span class="s2">"is_win"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">is_win</span><span class="p">),</span> <span class="s2">"score"</span><span class="p">:</span> <span class="n">score</span><span class="p">,</span> <span class="s2">"duration"</span><span class="p">:</span> <span class="n">duration_seconds</span><span class="p">})</span>
 </code></pre></div>
 <hr>
 <h2 id="g2-apprepositoriesprogress_repopy">G.2. <code>app/repositories/progress_repo.py</code></h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
 <span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
+
+
+<span class="k">def</span> <span class="nf">ensure_progress_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="c1"># INSERT IGNORE — создаёт строку прогресса, если её нет</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"INSERT IGNORE INTO player_progress (user_id) VALUES (:user_id)"</span><span class="p">)</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">})</span>
 
 
 <span class="k">def</span> <span class="nf">lock_progress_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
@@ -1699,7 +1676,6 @@ SQL и транзакций тут быть не должно.</p>
 <span class="s2">    """</span><span class="p">)</span>
     <span class="n">row</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">})</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># Если строки прогресса нет — ошибка инициализации данных пользователя</span>
         <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"PROGRESS_NOT_FOUND"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"player_progress row not found"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
 
 
@@ -1719,20 +1695,20 @@ SQL и транзакций тут быть не должно.</p>
 
 
 <span class="k">def</span> <span class="nf">upsert_daily_stats</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">playtime_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_win</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-    <span class="c1"># Минимальная агрегация по победам/поражениям</span>
-    <span class="n">wins</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">is_win</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">wins</span>   <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">is_win</span> <span class="k">else</span> <span class="mi">0</span>
     <span class="n">losses</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">is_win</span> <span class="k">else</span> <span class="mi">1</span>
 
     <span class="c1"># UPSERT статистики по дню</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
-<span class="s2">        INSERT INTO statistics_daily (user_id, day, sessions_count, events_count, playtime_seconds, wins, losses, score_sum)</span>
+<span class="s2">        INSERT INTO statistics_daily</span>
+<span class="s2">          (user_id, day, sessions_count, events_count, playtime_seconds, wins, losses, score_sum)</span>
 <span class="s2">        VALUES (:user_id, CURDATE(), 0, 1, :playtime, :wins, :losses, :score)</span>
 <span class="s2">        ON DUPLICATE KEY UPDATE</span>
-<span class="s2">          events_count = events_count + 1,</span>
+<span class="s2">          events_count     = events_count + 1,</span>
 <span class="s2">          playtime_seconds = playtime_seconds + VALUES(playtime_seconds),</span>
-<span class="s2">          wins = wins + VALUES(wins),</span>
-<span class="s2">          losses = losses + VALUES(losses),</span>
-<span class="s2">          score_sum = score_sum + VALUES(score_sum);</span>
+<span class="s2">          wins             = wins + VALUES(wins),</span>
+<span class="s2">          losses           = losses + VALUES(losses),</span>
+<span class="s2">          score_sum        = score_sum + VALUES(score_sum)</span>
 <span class="s2">    """</span><span class="p">)</span>
     <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span>
         <span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
@@ -1753,8 +1729,8 @@ SQL и транзакций тут быть не должно.</p>
 <span class="s2">        INSERT INTO leaderboard_scores (user_id, board_code, season, score)</span>
 <span class="s2">        VALUES (:user_id, :board_code, :season, :score)</span>
 <span class="s2">        ON DUPLICATE KEY UPDATE</span>
-<span class="s2">          score = GREATEST(score, VALUES(score)),</span>
-<span class="s2">          updated_at = CURRENT_TIMESTAMP(3);</span>
+<span class="s2">          score      = GREATEST(score, VALUES(score)),</span>
+<span class="s2">          updated_at = CURRENT_TIMESTAMP(3)</span>
 <span class="s2">    """</span><span class="p">)</span>
     <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span>
         <span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
@@ -1777,8 +1753,10 @@ SQL и транзакций тут быть не должно.</p>
 <h3 id="461">4.6.1. Что должно происходить внутри одной транзакции</h3>
 <p>Внутри одной TX выполняются:</p>
 <ol>
-<li>запись события в <code>game_events</code> (<code>event_type='match_finish'</code>)</li>
-<li>обновление <code>player_progress</code> (начисления)</li>
+<li>проверка матча (<code>ensure_match_ownership_started</code>)</li>
+<li>закрытие матча + запись <code>battle_results</code> (<code>finish_match_row</code>)</li>
+<li>блокировка прогресса (<code>lock_progress_row</code>)</li>
+<li>начисление наград (<code>add_progress_rewards</code>)</li>
 <li>upsert <code>statistics_daily</code></li>
 <li>upsert <code>leaderboard_scores</code></li>
 <li>commit</li>
@@ -1787,104 +1765,97 @@ SQL и транзакций тут быть не должно.</p>
 <h3 id="462">4.6.2. Что обязательно добавить (чего обычно не хватает)</h3>
 <ol>
 <li>
-<p><strong>Идемпотентность</strong>: защита от повторного <code>match_finish</code>
-   Минимально: проверка, что матч ещё не завершён (если есть <code>matches</code>).
-   Универсально: хранить <code>requestId</code> в payload и проверять дубликаты на уровне приложения.</p>
+<p><strong>Idempotency — защита от повторного <code>match_finish</code></strong>:
+   Реализована через статус матча: <code>ensure_match_ownership_started()</code> выбрасывает <code>409 CONFLICT</code> если <code>status != 'started'</code>. Дополнительно в <code>events_service.py</code> используется <code>processed_events</code> с <code>UNIQUE(user_id, event_id)</code>.</p>
 </li>
 <li>
 <p><strong>Anti-cheat / ownership checks</strong>:</p>
 </li>
+<li><code>matchId</code> должен принадлежать <code>userId</code> из JWT — проверяется в <code>ensure_match_ownership_started()</code></li>
 <li>
-<p><code>matchId</code> должен принадлежать <code>userId</code> из JWT (если есть таблица matches)</p>
-</li>
-<li>
-<p>статус матча должен быть <code>started</code></p>
+<p>статус матча должен быть <code>started</code> — проверяется там же</p>
 </li>
 <li>
 <p><strong>Блокировки для защиты от гонок</strong>:</p>
 </li>
 <li>
-<p><code>SELECT ... FOR UPDATE</code> на <code>player_progress</code> и (при необходимости) на <code>leaderboard_scores</code></p>
+<p><code>SELECT ... FOR UPDATE</code> на <code>player_progress</code> в <code>lock_progress_row()</code></p>
 </li>
 <li>
 <p><strong>Атомарность</strong>:</p>
 </li>
-<li>
-<p>любой сбой → <code>ROLLBACK</code> и единый формат ошибки</p>
-</li>
+<li>любой сбой → <code>db.session.rollback()</code> в блоке <code>except Exception</code></li>
 </ol>
 <hr>
-<h3 id="463-tower-defense">4.6.3. Пример входного запроса (Tower Defense)</h3>
-<div class="highlight"><pre><span></span><code><span class="err">POST /match/finish</span>
+<h3 id="463-strategy">4.6.3. Пример входного запроса (Strategy)</h3>
+<div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/match/finish</span>
 <span class="err">Authorization: Bearer &lt;JWT&gt;</span>
 <span class="err">Content-Type: application/json</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">12450</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">410</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"waveReached"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">1850</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"powerDelta"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
+<blockquote>
+<p>Матч <code>id=9</code> из <code>seed.sql</code> принадлежит <code>alice</code> (user_id=1), статус <code>started</code>.</p>
+</blockquote>
 <hr>
-<h3 id="464-">4.6.4. Минимальная бизнес-логика (пример начислений)</h3>
-<p>Награды рассчитываются сервером:</p>
-<div class="highlight"><pre><span></span><code>xp = 50 + waveReached * 10
-softCurrency = 100 + waveReached * 20
+<h3 id="464-">4.6.4. Бизнес-логика начислений</h3>
+<p>Награды рассчитываются сервером в <code>match_service.py</code>:</p>
+<div class="highlight"><pre><span></span><code>xp_gained   = 100  (isWin = true)  / 30  (isWin = false)
+soft_gained = 50   (isWin = true)  / 10  (isWin = false)
 </code></pre></div>
 <hr>
 <h3 id="465-sql-mysql-80">4.6.5. SQL внутри транзакции (MySQL 8.0)</h3>
 <p>Начало транзакции:</p>
 <div class="highlight"><pre><span></span><code><span class="k">START</span><span class="w"> </span><span class="k">TRANSACTION</span><span class="p">;</span>
 </code></pre></div>
-<h4 id="0">0) Блокировка прогресса игрока (защита от гонок)</h4>
+<h4 id="0">0) Проверка матча</h4>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span>
+</code></pre></div>
+<h4 id="1">1) Закрытие матча</h4>
+<div class="highlight"><pre><span></span><code><span class="k">UPDATE</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="o">=</span><span class="s1">'finished'</span><span class="p">,</span><span class="w"> </span><span class="n">ended_at</span><span class="o">=</span><span class="n">NOW</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span>
+</code></pre></div>
+<h4 id="2">2) Запись результата</h4>
+<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">battle_results</span><span class="w"> </span><span class="p">(</span><span class="n">match_id</span><span class="p">,</span><span class="w"> </span><span class="n">is_win</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="n">duration_seconds</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1850</span><span class="p">,</span><span class="w"> </span><span class="mi">1200</span><span class="p">)</span>
+<span class="k">ON</span><span class="w"> </span><span class="n">DUPLICATE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">UPDATE</span>
+<span class="w">  </span><span class="n">is_win</span><span class="o">=</span><span class="k">VALUES</span><span class="p">(</span><span class="n">is_win</span><span class="p">),</span><span class="w"> </span><span class="n">score</span><span class="o">=</span><span class="k">VALUES</span><span class="p">(</span><span class="n">score</span><span class="p">),</span><span class="w"> </span><span class="n">duration_seconds</span><span class="o">=</span><span class="k">VALUES</span><span class="p">(</span><span class="n">duration_seconds</span><span class="p">);</span>
+</code></pre></div>
+<h4 id="3">3) Блокировка прогресса (защита от гонок)</h4>
 <div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">xp</span><span class="p">,</span><span class="w"> </span><span class="n">soft_currency</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">player_progress</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
 <span class="k">FOR</span><span class="w"> </span><span class="k">UPDATE</span><span class="p">;</span>
 </code></pre></div>
-<h4 id="1-game_events">1) Запись события в <code>game_events</code></h4>
-<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">game_events</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">session_id</span><span class="p">,</span><span class="w"> </span><span class="n">event_type</span><span class="p">,</span><span class="w"> </span><span class="n">payload_json</span><span class="p">)</span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span>
-<span class="w">  </span><span class="o">?</span><span class="p">,</span><span class="w"> </span>
-<span class="w">  </span><span class="k">NULL</span><span class="p">,</span>
-<span class="w">  </span><span class="s1">'match_finish'</span><span class="p">,</span>
-<span class="w">  </span><span class="n">JSON_OBJECT</span><span class="p">(</span>
-<span class="w">    </span><span class="s1">'requestId'</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">'matchId'</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">,</span>
-<span class="w">    </span><span class="s1">'result'</span><span class="p">,</span><span class="w"> </span><span class="n">JSON_OBJECT</span><span class="p">(</span>
-<span class="w">      </span><span class="s1">'isWin'</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">,</span>
-<span class="w">      </span><span class="s1">'score'</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">,</span>
-<span class="w">      </span><span class="s1">'durationSeconds'</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">,</span>
-<span class="w">      </span><span class="s1">'waveReached'</span><span class="p">,</span><span class="w"> </span><span class="o">?</span>
-<span class="w">    </span><span class="p">)</span>
-<span class="w">  </span><span class="p">)</span>
-<span class="p">);</span>
-</code></pre></div>
-<h4 id="2">2) Обновление прогресса</h4>
+<h4 id="4">4) Обновление прогресса</h4>
 <div class="highlight"><pre><span></span><code><span class="k">UPDATE</span><span class="w"> </span><span class="n">player_progress</span>
-<span class="k">SET</span><span class="w"> </span><span class="n">xp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">?</span><span class="p">,</span>
-<span class="w">    </span><span class="n">soft_currency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">soft_currency</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="o">?</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">?</span><span class="p">;</span>
+<span class="k">SET</span><span class="w"> </span><span class="n">xp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">xp</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="n">soft_currency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">soft_currency</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">50</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
 </code></pre></div>
-<h4 id="3-upsert">3) Обновление дневной статистики (upsert)</h4>
-<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">statistics_daily</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="k">day</span><span class="p">,</span><span class="w"> </span><span class="n">sessions_count</span><span class="p">,</span><span class="w"> </span><span class="n">events_count</span><span class="p">,</span><span class="w"> </span><span class="n">playtime_seconds</span><span class="p">,</span><span class="w"> </span><span class="n">wins</span><span class="p">,</span><span class="w"> </span><span class="n">losses</span><span class="p">,</span><span class="w"> </span><span class="n">score_sum</span><span class="p">)</span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="n">CURDATE</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">)</span>
+<h4 id="5-upsert">5) Обновление дневной статистики (upsert)</h4>
+<div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">statistics_daily</span>
+<span class="w">  </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="k">day</span><span class="p">,</span><span class="w"> </span><span class="n">sessions_count</span><span class="p">,</span><span class="w"> </span><span class="n">events_count</span><span class="p">,</span><span class="w"> </span><span class="n">playtime_seconds</span><span class="p">,</span><span class="w"> </span><span class="n">wins</span><span class="p">,</span><span class="w"> </span><span class="n">losses</span><span class="p">,</span><span class="w"> </span><span class="n">score_sum</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">CURDATE</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1200</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1850</span><span class="p">)</span>
 <span class="k">ON</span><span class="w"> </span><span class="n">DUPLICATE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">UPDATE</span>
-<span class="w">  </span><span class="n">events_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">events_count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">events_count</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">events_count</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
 <span class="w">  </span><span class="n">playtime_seconds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">playtime_seconds</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">playtime_seconds</span><span class="p">),</span>
-<span class="w">  </span><span class="n">wins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wins</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">wins</span><span class="p">),</span>
-<span class="w">  </span><span class="n">losses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">losses</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">losses</span><span class="p">),</span>
-<span class="w">  </span><span class="n">score_sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">score_sum</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">score_sum</span><span class="p">);</span>
+<span class="w">  </span><span class="n">wins</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">wins</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">wins</span><span class="p">),</span>
+<span class="w">  </span><span class="n">losses</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="n">losses</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">losses</span><span class="p">),</span>
+<span class="w">  </span><span class="n">score_sum</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">score_sum</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">score_sum</span><span class="p">);</span>
 </code></pre></div>
-<h4 id="4-upsert">4) Upsert лидерборда</h4>
+<h4 id="6-upsert">6) Upsert лидерборда</h4>
 <div class="highlight"><pre><span></span><code><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">leaderboard_scores</span><span class="w"> </span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">board_code</span><span class="p">,</span><span class="w"> </span><span class="n">season</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">)</span>
-<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="o">?</span><span class="p">,</span><span class="w"> </span><span class="s1">'td_score'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">?</span><span class="p">)</span>
+<span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s1">'default'</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1850</span><span class="p">)</span>
 <span class="k">ON</span><span class="w"> </span><span class="n">DUPLICATE</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="k">UPDATE</span>
-<span class="w">  </span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GREATEST</span><span class="p">(</span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">score</span><span class="p">)),</span>
+<span class="w">  </span><span class="n">score</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">GREATEST</span><span class="p">(</span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="k">VALUES</span><span class="p">(</span><span class="n">score</span><span class="p">)),</span>
 <span class="w">  </span><span class="n">updated_at</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">CURRENT_TIMESTAMP</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
 </code></pre></div>
 <p>Завершение транзакции:</p>
@@ -1895,37 +1866,29 @@ softCurrency = 100 + waveReached * 20
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"rewards"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">"xp"</span><span class="p">:</span><span class="w"> </span><span class="mi">170</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"softCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">340</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">"leaderboard"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">"boardCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"td_score"</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"season"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">12450</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"req_abc123"</span>
+<span class="w">    </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"xpGained"</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"softCurrencyGained"</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
 <hr>
 <h2 id="443">4.4.3. Проверка работоспособности (минимальная)</h2>
-<h3 id="1">1) Запуск</h3>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>run.py
+<h3 id="1_1">1) Запуск</h3>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>wsgi.py
 </code></pre></div>
 <h3 id="2_1">2) Запрос (пример)</h3>
-<div class="highlight"><pre><span></span><code><span class="err">POST /match/finish</span>
+<div class="highlight"><pre><span></span><code><span class="err">POST /api/v1/match/finish</span>
 <span class="err">Authorization: Bearer &lt;JWT&gt;</span>
 <span class="err">Content-Type: application/json</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">987654321</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">12450</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">410</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"waveReached"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">1850</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div>
@@ -1938,13 +1901,15 @@ softCurrency = 100 + waveReached * 20
 <p>записи в:</p>
 </li>
 <li>
-<p><code>game_events</code></p>
+<p><code>matches</code> (status = finished)</p>
 </li>
+<li><code>battle_results</code></li>
 <li><code>player_progress</code></li>
 <li><code>statistics_daily</code></li>
 <li><code>leaderboard_scores</code></li>
 </ul>
-<hr>
+<h3 id="3-test_clienthtml">3) Тестирование через test_client.html</h3>
+<p>В корне проекта находится <code>test_client.html</code> — HTML-страница для ручного тестирования всех endpoint'ов через браузер без Postman.</p>
 
 
 
