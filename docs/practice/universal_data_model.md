@@ -180,7 +180,9 @@ project-root/
 
 ### 2.3.2. Пример содержимого `db/schema.sql` (MySQL 8.0)
 
-```sql-- =============================================================
+```sql
+
+-- =============================================================
 -- strategy_db — Schema Creation
 -- Run this BEFORE importing seed data
 -- =============================================================
@@ -380,6 +382,7 @@ CREATE TABLE IF NOT EXISTS processed_events (
     INDEX idx_event_type (event_type),
     INDEX idx_processed_at (processed_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 ```
 
 ---
@@ -518,6 +521,7 @@ LIMIT 1;
 > Поле пароля называется `password` (хранит bcrypt-хэш).
 
 ```sql
+
 -- MySQL 8.0+
 -- ENGINE=InnoDB, CHARSET=utf8mb4, COLLATION=utf8mb4_0900_ai_ci
 
@@ -613,4 +617,5 @@ CREATE TABLE leaderboard_scores (
   CONSTRAINT chk_season CHECK (season >= 1),
   CONSTRAINT chk_score  CHECK (score >= 0)
 ) ENGINE=InnoDB;
+
 ```
