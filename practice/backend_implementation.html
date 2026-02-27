@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/icons/logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
       
 
@@ -1073,14 +1073,14 @@ Error → errorHandler → JSON + logging
 <hr>
 <h1 id="a">A) Конфигурация</h1>
 <h2 id="a1-appconfigpy">A.1. <code>app/config.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
 
 <span class="c1"># Загружаем переменные окружения из .env (если файл есть)</span>
 <span class="n">load_dotenv</span><span class="p">()</span>
 
 
-<span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
     <span class="c1"># Flask</span>
     <span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SECRET_KEY"</span><span class="p">,</span> <span class="s2">"change-me-in-production"</span><span class="p">)</span>
 
@@ -1108,7 +1108,7 @@ DEBUG=1
 </blockquote>
 <hr>
 <h2 id="a2-wsgipy">A.2. <code>wsgi.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">create_app</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">app</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_app</span>
 
 <span class="c1"># Создание Flask-приложения (регистрация middleware и маршрутов)</span>
 <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
@@ -1121,9 +1121,9 @@ DEBUG=1
 <hr>
 <h1 id="b-app">B) app/</h1>
 <h2 id="b1-appextensionspy">B.1. <code>app/extensions.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask_sqlalchemy</span> <span class="kn">import</span> <span class="n">SQLAlchemy</span>
-<span class="kn">from</span> <span class="nn">flask_jwt_extended</span> <span class="kn">import</span> <span class="n">JWTManager</span>
-<span class="kn">from</span> <span class="nn">flask_cors</span> <span class="kn">import</span> <span class="n">CORS</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask_sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLAlchemy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask_jwt_extended</span><span class="w"> </span><span class="kn">import</span> <span class="n">JWTManager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask_cors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CORS</span>
 
 <span class="c1"># db — единая точка доступа к БД (SQLAlchemy)</span>
 <span class="n">db</span> <span class="o">=</span> <span class="n">SQLAlchemy</span><span class="p">()</span>
@@ -1136,15 +1136,15 @@ DEBUG=1
 </code></pre></div>
 <hr>
 <h2 id="b2-app__init__py">B.2. <code>app/__init__.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span>
 
-<span class="kn">from</span> <span class="nn">.extensions</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">jwt</span><span class="p">,</span> <span class="n">cors</span>
-<span class="kn">from</span> <span class="nn">.middleware.request_id</span> <span class="kn">import</span> <span class="n">register_request_id</span>
-<span class="kn">from</span> <span class="nn">.middleware.error_handler</span> <span class="kn">import</span> <span class="n">register_error_handlers</span>
-<span class="kn">from</span> <span class="nn">.routes.match</span> <span class="kn">import</span> <span class="n">match_bp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">jwt</span><span class="p">,</span> <span class="n">cors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.middleware.request_id</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_request_id</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.middleware.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_error_handlers</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.routes.match</span><span class="w"> </span><span class="kn">import</span> <span class="n">match_bp</span>
 
 
-<span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flask</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flask</span><span class="p">:</span>
     <span class="c1"># 1) Создаём Flask-приложение</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -1207,19 +1207,19 @@ DEBUG=1
 <li>вычислить duration</li>
 <li>залогировать строку</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span>
 
 
-<span class="k">def</span> <span class="nf">_gen_request_id</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_gen_request_id</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="c1"># Генерируем короткий requestId для логирования и диагностики</span>
     <span class="k">return</span> <span class="s2">"req_"</span> <span class="o">+</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">register_request_id</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">register_request_id</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
     <span class="nd">@app</span><span class="o">.</span><span class="n">before_request</span>
-    <span class="k">def</span> <span class="nf">_before</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_before</span><span class="p">():</span>
         <span class="c1"># Если клиент прислал X-Request-Id — используем его (удобно для трассировки цепочки)</span>
         <span class="c1"># Иначе генерируем новый id</span>
         <span class="n">g</span><span class="o">.</span><span class="n">request_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"X-Request-Id"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_gen_request_id</span><span class="p">()</span>
@@ -1228,7 +1228,7 @@ DEBUG=1
         <span class="n">g</span><span class="o">.</span><span class="n">_start_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
 
     <span class="nd">@app</span><span class="o">.</span><span class="n">after_request</span>
-    <span class="k">def</span> <span class="nf">_after</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_after</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
         <span class="c1"># Длительность запроса</span>
         <span class="n">duration_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">"_start_ms"</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
 
@@ -1294,13 +1294,13 @@ DEBUG=1
 </li>
 <li>в лог записать stack trace + requestId + userId</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">g</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">g</span>
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">AppError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AppError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="c1"># Контролируемая ошибка приложения:</span>
     <span class="c1"># code — машинный код для клиента</span>
     <span class="c1"># message — человекочитаемое сообщение</span>
@@ -1312,7 +1312,7 @@ DEBUG=1
     <span class="n">details</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<span class="k">def</span> <span class="nf">_error_response</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_error_response</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># Единый формат error-ответов по заданию</span>
     <span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">"ok"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -1327,9 +1327,9 @@ DEBUG=1
     <span class="k">return</span> <span class="n">body</span>
 
 
-<span class="k">def</span> <span class="nf">register_error_handlers</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">register_error_handlers</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
     <span class="nd">@app</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">AppError</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">handle_app_error</span><span class="p">(</span><span class="n">err</span><span class="p">:</span> <span class="n">AppError</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_app_error</span><span class="p">(</span><span class="n">err</span><span class="p">:</span> <span class="n">AppError</span><span class="p">):</span>
         <span class="n">rid</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">"request_id"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)</span>
 
         <span class="c1"># Логируем контролируемую ошибку (без stacktrace, обычно достаточно кода/сообщения)</span>
@@ -1338,7 +1338,7 @@ DEBUG=1
         <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">_error_response</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">rid</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">details</span><span class="p">)),</span> <span class="n">err</span><span class="o">.</span><span class="n">http_status</span>
 
     <span class="nd">@app</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">handle_exception</span><span class="p">(</span><span class="n">err</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_exception</span><span class="p">(</span><span class="n">err</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">):</span>
         <span class="n">rid</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">"request_id"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)</span>
 
         <span class="c1"># Логируем неконтролируемую ошибку со stacktrace</span>
@@ -1379,20 +1379,20 @@ DEBUG=1
 <li>забирает identity (user_id) и roles (из claims)</li>
 <li>кладёт в <code>g.user = {"userId": ..., "roles": [...]}</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">g</span>
-<span class="kn">from</span> <span class="nn">flask_jwt_extended</span> <span class="kn">import</span> <span class="n">verify_jwt_in_request</span><span class="p">,</span> <span class="n">get_jwt</span><span class="p">,</span> <span class="n">get_jwt_identity</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">g</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask_jwt_extended</span><span class="w"> </span><span class="kn">import</span> <span class="n">verify_jwt_in_request</span><span class="p">,</span> <span class="n">get_jwt</span><span class="p">,</span> <span class="n">get_jwt_identity</span>
 
-<span class="kn">from</span> <span class="nn">.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
 
 
-<span class="k">def</span> <span class="nf">auth_required</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">auth_required</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># roles — список ролей, которые допускаются к endpoint</span>
     <span class="n">roles</span> <span class="o">=</span> <span class="n">roles</span> <span class="ow">or</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="c1"># Проверяем токен (валидность, срок жизни)</span>
                 <span class="n">verify_jwt_in_request</span><span class="p">()</span>
@@ -1458,20 +1458,20 @@ DEBUG=1
 <li>проверяет наличие ключей/типов</li>
 <li>при ошибке выбрасывает <code>AppError(code='VALIDATION_ERROR', http_status=400, ...)</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
-<span class="kn">from</span> <span class="nn">.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
 
 
-<span class="k">def</span> <span class="nf">_bad_body</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_bad_body</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
     <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid request body"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">validate_match_finish</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_match_finish</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
     <span class="c1"># Валидация запроса выполняется ДО контроллера/сервиса, чтобы не трогать БД при мусорном вводе</span>
 
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -1508,10 +1508,10 @@ DEBUG=1
 <h1 id="d-approutes">D) app/routes/</h1>
 <h2 id="d1-approutesmatchpy">D.1. <code>app/routes/match.py</code></h2>
 <p>Файл маршрутов связывает URL с контроллером и подключает middleware-декораторы.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
-<span class="kn">from</span> <span class="nn">app.middleware.auth_jwt</span> <span class="kn">import</span> <span class="n">auth_required</span>
-<span class="kn">from</span> <span class="nn">app.middleware.validate_api</span> <span class="kn">import</span> <span class="n">validate_match_finish</span>
-<span class="kn">from</span> <span class="nn">app.controllers.match_controller</span> <span class="kn">import</span> <span class="n">finish_match_controller</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Blueprint</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.auth_jwt</span><span class="w"> </span><span class="kn">import</span> <span class="n">auth_required</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.validate_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_match_finish</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.controllers.match_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">finish_match_controller</span>
 
 <span class="c1"># Группа маршрутов /api/v1/match</span>
 <span class="n">match_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s2">"match"</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s2">"/api/v1/match"</span><span class="p">)</span>
@@ -1522,7 +1522,7 @@ DEBUG=1
 <span class="nd">@auth_required</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"player"</span><span class="p">])</span>
 <span class="c1"># 2) validate: проверяем тело запроса</span>
 <span class="nd">@validate_match_finish</span>
-<span class="k">def</span> <span class="nf">finish_match</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">finish_match</span><span class="p">():</span>
     <span class="c1"># 3) controller: извлекает данные и вызывает сервис</span>
     <span class="k">return</span> <span class="n">finish_match_controller</span><span class="p">()</span>
 </code></pre></div>
@@ -1531,11 +1531,11 @@ DEBUG=1
 <h2 id="e1-appcontrollersmatch_controllerpy">E.1. <code>app/controllers/match_controller.py</code></h2>
 <p>Контроллер: только HTTP-обвязка.
 SQL и транзакций тут быть не должно.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
-<span class="kn">from</span> <span class="nn">app.services.match_service</span> <span class="kn">import</span> <span class="n">finish_match_service</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.services.match_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">finish_match_service</span>
 
 
-<span class="k">def</span> <span class="nf">finish_match_controller</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">finish_match_controller</span><span class="p">():</span>
     <span class="c1"># userId берём только из JWT (g.user заполняется middleware authJwt)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">user</span><span class="p">[</span><span class="s2">"userId"</span><span class="p">]</span>
 
@@ -1556,11 +1556,11 @@ SQL и транзакций тут быть не должно.</p>
 <h2 id="f1-appservicesmatch_servicepy">F.1. <code>app/services/match_service.py</code></h2>
 <p>Сервис: бизнес-логика + транзакция + orchestration репозиториев.</p>
 <p>Важное правило: одна транзакция на весь итог.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
-<span class="kn">from</span> <span class="nn">app.repositories.matches_repo</span> <span class="kn">import</span> <span class="n">ensure_match_ownership_started</span><span class="p">,</span> <span class="n">finish_match_row</span>
-<span class="kn">from</span> <span class="nn">app.repositories.progress_repo</span> <span class="kn">import</span> <span class="n">ensure_progress_row</span><span class="p">,</span> <span class="n">lock_progress_row</span><span class="p">,</span> <span class="n">add_progress_rewards</span>
-<span class="kn">from</span> <span class="nn">app.repositories.stats_repo</span> <span class="kn">import</span> <span class="n">upsert_daily_stats</span>
-<span class="kn">from</span> <span class="nn">app.repositories.leaderboard_repo</span> <span class="kn">import</span> <span class="n">upsert_leaderboard_score</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">app.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.matches_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_match_ownership_started</span><span class="p">,</span> <span class="n">finish_match_row</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.progress_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_progress_row</span><span class="p">,</span> <span class="n">lock_progress_row</span><span class="p">,</span> <span class="n">add_progress_rewards</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.stats_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">upsert_daily_stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.leaderboard_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">upsert_leaderboard_score</span>
 
 <span class="n">_XP_WIN</span>   <span class="o">=</span> <span class="mi">100</span>
 <span class="n">_XP_LOSS</span>  <span class="o">=</span> <span class="mi">30</span>
@@ -1570,7 +1570,7 @@ SQL и транзакций тут быть не должно.</p>
 <span class="n">_SEASON</span> <span class="o">=</span> <span class="mi">1</span>
 
 
-<span class="k">def</span> <span class="nf">finish_match_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">finish_match_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">match_id</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"matchId"</span><span class="p">]</span>
     <span class="n">result</span>   <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"result"</span><span class="p">]</span>
     <span class="n">is_win</span>   <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">"isWin"</span><span class="p">]</span>
@@ -1624,11 +1624,11 @@ SQL и транзакций тут быть не должно.</p>
 <p>Репозитории: только SQL, никаких расчётов наград, никаких правил "как считать".</p>
 </blockquote>
 <h2 id="g1-apprepositoriesmatches_repopy">G.1. <code>app/repositories/matches_repo.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
-<span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
 
 
-<span class="k">def</span> <span class="nf">ensure_match_ownership_started</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_match_ownership_started</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># Проверяет, что матч существует, принадлежит пользователю и имеет статус started</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"SELECT id, user_id, status FROM matches WHERE id = :match_id"</span><span class="p">)</span>
     <span class="n">row</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"match_id"</span><span class="p">:</span> <span class="n">match_id</span><span class="p">})</span><span class="o">.</span><span class="n">mappings</span><span class="p">()</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
@@ -1640,7 +1640,7 @@ SQL и транзакций тут быть не должно.</p>
         <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"CONFLICT"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Match is not in started state"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">409</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">finish_match_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_win</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duration_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">finish_match_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_win</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duration_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># Закрытие матча</span>
     <span class="n">upd</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"UPDATE matches SET status='finished', ended_at=NOW(3) WHERE id=:match_id"</span><span class="p">)</span>
     <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">upd</span><span class="p">,</span> <span class="p">{</span><span class="s2">"match_id"</span><span class="p">:</span> <span class="n">match_id</span><span class="p">})</span>
@@ -1656,17 +1656,17 @@ SQL и транзакций тут быть не должно.</p>
 </code></pre></div>
 <hr>
 <h2 id="g2-apprepositoriesprogress_repopy">G.2. <code>app/repositories/progress_repo.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
-<span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
 
 
-<span class="k">def</span> <span class="nf">ensure_progress_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_progress_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># INSERT IGNORE — создаёт строку прогресса, если её нет</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"INSERT IGNORE INTO player_progress (user_id) VALUES (:user_id)"</span><span class="p">)</span>
     <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">})</span>
 
 
-<span class="k">def</span> <span class="nf">lock_progress_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">lock_progress_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># SELECT ... FOR UPDATE — блокировка строки (защита от гонок)</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        SELECT user_id, xp, soft_currency</span>
@@ -1679,7 +1679,7 @@ SQL и транзакций тут быть не должно.</p>
         <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"PROGRESS_NOT_FOUND"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"player_progress row not found"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">add_progress_rewards</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xp</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">soft_currency</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_progress_rewards</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xp</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">soft_currency</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># Обновление прогресса игрока</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        UPDATE player_progress</span>
@@ -1691,10 +1691,10 @@ SQL и транзакций тут быть не должно.</p>
 </code></pre></div>
 <hr>
 <h2 id="g3-apprepositoriesstats_repopy">G.3. <code>app/repositories/stats_repo.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
 
 
-<span class="k">def</span> <span class="nf">upsert_daily_stats</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">playtime_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_win</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">upsert_daily_stats</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">playtime_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_win</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="n">wins</span>   <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">is_win</span> <span class="k">else</span> <span class="mi">0</span>
     <span class="n">losses</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">is_win</span> <span class="k">else</span> <span class="mi">1</span>
 
@@ -1720,10 +1720,10 @@ SQL и транзакций тут быть не должно.</p>
 </code></pre></div>
 <hr>
 <h2 id="g4-apprepositoriesleaderboard_repopy">G.4. <code>app/repositories/leaderboard_repo.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
 
 
-<span class="k">def</span> <span class="nf">upsert_leaderboard_score</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">board_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">season</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">upsert_leaderboard_score</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">board_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">season</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># UPSERT лидерборда (берём лучший score)</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        INSERT INTO leaderboard_scores (user_id, board_code, season, score)</span>
@@ -1965,10 +1965,10 @@ soft_gained = 50   (isWin = true)  / 10  (isWin = false)
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.image.zoom", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.image.zoom", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
       
         <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
       
