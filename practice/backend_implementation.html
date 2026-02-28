@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/icons/logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
       
       
 
@@ -1073,14 +1073,14 @@ Error → errorHandler → JSON + logging
 <hr>
 <h1 id="a">A) Конфигурация</h1>
 <h2 id="a1-appconfigpy">A.1. <code>app/config.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>
 
 <span class="c1"># Загружаем переменные окружения из .env (если файл есть)</span>
 <span class="n">load_dotenv</span><span class="p">()</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
     <span class="c1"># Flask</span>
     <span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"SECRET_KEY"</span><span class="p">,</span> <span class="s2">"change-me-in-production"</span><span class="p">)</span>
 
@@ -1108,7 +1108,7 @@ DEBUG=1
 </blockquote>
 <hr>
 <h2 id="a2-wsgipy">A.2. <code>wsgi.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">app</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_app</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">create_app</span>
 
 <span class="c1"># Создание Flask-приложения (регистрация middleware и маршрутов)</span>
 <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
@@ -1121,9 +1121,9 @@ DEBUG=1
 <hr>
 <h1 id="b-app">B) app/</h1>
 <h2 id="b1-appextensionspy">B.1. <code>app/extensions.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask_sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">SQLAlchemy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flask_jwt_extended</span><span class="w"> </span><span class="kn">import</span> <span class="n">JWTManager</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flask_cors</span><span class="w"> </span><span class="kn">import</span> <span class="n">CORS</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask_sqlalchemy</span> <span class="kn">import</span> <span class="n">SQLAlchemy</span>
+<span class="kn">from</span> <span class="nn">flask_jwt_extended</span> <span class="kn">import</span> <span class="n">JWTManager</span>
+<span class="kn">from</span> <span class="nn">flask_cors</span> <span class="kn">import</span> <span class="n">CORS</span>
 
 <span class="c1"># db — единая точка доступа к БД (SQLAlchemy)</span>
 <span class="n">db</span> <span class="o">=</span> <span class="n">SQLAlchemy</span><span class="p">()</span>
@@ -1136,15 +1136,15 @@ DEBUG=1
 </code></pre></div>
 <hr>
 <h2 id="b2-app__init__py">B.2. <code>app/__init__.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">jwt</span><span class="p">,</span> <span class="n">cors</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.middleware.request_id</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_request_id</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.middleware.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_error_handlers</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.routes.match</span><span class="w"> </span><span class="kn">import</span> <span class="n">match_bp</span>
+<span class="kn">from</span> <span class="nn">.extensions</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">jwt</span><span class="p">,</span> <span class="n">cors</span>
+<span class="kn">from</span> <span class="nn">.middleware.request_id</span> <span class="kn">import</span> <span class="n">register_request_id</span>
+<span class="kn">from</span> <span class="nn">.middleware.error_handler</span> <span class="kn">import</span> <span class="n">register_error_handlers</span>
+<span class="kn">from</span> <span class="nn">.routes.match</span> <span class="kn">import</span> <span class="n">match_bp</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flask</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Flask</span><span class="p">:</span>
     <span class="c1"># 1) Создаём Flask-приложение</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -1207,19 +1207,19 @@ DEBUG=1
 <li>вычислить duration</li>
 <li>залогировать строку</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_gen_request_id</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">_gen_request_id</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="c1"># Генерируем короткий requestId для логирования и диагностики</span>
     <span class="k">return</span> <span class="s2">"req_"</span> <span class="o">+</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">[:</span><span class="mi">8</span><span class="p">]</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">register_request_id</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">register_request_id</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
     <span class="nd">@app</span><span class="o">.</span><span class="n">before_request</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_before</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">_before</span><span class="p">():</span>
         <span class="c1"># Если клиент прислал X-Request-Id — используем его (удобно для трассировки цепочки)</span>
         <span class="c1"># Иначе генерируем новый id</span>
         <span class="n">g</span><span class="o">.</span><span class="n">request_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"X-Request-Id"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">_gen_request_id</span><span class="p">()</span>
@@ -1228,7 +1228,7 @@ DEBUG=1
         <span class="n">g</span><span class="o">.</span><span class="n">_start_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
 
     <span class="nd">@app</span><span class="o">.</span><span class="n">after_request</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_after</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_after</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
         <span class="c1"># Длительность запроса</span>
         <span class="n">duration_ms</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">-</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">"_start_ms"</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">))</span>
 
@@ -1294,13 +1294,13 @@ DEBUG=1
 </li>
 <li>в лог записать stack trace + requestId + userId</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">g</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">g</span>
 
 
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">AppError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">AppError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="c1"># Контролируемая ошибка приложения:</span>
     <span class="c1"># code — машинный код для клиента</span>
     <span class="c1"># message — человекочитаемое сообщение</span>
@@ -1312,7 +1312,7 @@ DEBUG=1
     <span class="n">details</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_error_response</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_error_response</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">request_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># Единый формат error-ответов по заданию</span>
     <span class="n">body</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">"ok"</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -1327,9 +1327,9 @@ DEBUG=1
     <span class="k">return</span> <span class="n">body</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">register_error_handlers</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">register_error_handlers</span><span class="p">(</span><span class="n">app</span><span class="p">):</span>
     <span class="nd">@app</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="n">AppError</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">handle_app_error</span><span class="p">(</span><span class="n">err</span><span class="p">:</span> <span class="n">AppError</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">handle_app_error</span><span class="p">(</span><span class="n">err</span><span class="p">:</span> <span class="n">AppError</span><span class="p">):</span>
         <span class="n">rid</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">"request_id"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)</span>
 
         <span class="c1"># Логируем контролируемую ошибку (без stacktrace, обычно достаточно кода/сообщения)</span>
@@ -1338,7 +1338,7 @@ DEBUG=1
         <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">_error_response</span><span class="p">(</span><span class="n">err</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">message</span><span class="p">,</span> <span class="n">rid</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">details</span><span class="p">)),</span> <span class="n">err</span><span class="o">.</span><span class="n">http_status</span>
 
     <span class="nd">@app</span><span class="o">.</span><span class="n">errorhandler</span><span class="p">(</span><span class="ne">Exception</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">handle_exception</span><span class="p">(</span><span class="n">err</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">handle_exception</span><span class="p">(</span><span class="n">err</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">):</span>
         <span class="n">rid</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="s2">"request_id"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)</span>
 
         <span class="c1"># Логируем неконтролируемую ошибку со stacktrace</span>
@@ -1379,20 +1379,20 @@ DEBUG=1
 <li>забирает identity (user_id) и roles (из claims)</li>
 <li>кладёт в <code>g.user = {"userId": ..., "roles": [...]}</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">g</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flask_jwt_extended</span><span class="w"> </span><span class="kn">import</span> <span class="n">verify_jwt_in_request</span><span class="p">,</span> <span class="n">get_jwt</span><span class="p">,</span> <span class="n">get_jwt_identity</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">g</span>
+<span class="kn">from</span> <span class="nn">flask_jwt_extended</span> <span class="kn">import</span> <span class="n">verify_jwt_in_request</span><span class="p">,</span> <span class="n">get_jwt</span><span class="p">,</span> <span class="n">get_jwt_identity</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
+<span class="kn">from</span> <span class="nn">.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">auth_required</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">auth_required</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="c1"># roles — список ролей, которые допускаются к endpoint</span>
     <span class="n">roles</span> <span class="o">=</span> <span class="n">roles</span> <span class="ow">or</span> <span class="p">[]</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-        <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="c1"># Проверяем токен (валидность, срок жизни)</span>
                 <span class="n">verify_jwt_in_request</span><span class="p">()</span>
@@ -1458,20 +1458,20 @@ DEBUG=1
 <li>проверяет наличие ключей/типов</li>
 <li>при ошибке выбрасывает <code>AppError(code='VALIDATION_ERROR', http_status=400, ...)</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_bad_body</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_bad_body</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
     <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid request body"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">validate_match_finish</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">validate_match_finish</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
     <span class="c1"># Валидация запроса выполняется ДО контроллера/сервиса, чтобы не трогать БД при мусорном вводе</span>
 
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -1508,10 +1508,10 @@ DEBUG=1
 <h1 id="d-approutes">D) app/routes/</h1>
 <h2 id="d1-approutesmatchpy">D.1. <code>app/routes/match.py</code></h2>
 <p>Файл маршрутов связывает URL с контроллером и подключает middleware-декораторы.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Blueprint</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.auth_jwt</span><span class="w"> </span><span class="kn">import</span> <span class="n">auth_required</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.validate_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_match_finish</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.controllers.match_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">finish_match_controller</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
+<span class="kn">from</span> <span class="nn">app.middleware.auth_jwt</span> <span class="kn">import</span> <span class="n">auth_required</span>
+<span class="kn">from</span> <span class="nn">app.middleware.validate_api</span> <span class="kn">import</span> <span class="n">validate_match_finish</span>
+<span class="kn">from</span> <span class="nn">app.controllers.match_controller</span> <span class="kn">import</span> <span class="n">finish_match_controller</span>
 
 <span class="c1"># Группа маршрутов /api/v1/match</span>
 <span class="n">match_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s2">"match"</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s2">"/api/v1/match"</span><span class="p">)</span>
@@ -1522,7 +1522,7 @@ DEBUG=1
 <span class="nd">@auth_required</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"player"</span><span class="p">])</span>
 <span class="c1"># 2) validate: проверяем тело запроса</span>
 <span class="nd">@validate_match_finish</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">finish_match</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">finish_match</span><span class="p">():</span>
     <span class="c1"># 3) controller: извлекает данные и вызывает сервис</span>
     <span class="k">return</span> <span class="n">finish_match_controller</span><span class="p">()</span>
 </code></pre></div>
@@ -1531,11 +1531,11 @@ DEBUG=1
 <h2 id="e1-appcontrollersmatch_controllerpy">E.1. <code>app/controllers/match_controller.py</code></h2>
 <p>Контроллер: только HTTP-обвязка.
 SQL и транзакций тут быть не должно.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.services.match_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">finish_match_service</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">app.services.match_service</span> <span class="kn">import</span> <span class="n">finish_match_service</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">finish_match_controller</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">finish_match_controller</span><span class="p">():</span>
     <span class="c1"># userId берём только из JWT (g.user заполняется middleware authJwt)</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">user</span><span class="p">[</span><span class="s2">"userId"</span><span class="p">]</span>
 
@@ -1556,11 +1556,11 @@ SQL и транзакций тут быть не должно.</p>
 <h2 id="f1-appservicesmatch_servicepy">F.1. <code>app/services/match_service.py</code></h2>
 <p>Сервис: бизнес-логика + транзакция + orchestration репозиториев.</p>
 <p>Важное правило: одна транзакция на весь итог.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">app.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.matches_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_match_ownership_started</span><span class="p">,</span> <span class="n">finish_match_row</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.progress_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_progress_row</span><span class="p">,</span> <span class="n">lock_progress_row</span><span class="p">,</span> <span class="n">add_progress_rewards</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.stats_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">upsert_daily_stats</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.leaderboard_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">upsert_leaderboard_score</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">app.repositories.matches_repo</span> <span class="kn">import</span> <span class="n">ensure_match_ownership_started</span><span class="p">,</span> <span class="n">finish_match_row</span>
+<span class="kn">from</span> <span class="nn">app.repositories.progress_repo</span> <span class="kn">import</span> <span class="n">ensure_progress_row</span><span class="p">,</span> <span class="n">lock_progress_row</span><span class="p">,</span> <span class="n">add_progress_rewards</span>
+<span class="kn">from</span> <span class="nn">app.repositories.stats_repo</span> <span class="kn">import</span> <span class="n">upsert_daily_stats</span>
+<span class="kn">from</span> <span class="nn">app.repositories.leaderboard_repo</span> <span class="kn">import</span> <span class="n">upsert_leaderboard_score</span>
 
 <span class="n">_XP_WIN</span>   <span class="o">=</span> <span class="mi">100</span>
 <span class="n">_XP_LOSS</span>  <span class="o">=</span> <span class="mi">30</span>
@@ -1570,7 +1570,7 @@ SQL и транзакций тут быть не должно.</p>
 <span class="n">_SEASON</span> <span class="o">=</span> <span class="mi">1</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">finish_match_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">finish_match_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">match_id</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"matchId"</span><span class="p">]</span>
     <span class="n">result</span>   <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"result"</span><span class="p">]</span>
     <span class="n">is_win</span>   <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="s2">"isWin"</span><span class="p">]</span>
@@ -1624,11 +1624,11 @@ SQL и транзакций тут быть не должно.</p>
 <p>Репозитории: только SQL, никаких расчётов наград, никаких правил "как считать".</p>
 </blockquote>
 <h2 id="g1-apprepositoriesmatches_repopy">G.1. <code>app/repositories/matches_repo.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">ensure_match_ownership_started</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">ensure_match_ownership_started</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># Проверяет, что матч существует, принадлежит пользователю и имеет статус started</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"SELECT id, user_id, status FROM matches WHERE id = :match_id"</span><span class="p">)</span>
     <span class="n">row</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"match_id"</span><span class="p">:</span> <span class="n">match_id</span><span class="p">})</span><span class="o">.</span><span class="n">mappings</span><span class="p">()</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
@@ -1640,7 +1640,7 @@ SQL и транзакций тут быть не должно.</p>
         <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"CONFLICT"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Match is not in started state"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">409</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">finish_match_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_win</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duration_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">finish_match_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">match_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_win</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duration_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># Закрытие матча</span>
     <span class="n">upd</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"UPDATE matches SET status='finished', ended_at=NOW(3) WHERE id=:match_id"</span><span class="p">)</span>
     <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">upd</span><span class="p">,</span> <span class="p">{</span><span class="s2">"match_id"</span><span class="p">:</span> <span class="n">match_id</span><span class="p">})</span>
@@ -1656,17 +1656,17 @@ SQL и транзакций тут быть не должно.</p>
 </code></pre></div>
 <hr>
 <h2 id="g2-apprepositoriesprogress_repopy">G.2. <code>app/repositories/progress_repo.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">ensure_progress_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">ensure_progress_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># INSERT IGNORE — создаёт строку прогресса, если её нет</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"INSERT IGNORE INTO player_progress (user_id) VALUES (:user_id)"</span><span class="p">)</span>
     <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"user_id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">})</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">lock_progress_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">lock_progress_row</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># SELECT ... FOR UPDATE — блокировка строки (защита от гонок)</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        SELECT user_id, xp, soft_currency</span>
@@ -1679,7 +1679,7 @@ SQL и транзакций тут быть не должно.</p>
         <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"PROGRESS_NOT_FOUND"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"player_progress row not found"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">add_progress_rewards</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xp</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">soft_currency</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">add_progress_rewards</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">xp</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">soft_currency</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># Обновление прогресса игрока</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        UPDATE player_progress</span>
@@ -1691,10 +1691,10 @@ SQL и транзакций тут быть не должно.</p>
 </code></pre></div>
 <hr>
 <h2 id="g3-apprepositoriesstats_repopy">G.3. <code>app/repositories/stats_repo.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">upsert_daily_stats</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">playtime_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_win</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">upsert_daily_stats</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">playtime_seconds</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">is_win</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="n">wins</span>   <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">is_win</span> <span class="k">else</span> <span class="mi">0</span>
     <span class="n">losses</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">is_win</span> <span class="k">else</span> <span class="mi">1</span>
 
@@ -1720,10 +1720,10 @@ SQL и транзакций тут быть не должно.</p>
 </code></pre></div>
 <hr>
 <h2 id="g4-apprepositoriesleaderboard_repopy">G.4. <code>app/repositories/leaderboard_repo.py</code></h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">upsert_leaderboard_score</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">board_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">season</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">upsert_leaderboard_score</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">board_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">season</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="c1"># UPSERT лидерборда (берём лучший score)</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        INSERT INTO leaderboard_scores (user_id, board_code, season, score)</span>
@@ -1910,6 +1910,565 @@ soft_gained = 50   (isWin = true)  / 10  (isWin = false)
 </ul>
 <h3 id="3-test_clienthtml">3) Тестирование через test_client.html</h3>
 <p>В корне проекта находится <code>test_client.html</code> — HTML-страница для ручного тестирования всех endpoint'ов через браузер без Postman.</p>
+<hr>
+<h2 id="48">4.8. Установка библиотек (зависимости проекта)</h2>
+<h3 id="481">4.8.1. Что и зачем устанавливается</h3>
+<p>Проект <code>strategy-support-is</code> использует следующие библиотеки Python:</p>
+<table>
+<thead>
+<tr>
+<th>Библиотека</th>
+<th>Зачем нужна</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Flask</code></td>
+<td>Web-фреймворк, маршруты, Blueprint'ы, <code>before/after_request</code></td>
+</tr>
+<tr>
+<td><code>flask-jwt-extended</code></td>
+<td>JWT-аутентификация: <code>create_access_token</code>, <code>verify_jwt_in_request</code>, <code>get_jwt_identity</code></td>
+</tr>
+<tr>
+<td><code>flask-sqlalchemy</code></td>
+<td>ORM-обёртка над SQLAlchemy, управление сессиями БД (<code>db.session</code>)</td>
+</tr>
+<tr>
+<td><code>flask-cors</code></td>
+<td>Заголовки CORS для Unity/Web/Mobile клиентов (<code>Access-Control-Allow-Origin</code>)</td>
+</tr>
+<tr>
+<td><code>pymysql</code></td>
+<td>MySQL-драйвер для Python (SQLAlchemy использует его под капотом)</td>
+</tr>
+<tr>
+<td><code>python-dotenv</code></td>
+<td>Загрузка переменных из <code>.env</code> файла в <code>os.environ</code></td>
+</tr>
+<tr>
+<td><code>bcrypt</code></td>
+<td>Хэширование паролей при регистрации и проверка при логине</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="482">4.8.2. Установка (шаг за шагом)</h3>
+<h4 id="1-python">1. Убедиться что Python установлен</h4>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>--version
+<span class="c1"># Должно быть Python 3.10 или новее</span>
+
+pip<span class="w"> </span>--version
+<span class="c1"># pip 23.x или новее</span>
+</code></pre></div>
+<p>Если Python не установлен: скачать с <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a><br>
+При установке обязательно отметить галку <strong>«Add Python to PATH»</strong>.</p>
+<hr>
+<h4 id="2_2">2. Перейти в папку проекта</h4>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>C:<span class="se">\U</span>sers<span class="se">\*</span>*ваш<span class="w"> </span>пользователь**<span class="se">\D</span>esktop<span class="se">\p</span>roject<span class="se">\s</span>trategy-support-is
+</code></pre></div>
+<p>Или на Linux/Mac:
+</p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/project/strategy-support-is
+</code></pre></div><p></p>
+<hr>
+<h4 id="3_1">3. Создать виртуальное окружение (рекомендуется)</h4>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+</code></pre></div>
+<p>Активировать:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Windows</span>
+venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+
+<span class="c1"># Linux / Mac</span>
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate
+</code></pre></div>
+<p>После активации в начале строки терминала появится <code>(venv)</code>.</p>
+<hr>
+<h4 id="4_1">4. Установить все зависимости одной командой</h4>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>Flask<span class="w"> </span>flask-jwt-extended<span class="w"> </span>flask-sqlalchemy<span class="w"> </span>flask-cors<span class="w"> </span>pymysql<span class="w"> </span>python-dotenv<span class="w"> </span>bcrypt
+</code></pre></div>
+<p>Проверить что всё установилось:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>list
+</code></pre></div>
+<p>Должны присутствовать все перечисленные пакеты.</p>
+<hr>
+<h4 id="5-env">5. Создать файл <code>.env</code> в корне проекта</h4>
+<p>Создайте файл <code>.env</code> рядом с <code>wsgi.py</code>:</p>
+<div class="highlight"><pre><span></span><code>SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:yourpassword@localhost:3306/strategy_db?charset=utf8mb4
+DATABASE_URL=mysql+pymysql://root:yourpassword@localhost:3306/strategy_db?charset=utf8mb4
+JWT_SECRET_KEY=my-super-secret-jwt-key-change-in-prod
+SECRET_KEY=my-flask-secret-key
+</code></pre></div>
+<p>Замените <code>root</code>, <code>yourpassword</code>, <code>strategy_db</code> на ваши реальные данные MySQL.</p>
+<blockquote>
+<p><strong>Важно:</strong> файл <code>.env</code> не коммитится в Git (должен быть в <code>.gitignore</code>).</p>
+</blockquote>
+<hr>
+<h4 id="6-mysql">Шаг 6. Подготовить базу данных MySQL</h4>
+<p>Подключиться к MySQL и выполнить:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">strategy_db</span><span class="w"> </span><span class="nb">CHARACTER</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">utf8mb4</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8mb4_0900_ai_ci</span><span class="p">;</span>
+</code></pre></div>
+<p>Затем применить схему и тестовые данные:</p>
+<div class="highlight"><pre><span></span><code>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>strategy_db<span class="w"> </span>&lt;<span class="w"> </span>db/schema.sql
+mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>strategy_db<span class="w"> </span>&lt;<span class="w"> </span>seed.sql
+</code></pre></div>
+<hr>
+<h4 id="7">7. Запустить сервер</h4>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>wsgi.py
+</code></pre></div>
+<p>Ожидаемый вывод:</p>
+<div class="highlight"><pre><span></span><code> * Running on http://127.0.0.1:5000
+ * Debug mode: on
+</code></pre></div>
+<hr>
+<h3 id="483">4.8.3. Проверка установки (быстрая)</h3>
+<p>Открыть в браузере:</p>
+<div class="highlight"><pre><span></span><code>http://127.0.0.1:5000/health
+</code></pre></div>
+<p>Ожидаемый ответ:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"healthy"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<hr>
+<h3 id="484">4.8.4. Частые ошибки при установке</h3>
+<table>
+<thead>
+<tr>
+<th>Ошибка</th>
+<th>Причина</th>
+<th>Решение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ModuleNotFoundError: No module named 'flask'</code></td>
+<td>Окружение не активировано</td>
+<td>Выполнить <code>venv\Scripts\activate</code></td>
+</tr>
+<tr>
+<td><code>Access denied for user 'root'@'localhost'</code></td>
+<td>Неверный пароль MySQL</td>
+<td>Проверить <code>.env</code> → <code>DATABASE_URL</code></td>
+</tr>
+<tr>
+<td><code>Unknown database 'strategy_db'</code></td>
+<td>База не создана</td>
+<td><code>CREATE DATABASE strategy_db ...</code></td>
+</tr>
+<tr>
+<td><code>Address already in use: 5000</code></td>
+<td>Порт занят</td>
+<td>Завершить другой процесс или сменить порт в <code>wsgi.py</code></td>
+</tr>
+<tr>
+<td><code>bcrypt not found</code></td>
+<td>Не установлен</td>
+<td><code>pip install bcrypt</code></td>
+</tr>
+<tr>
+<td><code>cryptography</code> warning от PyMySQL</td>
+<td>Не критично</td>
+<td><code>pip install cryptography</code> по желанию</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="49-test_clienthtml">4.9. Клиентская сторона: <code>test_client.html</code></h2>
+<h3 id="491-test_clienthtml">4.9.1. Что такое <code>test_client.html</code> и зачем он нужен</h3>
+<p><code>test_client.html</code> — это однофайловое веб-приложение, которое живёт прямо в корне проекта (<code>strategy-support-is/test_client.html</code>). Оно позволяет тестировать все API endpoint'ы <strong>прямо в браузере</strong> без Postman, curl и дополнительных инструментов.</p>
+<p><strong>Что умеет клиент:</strong>
+- Отправлять все 6 типов запросов к API
+- Автоматически сохранять JWT после логина и подставлять его в защищённые запросы
+- Подсвечивать JSON-ответы (ключи, строки, числа, булевы значения)
+- Вести лог всех запросов с статусами и временем выполнения
+- Автозаполнять тела запросов готовыми тестовыми данными (Quick Fill)
+- Настраивать Base URL для работы с любым сервером</p>
+<hr>
+<h3 id="492">4.9.2. Как запустить</h3>
+<ol>
+<li>Убедиться, что Flask-сервер запущен (<code>python wsgi.py</code>).</li>
+<li>Открыть файл в браузере:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>Двойной клик → test_client.html
+</code></pre></div>
+<p>Или перетащить файл в браузер. Никакого веб-сервера для самого клиента не нужно — он работает как локальный HTML-файл.</p>
+<ol>
+<li>В поле <strong>Base URL</strong> (верхняя панель) проверить адрес — по умолчанию <code>http://localhost:5000</code>.</li>
+</ol>
+<hr>
+<h3 id="493">4.9.3. Дизайн и структура интерфейса</h3>
+<p>Интерфейс выдержан в стиле <strong>военного командного терминала</strong> — тёмная цветовая схема с тёмно-зелёными и золотыми акцентами, моноширинные шрифты для технических данных.</p>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────┐
+│  ⚔ Strategy IS    Base URL: [http://localhost:5000]  ●  │  ← Топ-бар
+├──────────────┬──────────────────────────┬────────────────┤
+│              │  Register User           │  Request Log   │
+│  AUTH        │  POST /api/v1/auth/reg   │                │
+│  › Register  │  ┌────────────────────┐  │  POST /auth/r  │
+│  › Login     │  │ { "email": ...     │  │  GET  /profile │
+│              │  └────────────────────┘  │  POST /match/f │
+│  PROFILE     │  [▶ Send]                │                │
+│  › My Profile│  ─────────────────────  │                │
+│              │  RESPONSE: 201 Created   │                │
+│  LEADERBOARD │  {"ok":true,"data":{...}}│                │
+│  › Leaderboard                          │                │
+│              │                          │                │
+│  EVENTS      │                          │                │
+│  › Post Event│                          │                │
+│              │                          │                │
+│  MATCH       │                          │                │
+│  › Finish    │                          │                │
+└──────────────┴──────────────────────────┴────────────────┘
+</code></pre></div>
+<p><strong>Три колонки:</strong>
+- <strong>Левая (240px)</strong> — сайдбар с группами endpoint'ов
+- <strong>Центральная</strong> — рабочая область: редактор запроса + ответ
+- <strong>Правая (320px)</strong> — лог запросов</p>
+<hr>
+<h3 id="494">4.9.4. Описание всех элементов интерфейса</h3>
+<h4 id="-">Топ-бар</h4>
+<table>
+<thead>
+<tr>
+<th>Элемент</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Лого <code>⚔ Strategy IS</code></td>
+<td>Идентификатор приложения</td>
+</tr>
+<tr>
+<td>Поле <strong>Base URL</strong></td>
+<td>Адрес сервера. Менять при развёртывании на другом хосте</td>
+</tr>
+<tr>
+<td>Индикатор <code>●</code></td>
+<td>Зелёный = JWT есть, серый = не авторизован. Показывает <code>user &lt;id&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="_7">Сайдбар (левая панель)</h4>
+<p>Endpoint'ы сгруппированы по разделам:</p>
+<table>
+<thead>
+<tr>
+<th>Группа</th>
+<th>Endpoint'ы</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Auth</strong></td>
+<td>Register, Login</td>
+</tr>
+<tr>
+<td><strong>Profile</strong></td>
+<td>My Profile</td>
+</tr>
+<tr>
+<td><strong>Leaderboard</strong></td>
+<td>Leaderboard</td>
+</tr>
+<tr>
+<td><strong>Events</strong></td>
+<td>Post Event</td>
+</tr>
+<tr>
+<td><strong>Match</strong></td>
+<td>Finish Match</td>
+</tr>
+<tr>
+<td><strong>System</strong></td>
+<td>Health Check</td>
+</tr>
+</tbody>
+</table>
+<p>Активный endpoint подсвечен: правая граница тёмно-зелёная + фон.</p>
+<p>Для каждого endpoint'а в сайдбаре видны:
+- Метка метода (<code>GET</code> — синяя, <code>POST</code> — зелёная)
+- Название endpoint'а
+- Путь URL</p>
+<h4 id="request-area">Центральная область — верх (Request Area)</h4>
+<table>
+<thead>
+<tr>
+<th>Элемент</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Заголовок + путь</td>
+<td>Название и полный путь выбранного endpoint'а</td>
+</tr>
+<tr>
+<td><strong>Info Box</strong> (золотой фон)</td>
+<td>Подсказка — что делает endpoint, что нужно сделать сначала</td>
+</tr>
+<tr>
+<td><strong>Query Params</strong></td>
+<td>Поля параметров строки запроса (только для GET с параметрами, например <code>/leaderboard</code>)</td>
+</tr>
+<tr>
+<td><strong>Quick Fill кнопки</strong></td>
+<td>Готовые тестовые данные — нажать чтобы заполнить тело одним кликом</td>
+</tr>
+<tr>
+<td><strong>Request Body</strong></td>
+<td>Редактор JSON. Можно редактировать вручную</td>
+</tr>
+<tr>
+<td>Кнопка <code>▶ Send</code></td>
+<td>Отправить запрос</td>
+</tr>
+</tbody>
+</table>
+<h4 id="response-area">Центральная область — низ (Response Area)</h4>
+<table>
+<thead>
+<tr>
+<th>Элемент</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Status Pill</strong></td>
+<td>HTTP-статус ответа. Зелёный = 2xx, красный = ошибка</td>
+</tr>
+<tr>
+<td><strong>Время</strong></td>
+<td>Время выполнения запроса в миллисекундах</td>
+</tr>
+<tr>
+<td><strong>Response Body</strong></td>
+<td>JSON ответа с подсветкой синтаксиса</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Цветовая схема подсветки JSON:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Цвет</th>
+<th>Тип значения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Бирюзовый</td>
+<td>Ключи объекта</td>
+</tr>
+<tr>
+<td>Золотой</td>
+<td>Строки</td>
+</tr>
+<tr>
+<td>Голубой</td>
+<td>Числа</td>
+</tr>
+<tr>
+<td>Розовый</td>
+<td>Boolean (true/false)</td>
+</tr>
+<tr>
+<td>Серый</td>
+<td>null</td>
+</tr>
+</tbody>
+</table>
+<h4 id="request-log">Правая панель — Request Log</h4>
+<p>Показывает историю всех отправленных запросов в сессии:
+- Метод (цвет по методу)
+- Путь endpoint'а
+- HTTP статус (зелёный/красный)
+- Время запроса</p>
+<p>Кнопка <strong>Clear</strong> — очистить лог.</p>
+<hr>
+<h3 id="495">4.9.5. Сценарий полного тестирования (шаг за шагом)</h3>
+<h4 id="1-health-check">Шаг 1. Health Check</h4>
+<ol>
+<li>Нажать <strong>System → Health Check</strong> в сайдбаре.</li>
+<li>Нажать <code>▶ Send</code>.</li>
+<li>Ожидаемый результат: <code>200 OK</code>, ответ <code>{"ok": true, "data": {"status": "healthy"}}</code>.</li>
+</ol>
+<p>Если появляется ошибка CORS или сеть недоступна — сервер не запущен.</p>
+<hr>
+<h4 id="2_3">Шаг 2. Регистрация нового пользователя</h4>
+<ol>
+<li>Нажать <strong>Auth → Register</strong>.</li>
+<li>Нажать Quick Fill <strong>«New User»</strong> — тело заполнится автоматически.</li>
+<li>Можно изменить email/nickname вручную.</li>
+<li>Нажать <code>▶ Send</code>.</li>
+<li>Ожидаемый результат: <code>201 Created</code>, в ответе <code>userId</code>.</li>
+</ol>
+<hr>
+<h4 id="3_2">Шаг 3. Логин</h4>
+<ol>
+<li>Нажать <strong>Auth → Login</strong>.</li>
+<li>Нажать Quick Fill <strong>«alice (admin)»</strong>.</li>
+<li>Нажать <code>▶ Send</code>.</li>
+<li>Ожидаемый результат: <code>200 OK</code>. Индикатор <code>●</code> в топ-баре станет зелёным — JWT сохранён.</li>
+</ol>
+<p>После этого все защищённые endpoint'ы будут работать автоматически.</p>
+<blockquote>
+<p>Тестовые пользователи (пароль у всех: <code>password123</code>):
+- <code>alice@example.com</code> — роли player + admin
+- <code>bob@example.com</code> — роли player + moderator
+- <code>carol@example.com</code> — player
+- <code>eve@example.com</code> — player (высокий рейтинг)
+- <code>banned@example.com</code> — заблокирован (вернёт 403)</p>
+</blockquote>
+<hr>
+<h4 id="4_2">Шаг 4. Просмотр профиля</h4>
+<ol>
+<li>Нажать <strong>Profile → My Profile</strong>.</li>
+<li>Нажать <code>▶ Send</code>.</li>
+<li>Ожидаемый результат: <code>200 OK</code>, данные alice: уровень, XP, валюта, роли.</li>
+</ol>
+<p>Если вернулся <code>401 UNAUTHORIZED</code> — вернуться к шагу 3 (логин).</p>
+<hr>
+<h4 id="5">Шаг 5. Таблица лидеров</h4>
+<ol>
+<li>Нажать <strong>Leaderboard → Leaderboard</strong>.</li>
+<li>В Query Params проверить: <code>boardCode=default</code>, <code>season=1</code>, <code>limit=10</code>.</li>
+<li>Нажать <code>▶ Send</code>.</li>
+<li>Ожидаемый результат: список игроков с рангами и очками.</li>
+</ol>
+<p>Попробовать <code>boardCode=pvp</code> — другая доска.</p>
+<hr>
+<h4 id="6">Шаг 6. Отправка события</h4>
+<ol>
+<li>Нажать <strong>Events → Post Event</strong>.</li>
+<li>Нажать Quick Fill <strong>«Match Start»</strong> или <strong>«Unit Deploy»</strong>.</li>
+<li>Обратить внимание: <code>eventId</code> генерируется автоматически (уникальный UUID).</li>
+<li>Нажать <code>▶ Send</code>.</li>
+<li>Ожидаемый результат: <code>200 OK</code>, <code>{"status": "accepted"}</code>.</li>
+</ol>
+<p>Попробовать нажать <code>▶ Send</code> ещё раз с тем же <code>eventId</code> — вернётся <code>409 EVENT_REJECTED</code> (дедупликация).</p>
+<hr>
+<h4 id="7_1">Шаг 7. Завершение матча</h4>
+<ol>
+<li>Нажать <strong>Match → Finish Match</strong>.</li>
+<li>Нажать Quick Fill <strong>«Win (match 9)»</strong>.</li>
+</ol>
+<blockquote>
+<p>Матч с <code>id=9</code> создан в <code>seed.sql</code> и принадлежит alice. Нужно быть залогиненным как alice.</p>
+</blockquote>
+<ol>
+<li>Нажать <code>▶ Send</code>.</li>
+<li>Ожидаемый результат: <code>200 OK</code>, в ответе <code>xpGained: 100</code>, <code>softCurrencyGained: 50</code>.</li>
+</ol>
+<p>Попробовать нажать <code>▶ Send</code> повторно — вернётся <code>409 CONFLICT</code> (матч уже завершён).</p>
+<hr>
+<h3 id="496">4.9.6. Технические детали реализации клиента</h3>
+<p>Клиент написан на чистом HTML + CSS + JavaScript, без фреймворков.</p>
+<h4 id="js">Архитектура JS</h4>
+<div class="highlight"><pre><span></span><code><span class="c1">// Конфигурация всех endpoint'ов</span>
+<span class="kd">const</span><span class="w"> </span><span class="nx">endpoints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">register</span><span class="o">:</span><span class="w">     </span><span class="p">{</span><span class="w"> </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'POST'</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/api/v1/auth/register'</span><span class="p">,</span><span class="w"> </span><span class="nx">auth</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">login</span><span class="o">:</span><span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'POST'</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/api/v1/auth/login'</span><span class="p">,</span><span class="w">    </span><span class="nx">auth</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">profile</span><span class="o">:</span><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'GET'</span><span class="p">,</span><span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/api/v1/profile'</span><span class="p">,</span><span class="w">       </span><span class="nx">auth</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">  </span><span class="p">...</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">leaderboard</span><span class="o">:</span><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'GET'</span><span class="p">,</span><span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/api/v1/leaderboard'</span><span class="p">,</span><span class="w">   </span><span class="nx">auth</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="p">[...]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">event</span><span class="o">:</span><span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'POST'</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/api/v1/events'</span><span class="p">,</span><span class="w">        </span><span class="nx">auth</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">  </span><span class="p">...</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">match_finish</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'POST'</span><span class="p">,</span><span class="w"> </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/api/v1/match/finish'</span><span class="p">,</span><span class="w">  </span><span class="nx">auth</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">  </span><span class="p">...</span><span class="w"> </span><span class="p">},</span>
+<span class="w">  </span><span class="nx">health</span><span class="o">:</span><span class="w">       </span><span class="p">{</span><span class="w"> </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="s1">'GET'</span><span class="p">,</span><span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s1">'/health'</span><span class="p">,</span><span class="w">               </span><span class="nx">auth</span><span class="o">:</span><span class="w"> </span><span class="kc">false</span><span class="w">  </span><span class="p">},</span>
+<span class="p">};</span>
+</code></pre></div>
+<h4 id="jwt">Хранение JWT</h4>
+<div class="highlight"><pre><span></span><code><span class="kd">let</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">  </span><span class="c1">// хранится в памяти вкладки</span>
+
+<span class="c1">// При логине — автоматически извлекается из ответа:</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">currentEndpoint</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'login'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">resp</span><span class="p">.</span><span class="nx">ok</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">data</span><span class="o">?</span><span class="p">.</span><span class="nx">data</span><span class="o">?</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">updateTokenUI</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// При запросе — автоматически подставляется:</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">ep</span><span class="p">.</span><span class="nx">auth</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">token</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">opts</span><span class="p">.</span><span class="nx">headers</span><span class="p">[</span><span class="s1">'Authorization'</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'Bearer '</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">token</span><span class="p">;</span>
+</code></pre></div>
+<h4 id="quick-fill-eventid">Quick Fill для событий — автогенерация <code>eventId</code></h4>
+<div class="highlight"><pre><span></span><code><span class="c1">// При выборе Quick Fill для /events — eventId генерируется каждый раз новый:</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">currentEndpoint</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">'event'</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">body</span><span class="p">.</span><span class="nx">eventId</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">''</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">body</span><span class="p">.</span><span class="nx">eventId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'evt-'</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">().</span><span class="nx">toString</span><span class="p">(</span><span class="mf">36</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mf">2</span><span class="p">,</span><span class="mf">10</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">().</span><span class="nx">toString</span><span class="p">(</span><span class="mf">36</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Это гарантирует уникальность при повторных нажатиях Quick Fill.</p>
+<h4 id="json">Подсветка JSON</h4>
+<div class="highlight"><pre><span></span><code><span class="kd">function</span><span class="w"> </span><span class="nx">syntaxHighlight</span><span class="p">(</span><span class="nx">json</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">json</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/(ключи|строки|числа|булевые|null)/g</span><span class="p">,</span><span class="w"> </span><span class="nx">match</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// каждый тип оборачивается в &lt;span class="json-key|str|num|bool|null"&gt;</span>
+<span class="w">  </span><span class="p">});</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h3 id="497-css-">4.9.7. Дизайн: цветовая палитра и CSS-переменные</h3>
+<p>Все цвета объявлены как CSS-переменные в <code>:root</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="p">:</span><span class="nd">root</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nv">--bg</span><span class="p">:</span><span class="w">      </span><span class="mh">#080c10</span><span class="p">;</span><span class="w">   </span><span class="c">/* фон — почти чёрный */</span>
+<span class="w">  </span><span class="nv">--panel</span><span class="p">:</span><span class="w">   </span><span class="mh">#0d1318</span><span class="p">;</span><span class="w">   </span><span class="c">/* панели */</span>
+<span class="w">  </span><span class="nv">--panel2</span><span class="p">:</span><span class="w">  </span><span class="mh">#111920</span><span class="p">;</span><span class="w">   </span><span class="c">/* вторичные панели */</span>
+<span class="w">  </span><span class="nv">--border</span><span class="p">:</span><span class="w">  </span><span class="mh">#1a2830</span><span class="p">;</span><span class="w">   </span><span class="c">/* границы */</span>
+<span class="w">  </span><span class="nv">--border2</span><span class="p">:</span><span class="w"> </span><span class="mh">#1f3040</span><span class="p">;</span><span class="w">   </span><span class="c">/* акцентные границы */</span>
+<span class="w">  </span><span class="nv">--gold</span><span class="p">:</span><span class="w">    </span><span class="mh">#c8982a</span><span class="p">;</span><span class="w">   </span><span class="c">/* золото — Quick Fill, Info Box */</span>
+<span class="w">  </span><span class="nv">--gold2</span><span class="p">:</span><span class="w">   </span><span class="mh">#e8b84b</span><span class="p">;</span><span class="w">   </span><span class="c">/* золото светлое — лого, JSON-строки */</span>
+<span class="w">  </span><span class="nv">--teal</span><span class="p">:</span><span class="w">    </span><span class="mh">#1db8a0</span><span class="p">;</span><span class="w">   </span><span class="c">/* бирюза — активные элементы, ссылки */</span>
+<span class="w">  </span><span class="nv">--teal2</span><span class="p">:</span><span class="w">   </span><span class="mh">#25d4ba</span><span class="p">;</span><span class="w">   </span><span class="c">/* бирюза светлая — JSON-ключи, inputs */</span>
+<span class="w">  </span><span class="nv">--red</span><span class="p">:</span><span class="w">     </span><span class="mh">#e05050</span><span class="p">;</span><span class="w">   </span><span class="c">/* ошибки */</span>
+<span class="w">  </span><span class="nv">--green</span><span class="p">:</span><span class="w">   </span><span class="mh">#3dba7a</span><span class="p">;</span><span class="w">   </span><span class="c">/* успех, POST-метки */</span>
+<span class="w">  </span><span class="nv">--blue</span><span class="p">:</span><span class="w">    </span><span class="mh">#3a8fd4</span><span class="p">;</span><span class="w">   </span><span class="c">/* GET-метки, JSON-числа */</span>
+<span class="w">  </span><span class="nv">--text</span><span class="p">:</span><span class="w">    </span><span class="mh">#d4e0e8</span><span class="p">;</span><span class="w">   </span><span class="c">/* основной текст */</span>
+<span class="w">  </span><span class="nv">--muted</span><span class="p">:</span><span class="w">   </span><span class="mh">#4a6070</span><span class="p">;</span><span class="w">   </span><span class="c">/* вторичный текст */</span>
+<span class="w">  </span><span class="nv">--bright</span><span class="p">:</span><span class="w">  </span><span class="mh">#eef4f8</span><span class="p">;</span><span class="w">   </span><span class="c">/* заголовки */</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Сетка страницы</strong> — CSS Grid 3 колонки:</p>
+<div class="highlight"><pre><span></span><code><span class="p">.</span><span class="nc">shell</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">display</span><span class="p">:</span><span class="w"> </span><span class="k">grid</span><span class="p">;</span>
+<span class="w">  </span><span class="k">grid-template-columns</span><span class="p">:</span><span class="w"> </span><span class="mi">240</span><span class="kt">px</span><span class="w"> </span><span class="mi">1</span><span class="n">fr</span><span class="w"> </span><span class="mi">320</span><span class="kt">px</span><span class="p">;</span><span class="w">  </span><span class="c">/* сайдбар | контент | лог */</span>
+<span class="w">  </span><span class="k">grid-template-rows</span><span class="p">:</span><span class="w"> </span><span class="mi">56</span><span class="kt">px</span><span class="w"> </span><span class="mi">1</span><span class="n">fr</span><span class="p">;</span><span class="w">            </span><span class="c">/* топ-бар | тело */</span>
+<span class="w">  </span><span class="k">height</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="kt">vh</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Анимированный фон</strong> — сетка из тонких линий через псевдоэлемент:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">body</span><span class="p">::</span><span class="nd">before</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">background-image</span><span class="p">:</span>
+<span class="w">    </span><span class="nb">linear-gradient</span><span class="p">(</span><span class="nb">rgba</span><span class="p">(</span><span class="mi">29</span><span class="p">,</span><span class="mi">184</span><span class="p">,</span><span class="mi">160</span><span class="p">,</span><span class="mf">0.03</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="kt">px</span><span class="p">,</span><span class="w"> </span><span class="kc">transparent</span><span class="w"> </span><span class="mi">1</span><span class="kt">px</span><span class="p">),</span>
+<span class="w">    </span><span class="nb">linear-gradient</span><span class="p">(</span><span class="mi">90</span><span class="kt">deg</span><span class="p">,</span><span class="w"> </span><span class="nb">rgba</span><span class="p">(</span><span class="mi">29</span><span class="p">,</span><span class="mi">184</span><span class="p">,</span><span class="mi">160</span><span class="p">,</span><span class="mf">0.03</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="kt">px</span><span class="p">,</span><span class="w"> </span><span class="kc">transparent</span><span class="w"> </span><span class="mi">1</span><span class="kt">px</span><span class="p">);</span>
+<span class="w">  </span><span class="k">background-size</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="kt">px</span><span class="w"> </span><span class="mi">40</span><span class="kt">px</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Шрифты</strong> (подключены через Google Fonts):
+- <code>Rajdhani</code> — основной UI (навигация, кнопки, заголовки)
+- <code>Share Tech Mono</code> — технические данные (URL, JSON, метки методов)</p>
+<hr>
+<h3 id="498">4.9.8. Как адаптировать клиент под свой проект</h3>
+<p>Если вы добавили новый endpoint в Flask — добавьте его в <code>test_client.html</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// В объект endpoints добавьте новую запись:</span>
+<span class="nx">my_endpoint</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nx">title</span><span class="o">:</span><span class="w">       </span><span class="s1">'My New Endpoint'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">method</span><span class="o">:</span><span class="w">      </span><span class="s1">'POST'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w">        </span><span class="s1">'/api/v1/my-endpoint'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">auth</span><span class="o">:</span><span class="w">        </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">info</span><span class="o">:</span><span class="w">        </span><span class="s1">'Описание что делает endpoint'</span><span class="p">,</span>
+<span class="w">  </span><span class="nx">quickFills</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s1">'Пример'</span><span class="p">,</span><span class="w"> </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">field1</span><span class="o">:</span><span class="w"> </span><span class="s1">'value1'</span><span class="p">,</span><span class="w"> </span><span class="nx">field2</span><span class="o">:</span><span class="w"> </span><span class="mf">42</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">],</span>
+<span class="w">  </span><span class="nx">defaultBody</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">field1</span><span class="o">:</span><span class="w"> </span><span class="s1">'value1'</span><span class="p">,</span><span class="w"> </span><span class="nx">field2</span><span class="o">:</span><span class="w"> </span><span class="mf">42</span><span class="w"> </span><span class="p">}</span>
+<span class="p">},</span>
+</code></pre></div>
+<p>Добавьте кнопку в HTML-сайдбар:</p>
+<div class="highlight"><pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"sidebar-section"</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"sidebar-section-title"</span><span class="p">&gt;</span>My Group<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">class</span><span class="o">=</span><span class="s">"endpoint-btn"</span> <span class="na">onclick</span><span class="o">=</span><span class="s">"selectEndpoint('my_endpoint')"</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">"method-tag POST"</span><span class="p">&gt;</span>POST<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"ep-name"</span><span class="p">&gt;</span>My Endpoint<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">"ep-path"</span><span class="p">&gt;</span>/api/v1/my-endpoint<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div>
 
 
 
@@ -1965,10 +2524,10 @@ soft_gained = 50   (isWin = true)  / 10  (isWin = false)
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.image.zoom", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.image.zoom", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
         <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
       
