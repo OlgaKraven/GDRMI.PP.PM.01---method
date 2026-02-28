@@ -16,7 +16,7 @@
       
       
       <link rel="icon" href="../assets/icons/logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -24,7 +24,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
       
       
 
@@ -1230,12 +1230,12 @@ wsgi.py              ← точка входа
 <hr>
 <h2 id="561-blueprint-app__init__py">5.6.1. Регистрация blueprint'ов в <code>app/__init__.py</code></h2>
 <p>Назначение: подключить все группы маршрутов к приложению, чтобы endpoints реально появились.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">.routes.match</span><span class="w"> </span><span class="kn">import</span> <span class="n">match_bp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.routes.auth</span><span class="w"> </span><span class="kn">import</span> <span class="n">auth_bp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.routes.profile</span><span class="w"> </span><span class="kn">import</span> <span class="n">profile_bp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.routes.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">events_bp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.routes.leaderboard</span><span class="w"> </span><span class="kn">import</span> <span class="n">leaderboard_bp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.routes.health</span><span class="w"> </span><span class="kn">import</span> <span class="n">health_bp</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">.routes.match</span> <span class="kn">import</span> <span class="n">match_bp</span>
+<span class="kn">from</span> <span class="nn">.routes.auth</span> <span class="kn">import</span> <span class="n">auth_bp</span>
+<span class="kn">from</span> <span class="nn">.routes.profile</span> <span class="kn">import</span> <span class="n">profile_bp</span>
+<span class="kn">from</span> <span class="nn">.routes.events</span> <span class="kn">import</span> <span class="n">events_bp</span>
+<span class="kn">from</span> <span class="nn">.routes.leaderboard</span> <span class="kn">import</span> <span class="n">leaderboard_bp</span>
+<span class="kn">from</span> <span class="nn">.routes.health</span> <span class="kn">import</span> <span class="n">health_bp</span>
 
 <span class="c1"># Регистрируем blueprint'ы, чтобы Flask начал обслуживать маршруты</span>
 <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">auth_bp</span><span class="p">)</span>
@@ -1250,9 +1250,9 @@ wsgi.py              ← точка входа
 <h2 id="562-routes-5-endpoints">5.6.2. Routes (обязательные 5 endpoints)</h2>
 <p>Назначение файлов routes: определить URL, HTTP-метод и подключить нужные декораторы (валидация, JWT).</p>
 <h3 id="approutesauthpy"><code>app/routes/auth.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Blueprint</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.controllers.auth_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_controller</span><span class="p">,</span> <span class="n">login_controller</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.validate_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_register</span><span class="p">,</span> <span class="n">validate_login</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
+<span class="kn">from</span> <span class="nn">app.controllers.auth_controller</span> <span class="kn">import</span> <span class="n">register_controller</span><span class="p">,</span> <span class="n">login_controller</span>
+<span class="kn">from</span> <span class="nn">app.middleware.validate_api</span> <span class="kn">import</span> <span class="n">validate_register</span><span class="p">,</span> <span class="n">validate_login</span>
 
 <span class="c1"># Blueprint для /api/v1/auth/*</span>
 <span class="c1"># Назначение: логически сгруппировать маршруты регистрации и логина</span>
@@ -1261,21 +1261,21 @@ wsgi.py              ← точка входа
 
 <span class="nd">@auth_bp</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/register"</span><span class="p">)</span>
 <span class="nd">@validate_register</span>  <span class="c1"># проверка тела запроса до попадания в сервис</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">register</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">register</span><span class="p">():</span>
     <span class="c1"># Маршрут не содержит логики: делегирование в controller</span>
     <span class="k">return</span> <span class="n">register_controller</span><span class="p">()</span>
 
 
 <span class="nd">@auth_bp</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/login"</span><span class="p">)</span>
 <span class="nd">@validate_login</span>  <span class="c1"># проверка тела запроса до попадания в сервис</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">login</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">login</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">login_controller</span><span class="p">()</span>
 </code></pre></div>
 <hr>
 <h3 id="approutesprofilepy"><code>app/routes/profile.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Blueprint</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.controllers.profile_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">profile_controller</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.auth_jwt</span><span class="w"> </span><span class="kn">import</span> <span class="n">auth_required</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
+<span class="kn">from</span> <span class="nn">app.controllers.profile_controller</span> <span class="kn">import</span> <span class="n">profile_controller</span>
+<span class="kn">from</span> <span class="nn">app.middleware.auth_jwt</span> <span class="kn">import</span> <span class="n">auth_required</span>
 
 <span class="c1"># Blueprint для /api/v1/*</span>
 <span class="c1"># Назначение: вынести профиль в отдельный модуль маршрутов</span>
@@ -1284,15 +1284,15 @@ wsgi.py              ← точка входа
 
 <span class="nd">@profile_bp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/profile"</span><span class="p">)</span>
 <span class="nd">@auth_required</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"player"</span><span class="p">])</span>  <span class="c1"># доступ только с JWT и ролью player</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">profile</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">profile</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">profile_controller</span><span class="p">()</span>
 </code></pre></div>
 <hr>
 <h3 id="approuteseventspy"><code>app/routes/events.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Blueprint</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.controllers.events_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">post_event_controller</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.auth_jwt</span><span class="w"> </span><span class="kn">import</span> <span class="n">auth_required</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.validate_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_event</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
+<span class="kn">from</span> <span class="nn">app.controllers.events_controller</span> <span class="kn">import</span> <span class="n">post_event_controller</span>
+<span class="kn">from</span> <span class="nn">app.middleware.auth_jwt</span> <span class="kn">import</span> <span class="n">auth_required</span>
+<span class="kn">from</span> <span class="nn">app.middleware.validate_api</span> <span class="kn">import</span> <span class="n">validate_event</span>
 
 <span class="c1"># Назначение: приём игровых событий единым endpoint'ом</span>
 <span class="n">events_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s2">"events"</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s2">"/api/v1"</span><span class="p">)</span>
@@ -1301,15 +1301,15 @@ wsgi.py              ← точка входа
 <span class="nd">@events_bp</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/events"</span><span class="p">)</span>
 <span class="nd">@auth_required</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"player"</span><span class="p">])</span>  <span class="c1"># событие пишется только от аутентифицированного игрока</span>
 <span class="nd">@validate_event</span>                   <span class="c1"># проверка структуры eventId/eventType/sessionId/clientTime/payload</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">post_event</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">post_event</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">post_event_controller</span><span class="p">()</span>
 </code></pre></div>
 <hr>
 <h3 id="approutesleaderboardpy"><code>app/routes/leaderboard.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Blueprint</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.controllers.leaderboard_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">leaderboard_controller</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.auth_jwt</span><span class="w"> </span><span class="kn">import</span> <span class="n">auth_required</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.validate_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_leaderboard_query</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
+<span class="kn">from</span> <span class="nn">app.controllers.leaderboard_controller</span> <span class="kn">import</span> <span class="n">leaderboard_controller</span>
+<span class="kn">from</span> <span class="nn">app.middleware.auth_jwt</span> <span class="kn">import</span> <span class="n">auth_required</span>
+<span class="kn">from</span> <span class="nn">app.middleware.validate_api</span> <span class="kn">import</span> <span class="n">validate_leaderboard_query</span>
 
 <span class="c1"># Назначение: выдача таблицы лидеров с фильтрацией через query-параметры</span>
 <span class="n">leaderboard_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s2">"leaderboard"</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s2">"/api/v1"</span><span class="p">)</span>
@@ -1318,21 +1318,21 @@ wsgi.py              ← точка входа
 <span class="nd">@leaderboard_bp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/leaderboard"</span><span class="p">)</span>
 <span class="nd">@auth_required</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"player"</span><span class="p">])</span>        <span class="c1"># доступ по JWT</span>
 <span class="nd">@validate_leaderboard_query</span>             <span class="c1"># проверка query: boardCode/season/limit</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">leaderboard</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">leaderboard</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">leaderboard_controller</span><span class="p">()</span>
 </code></pre></div>
 <hr>
 <h2 id="563-controllers-http-sql">5.6.3. Controllers (HTTP слой, без SQL)</h2>
 <p>Назначение контроллеров: унифицировать ответы (<code>ok/data</code>) и передать управление сервисам.</p>
 <h3 id="appcontrollersauth_controllerpy"><code>app/controllers/auth_controller.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.services.auth_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_service</span><span class="p">,</span> <span class="n">login_service</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">app.services.auth_service</span> <span class="kn">import</span> <span class="n">register_service</span><span class="p">,</span> <span class="n">login_service</span>
 
 <span class="c1"># Контроллеры не содержат SQL и не содержат бизнес-правил.</span>
 <span class="c1"># Они принимают HTTP-вход, вызывают сервис и возвращают единый контракт.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">register_controller</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">register_controller</span><span class="p">():</span>
     <span class="c1"># JSON тела запроса должен быть уже провалидирован validate_register</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
 
@@ -1343,7 +1343,7 @@ wsgi.py              ← точка входа
     <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">"ok"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">"data"</span><span class="p">:</span> <span class="n">result</span><span class="p">}),</span> <span class="mi">201</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">login_controller</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">login_controller</span><span class="p">():</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
 
     <span class="c1"># Вся логика проверки bcrypt-пароля/выдачи токена находится в сервисе</span>
@@ -1353,14 +1353,14 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="appcontrollersprofile_controllerpy"><code>app/controllers/profile_controller.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">jsonify</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.services.profile_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">profile_service</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">app.services.profile_service</span> <span class="kn">import</span> <span class="n">profile_service</span>
 
 <span class="c1"># Назначение: отдать витрину профиля.</span>
 <span class="c1"># userId берётся только из JWT, извлечение реализует auth_required.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">profile_controller</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">profile_controller</span><span class="p">():</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">user</span><span class="p">[</span><span class="s2">"userId"</span><span class="p">]</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">profile_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
@@ -1369,14 +1369,14 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="appcontrollersevents_controllerpy"><code>app/controllers/events_controller.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.services.events_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">accept_event_service</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">app.services.events_service</span> <span class="kn">import</span> <span class="n">accept_event_service</span>
 
 <span class="c1"># Назначение: принять событие и делегировать обработку сервису.</span>
 <span class="c1"># SQL и бизнес-решения в контроллере запрещены.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">post_event_controller</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">post_event_controller</span><span class="p">():</span>
     <span class="n">user_id</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">user</span><span class="p">[</span><span class="s2">"userId"</span><span class="p">]</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
 
@@ -1386,14 +1386,14 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="appcontrollersleaderboard_controllerpy"><code>app/controllers/leaderboard_controller.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.services.leaderboard_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">leaderboard_service</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">app.services.leaderboard_service</span> <span class="kn">import</span> <span class="n">leaderboard_service</span>
 
 <span class="c1"># Назначение: получить query-параметры и вызвать сервис.</span>
 <span class="c1"># validate_leaderboard_query гарантирует корректность типов и диапазонов.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">leaderboard_controller</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">leaderboard_controller</span><span class="p">():</span>
     <span class="n">board_code</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"boardCode"</span><span class="p">)</span>
     <span class="n">season</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"season"</span><span class="p">))</span>
     <span class="n">limit</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"limit"</span><span class="p">))</span>
@@ -1406,20 +1406,20 @@ wsgi.py              ← точка входа
 <h2 id="564-services-orchestration">5.6.4. Services (бизнес-логика + orchestration)</h2>
 <p>Назначение сервисов: реализовать правила поведения системы и управлять репозиториями.</p>
 <h3 id="appservicesauth_servicepy"><code>app/services/auth_service.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">bcrypt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flask_jwt_extended</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_access_token</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.users_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_user_by_email</span><span class="p">,</span> <span class="n">create_user</span><span class="p">,</span> <span class="n">get_user_roles</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.roles_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">assign_role_to_user</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.progress_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">ensure_progress_row</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">bcrypt</span>
+<span class="kn">from</span> <span class="nn">flask_jwt_extended</span> <span class="kn">import</span> <span class="n">create_access_token</span>
+<span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
+<span class="kn">from</span> <span class="nn">app.repositories.users_repo</span> <span class="kn">import</span> <span class="n">find_user_by_email</span><span class="p">,</span> <span class="n">create_user</span><span class="p">,</span> <span class="n">get_user_roles</span>
+<span class="kn">from</span> <span class="nn">app.repositories.roles_repo</span> <span class="kn">import</span> <span class="n">assign_role_to_user</span>
+<span class="kn">from</span> <span class="nn">app.repositories.progress_repo</span> <span class="kn">import</span> <span class="n">ensure_progress_row</span>
 
 <span class="c1"># Назначение:</span>
 <span class="c1"># - register_service: создать пользователя (bcrypt-хэш), назначить роль player, создать progress</span>
 <span class="c1"># - login_service: проверить bcrypt-пароль и выдать JWT с claims.roles</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">register_service</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">register_service</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">email</span>    <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"email"</span><span class="p">]</span>
     <span class="n">password</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"password"</span><span class="p">]</span>
     <span class="n">nickname</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">]</span>
@@ -1443,7 +1443,7 @@ wsgi.py              ← точка входа
     <span class="k">return</span> <span class="p">{</span><span class="s2">"userId"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span> <span class="s2">"email"</span><span class="p">:</span> <span class="n">email</span><span class="p">,</span> <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">nickname</span><span class="p">}</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">login_service</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">login_service</span><span class="p">(</span><span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">email</span>    <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"email"</span><span class="p">]</span>
     <span class="n">password</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"password"</span><span class="p">]</span>
 
@@ -1473,14 +1473,14 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="appservicesprofile_servicepy"><code>app/services/profile_service.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.users_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_by_id</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.progress_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_progress_by_user</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
+<span class="kn">from</span> <span class="nn">app.repositories.users_repo</span> <span class="kn">import</span> <span class="n">get_user_by_id</span>
+<span class="kn">from</span> <span class="nn">app.repositories.progress_repo</span> <span class="kn">import</span> <span class="n">get_progress_by_user</span>
 
 <span class="c1"># Назначение: собрать витрину профиля (user + progress) из БД.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">profile_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">profile_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">user</span> <span class="o">=</span> <span class="n">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"NOT_FOUND"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"User not found"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
@@ -1501,15 +1501,15 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="appservicesevents_servicepy"><code>app/services/events_service.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">app.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.dedupe_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_event_or_conflict</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.events_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">insert_game_event</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">app.repositories.dedupe_repo</span> <span class="kn">import</span> <span class="n">register_event_or_conflict</span>
+<span class="kn">from</span> <span class="nn">app.repositories.events_repo</span> <span class="kn">import</span> <span class="n">insert_game_event</span>
 
 <span class="c1"># Назначение: принять событие, зарегистрировать в processed_events (дедупликация) и записать в game_events.</span>
 <span class="c1"># Требование: повторный eventId → 409 EVENT_REJECTED через UNIQUE(user_id, event_id) в processed_events.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">accept_event_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">accept_event_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">event_id</span>    <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"eventId"</span><span class="p">]</span>
     <span class="n">event_type</span>  <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">"eventType"</span><span class="p">]</span>
     <span class="n">session_id</span>  <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"sessionId"</span><span class="p">)</span>
@@ -1529,12 +1529,12 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="appservicesleaderboard_servicepy"><code>app/services/leaderboard_service.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">app.repositories.leaderboard_repo</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_leaderboard</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app.repositories.leaderboard_repo</span> <span class="kn">import</span> <span class="n">get_leaderboard</span>
 
 <span class="c1"># Назначение: получить данные таблицы лидеров и привести к контракту API.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">leaderboard_service</span><span class="p">(</span><span class="n">board_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">season</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">leaderboard_service</span><span class="p">(</span><span class="n">board_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">season</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">items</span> <span class="o">=</span> <span class="n">get_leaderboard</span><span class="p">(</span><span class="n">board_code</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">"boardCode"</span><span class="p">:</span> <span class="n">board_code</span><span class="p">,</span>
@@ -1546,8 +1546,8 @@ wsgi.py              ← точка входа
 <h2 id="565-repositories-sql-">5.6.5. Repositories (SQL слой, без бизнес-логики)</h2>
 <p>Назначение репозиториев: изолировать SQL и сделать операции с БД повторно используемыми.</p>
 <h3 id="apprepositoriesusers_repopy"><code>app/repositories/users_repo.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
 
 <span class="c1"># Назначение:</span>
 <span class="c1"># - find_user_by_email: получить пользователя по email (включая password для bcrypt-проверки)</span>
@@ -1557,7 +1557,7 @@ wsgi.py              ← точка входа
 <span class="c1"># Ограничение: только SQL, никакой бизнес-логики.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">find_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">find_user_by_email</span><span class="p">(</span><span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"SELECT id, email, password, nickname, is_banned FROM users WHERE email = :email"</span><span class="p">)</span>
     <span class="n">row</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"email"</span><span class="p">:</span> <span class="n">email</span><span class="p">})</span><span class="o">.</span><span class="n">mappings</span><span class="p">()</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1571,7 +1571,7 @@ wsgi.py              ← точка входа
     <span class="p">}</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nickname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">email</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">nickname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        INSERT INTO users (email, password, nickname, created_at, is_banned)</span>
 <span class="s2">        VALUES (:email, :password, :nickname, NOW(3), 0)</span>
@@ -1580,7 +1580,7 @@ wsgi.py              ← точка входа
     <span class="k">return</span> <span class="n">res</span><span class="o">.</span><span class="n">lastrowid</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_user_by_id</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"SELECT id, email, nickname, is_banned FROM users WHERE id = :id"</span><span class="p">)</span>
     <span class="n">row</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="n">user_id</span><span class="p">})</span><span class="o">.</span><span class="n">mappings</span><span class="p">()</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">row</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1588,7 +1588,7 @@ wsgi.py              ← точка входа
     <span class="k">return</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span> <span class="s2">"email"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span> <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">],</span> <span class="s2">"is_banned"</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">"is_banned"</span><span class="p">])}</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user_roles</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_user_roles</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        SELECT r.name AS role_name</span>
 <span class="s2">        FROM user_roles ur</span>
@@ -1600,14 +1600,14 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="apprepositoriesroles_repopy"><code>app/repositories/roles_repo.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
 
 <span class="c1"># Назначение: назначить пользователю роль (например, player).</span>
 <span class="c1"># Ограничение: только SQL.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">assign_role_to_user</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">role_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">assign_role_to_user</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">role_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="c1"># Получение role_id по имени</span>
     <span class="n">role_sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"SELECT id FROM roles WHERE name = :name"</span><span class="p">)</span>
     <span class="n">role</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">role_sql</span><span class="p">,</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="n">role_name</span><span class="p">})</span><span class="o">.</span><span class="n">mappings</span><span class="p">()</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
@@ -1630,14 +1630,14 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="apprepositoriesprogress_repopy"><code>app/repositories/progress_repo.py</code> (дополнение для профиля)</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
 
 <span class="c1"># Назначение: получить прогресс игрока для вывода в профиле.</span>
 <span class="c1"># Ограничение: только SQL.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_progress_by_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">get_progress_by_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        SELECT level, xp, soft_currency, hard_currency</span>
 <span class="s2">        FROM player_progress</span>
@@ -1656,15 +1656,15 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="apprepositoriesevents_repopy"><code>app/repositories/events_repo.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
 
 <span class="c1"># Назначение: записать событие в game_events.</span>
 <span class="c1"># Ограничение: только SQL.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">insert_game_event</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">session_id</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">insert_game_event</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">session_id</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        INSERT INTO game_events (user_id, session_id, event_type, payload_json)</span>
 <span class="s2">        VALUES (:user_id, :session_id, :event_type, CAST(:payload AS JSON))</span>
@@ -1678,14 +1678,14 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="apprepositoriesdedupe_repopy"><code>app/repositories/dedupe_repo.py</code></h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
 
 <span class="c1"># Назначение: регистрировать eventId в processed_events для защиты от дублей.</span>
 <span class="c1"># UNIQUE(user_id, event_id) → IntegrityError при повторной отправке → 409 EVENT_REJECTED</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">register_event_or_conflict</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">register_event_or_conflict</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        INSERT INTO processed_events (user_id, event_id, event_type, processed_at)</span>
 <span class="s2">        VALUES (:user_id, :event_id, :event_type, NOW(3))</span>
@@ -1697,14 +1697,14 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <hr>
 <h3 id="apprepositoriesleaderboard_repopy-get"><code>app/repositories/leaderboard_repo.py</code> (дополнение для GET)</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">sqlalchemy</span><span class="w"> </span><span class="kn">import</span> <span class="n">text</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">db</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">text</span>
+<span class="kn">from</span> <span class="nn">app.extensions</span> <span class="kn">import</span> <span class="n">db</span>
 
 <span class="c1"># Назначение: выбрать топ игроков по board_code/season с ограничением limit.</span>
 <span class="c1"># Ограничение: только SQL.</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_leaderboard</span><span class="p">(</span><span class="n">board_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">season</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_leaderboard</span><span class="p">(</span><span class="n">board_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">season</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="n">text</span><span class="p">(</span><span class="s2">"""</span>
 <span class="s2">        SELECT ls.user_id AS userId, u.nickname AS nickname, ls.score AS score</span>
 <span class="s2">        FROM leaderboard_scores ls</span>
@@ -1735,21 +1735,21 @@ wsgi.py              ← точка входа
 <li><code>validate_leaderboard_query</code></li>
 <li><code>validate_match_finish</code></li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">wraps</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">request</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">app.middleware.error_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">AppError</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_bad_body</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_bad_body</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
     <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid request body"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_bad_query</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_bad_query</span><span class="p">(</span><span class="n">details</span><span class="p">):</span>
     <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"VALIDATION_ERROR"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Invalid query params"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">details</span><span class="o">=</span><span class="n">details</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">validate_register</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">validate_register</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
@@ -1769,9 +1769,9 @@ wsgi.py              ← точка входа
     <span class="k">return</span> <span class="n">wrapper</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">validate_login</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">validate_login</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
@@ -1788,9 +1788,9 @@ wsgi.py              ← точка входа
     <span class="k">return</span> <span class="n">wrapper</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">validate_event</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">validate_event</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
@@ -1817,9 +1817,9 @@ wsgi.py              ← точка входа
     <span class="k">return</span> <span class="n">wrapper</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">validate_leaderboard_query</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">validate_leaderboard_query</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">board_code</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"boardCode"</span><span class="p">)</span>
         <span class="n">season</span>     <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"season"</span><span class="p">)</span>
         <span class="n">limit</span>      <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"limit"</span><span class="p">)</span>
@@ -1839,9 +1839,9 @@ wsgi.py              ← точка входа
     <span class="k">return</span> <span class="n">wrapper</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">validate_match_finish</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">validate_match_finish</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">silent</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">_bad_body</span><span class="p">({</span><span class="s2">"body"</span><span class="p">:</span> <span class="s2">"JSON object expected"</span><span class="p">})</span>
@@ -2116,10 +2116,10 @@ wsgi.py              ← точка входа
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.image.zoom", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.image.zoom", "navigation.top", "navigation.tracking", "toc.follow"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
         <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
       

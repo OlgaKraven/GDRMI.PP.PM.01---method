@@ -169,7 +169,7 @@ app/
     profile.py
     events.py
     leaderboard.py
-    health.py
+    health.py        ← GET / и GET /health
   controllers/
     auth_controller.py
     match_controller.py
@@ -177,6 +177,7 @@ app/
     events_controller.py
     leaderboard_controller.py
   services/
+    __init__.py
     auth_service.py
     match_service.py
     profile_service.py
@@ -190,6 +191,7 @@ app/
     users_repo.py
     roles_repo.py
     matches_repo.py
+    sessions_repo.py ← работа с game_sessions
     dedupe_repo.py
   middleware/
     request_id.py
@@ -197,6 +199,11 @@ app/
     validate_api.py
     error_handler.py
 wsgi.py              ← точка входа
+.env                 ← переменные окружения (не коммитить в Git!)
+db/
+  schema.sql         ← DDL: CREATE TABLE для всех таблиц
+seed.sql             ← тестовые данные (10 пользователей, матчи, прогресс)
+test_client.html     ← HTML-клиент для ручного тестирования в браузере
 ```
 
 Важно: middleware остаётся общим для всех endpoint'ов (requestId/errorHandler), а `auth_required` и валидаторы подключаются там, где требуется.
@@ -214,20 +221,40 @@ wsgi.py              ← точка входа
 Назначение: подключить все группы маршрутов к приложению, чтобы endpoints реально появились.
 
 ```python
-from .routes.match import match_bp
+from flask import Flask
+from .extensions import db, jwt, cors
+from .middleware.error_handler import register_error_handlers
+from .middleware.request_id import register_request_id
 from .routes.auth import auth_bp
-from .routes.profile import profile_bp
 from .routes.events import events_bp
-from .routes.leaderboard import leaderboard_bp
 from .routes.health import health_bp
+from .routes.leaderboard import leaderboard_bp
+from .routes.profile import profile_bp
+from .routes.match import match_bp
 
-# Регистрируем blueprint'ы, чтобы Flask начал обслуживать маршруты
-app.register_blueprint(auth_bp)
-app.register_blueprint(events_bp)
-app.register_blueprint(health_bp)
-app.register_blueprint(leaderboard_bp)
-app.register_blueprint(profile_bp)
-app.register_blueprint(match_bp)
+
+def create_app(config=None):
+    app = Flask(__name__)
+    app.config.from_object(config or "app.config.Config")
+
+    # Инициализация расширений (порядок важен: db → jwt → cors)
+    db.init_app(app)
+    jwt.init_app(app)
+    cors.init_app(app, resources={r"/*": {"origins": "*"}})
+
+    # Регистрация глобального middleware
+    register_error_handlers(app)   # AppError + HTTPException + Exception → единый JSON
+    register_request_id(app)       # X-Request-Id заголовок + логирование всех запросов
+
+    # Регистрируем blueprint'ы, чтобы Flask начал обслуживать маршруты
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(events_bp)
+    app.register_blueprint(health_bp)
+    app.register_blueprint(leaderboard_bp)
+    app.register_blueprint(profile_bp)
+    app.register_blueprint(match_bp)
+
+    return app
 ```
 
 Комментарий: если blueprint не зарегистрирован — соответствующий endpoint отсутствует в приложении и не может быть протестирован.
@@ -311,17 +338,16 @@ def post_event():
 ```python
 from flask import Blueprint
 from app.controllers.leaderboard_controller import leaderboard_controller
-from app.middleware.auth_jwt import auth_required
 from app.middleware.validate_api import validate_leaderboard_query
 
 # Назначение: выдача таблицы лидеров с фильтрацией через query-параметры
+# Примечание: leaderboard — публичный endpoint, auth_required не требуется
 leaderboard_bp = Blueprint("leaderboard", __name__, url_prefix="/api/v1")
 
 
 @leaderboard_bp.get("/leaderboard")
-@auth_required(roles=["player"])        # доступ по JWT
 @validate_leaderboard_query             # проверка query: boardCode/season/limit
-def leaderboard():
+def get_leaderboard():
     return leaderboard_controller()
 ```
 
@@ -416,8 +442,8 @@ from app.services.leaderboard_service import leaderboard_service
 
 def leaderboard_controller():
     board_code = request.args.get("boardCode")
-    season = int(request.args.get("season"))
-    limit  = int(request.args.get("limit"))
+    season     = int(request.args.get("season", 0))
+    limit      = int(request.args.get("limit", 50))
 
     result = leaderboard_service(board_code, season, limit)
 
@@ -505,10 +531,12 @@ def login_service(payload: dict) -> dict:
 
 ```python
 from app.middleware.error_handler import AppError
-from app.repositories.users_repo import get_user_by_id
+from app.repositories.users_repo import get_user_by_id, get_user_roles
 from app.repositories.progress_repo import get_progress_by_user
 
-# Назначение: собрать витрину профиля (user + progress) из БД.
+# Назначение: собрать витрину профиля (user + roles + progress) из БД.
+# Примечание: is_banned не проверяется здесь повторно — auth_jwt уже не пропустит
+# заблокированного пользователя (если is_banned проверяется при логине).
 
 
 def profile_service(user_id: int) -> dict:
@@ -516,18 +544,15 @@ def profile_service(user_id: int) -> dict:
     if user is None:
         raise AppError(code="NOT_FOUND", message="User not found", http_status=404)
 
-    if user.get("is_banned") is True:
-        raise AppError(code="FORBIDDEN", message="Account is banned", http_status=403)
-
+    roles    = get_user_roles(user_id)
     progress = get_progress_by_user(user_id)
 
     return {
-        "user": {
-            "id":       user["id"],
-            "email":    user["email"],
-            "nickname": user["nickname"]
-        },
-        "progress": progress
+        "userId":   user["id"],
+        "email":    user["email"],
+        "nickname": user["nickname"],
+        "roles":    roles,
+        "progress": progress,
     }
 ```
 
@@ -1022,7 +1047,7 @@ Content-Type: application/json
 
 ## 5.7.3. `GET /api/v1/profile`
 
-**Назначение:** отдать "витрину" профиля: user + progress.
+**Назначение:** отдать \"витрину\" профиля: userId, email, nickname, roles, progress.
 
 **Request**
 
@@ -1037,7 +1062,10 @@ Authorization: Bearer <JWT>
 {
   "ok": true,
   "data": {
-    "user": { "id": 1, "email": "alice@example.com", "nickname": "Commander_Alice" },
+    "userId":   1,
+    "email":    "alice@example.com",
+    "nickname": "Commander_Alice",
+    "roles":    ["player", "admin"],
     "progress": { "level": 42, "xp": 85400, "softCurrency": 12500, "hardCurrency": 250 }
   }
 }
@@ -1046,7 +1074,7 @@ Authorization: Bearer <JWT>
 Ошибки:
 
 * `401 UNAUTHORIZED`
-* `403 FORBIDDEN` — пользователь заблокирован
+* `404 NOT_FOUND` — пользователь удалён из БД после выдачи токена
 
 ---
 
@@ -1095,11 +1123,12 @@ Content-Type: application/json
 
 ## 5.7.5. `GET /api/v1/leaderboard`
 
+**Назначение:** вернуть топ игроков по заданной доске и сезону. Endpoint публичный — JWT не требуется.
+
 **Request**
 
 ```http
 GET /api/v1/leaderboard?boardCode=default&season=1&limit=10
-Authorization: Bearer <JWT>
 ```
 
 **Response (200)**
@@ -1120,12 +1149,13 @@ Authorization: Bearer <JWT>
 
 Ошибки:
 
-* `400 VALIDATION_ERROR` (невалидные query-параметры)
-* `401 UNAUTHORIZED`
+* `400 VALIDATION_ERROR` (невалидные query-параметры: отсутствует boardCode, season или limit выходит за диапазон 1–1000)
 
 ---
 
 # 5.8. Требование к воспроизводимости проверок (Postman / test_client.html)
+
+> Пошаговые инструкции по Postman — в разделе **5.12**. Инструкция по `test_client.html` — в разделе **4.9** документа `backend_implementation.md`.
 
 Должно быть возможно проверить:
 
@@ -1182,3 +1212,528 @@ components:
       scheme: bearer
       bearerFormat: JWT
 ```
+
+---
+
+# 5.11. ⚠️ Напоминание: заполнение базы данных перед работой
+
+> **Без выполнения этого шага API не будет работать корректно.** Таблицы окажутся пустыми, логин с тестовыми данными не пройдёт, лидерборд вернёт пустой список, матч с id=9 не будет найден.
+
+Порядок заполнения БД обязателен и выполняется **один раз** после создания базы данных.
+
+## 5.11.1. Что нужно выполнить и в каком порядке
+
+### Шаг 1. Создать базу данных (если ещё не создана)
+
+Подключиться к MySQL и выполнить:
+
+```sql
+CREATE DATABASE IF NOT EXISTS strategy_db
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_0900_ai_ci;
+```
+
+> Имя базы, хост, пользователь и пароль должны совпадать с тем, что прописано в `.env`.
+
+---
+
+### Шаг 2. Применить схему (`db/schema.sql`)
+
+`db/schema.sql` содержит все `CREATE TABLE` — структуру всех таблиц. Без этого файла БД пустая и Python-код упадёт с ошибкой «Table not found».
+
+```bash
+# Из корня проекта:
+mysql -u root -p strategy_db < db/schema.sql
+```
+
+**Что создаётся этим файлом:**
+
+| Таблица | Назначение |
+|---|---|
+| `roles` | Роли: player, moderator, admin |
+| `users` | Аккаунты игроков (email, bcrypt-пароль, nickname) |
+| `user_roles` | Связь пользователь ↔ роль |
+| `game_sessions` | Игровые сессии (платформа, версия клиента) |
+| `game_events` | Поток игровых событий с JSON-payload |
+| `player_progress` | Уровень, XP, валюта каждого игрока |
+| `statistics_daily` | Агрегированная статистика по дням |
+| `leaderboard_scores` | Рейтинговые очки (board_code, season) |
+| `matches` | Матчи (pve/pvp, карта, статус) |
+| `battle_results` | Итоги матча 1:1 с matches |
+| `army_units` | Армия пользователя (тип юнита, количество) |
+| `city_buildings` | Здания города (тип, уровень, статус) |
+| `processed_events` | Реестр обработанных eventId (дедупликация) |
+
+---
+
+### Шаг 3. Залить тестовые данные (`seed.sql`)
+
+`seed.sql` содержит тестовых пользователей, матчи, прогресс, лидерборд — всё что нужно для тестирования API прямо после запуска.
+
+```bash
+# Из корня проекта:
+mysql -u root -p strategy_db < seed.sql
+```
+
+**Что создаётся тестовыми данными:**
+
+| Данные | Подробности |
+|---|---|
+| **10 пользователей** | alice, bob, carol, dave, eve, frank, grace, hank, ivan, banned |
+| **Роли** | alice — player+admin, bob — player+moderator, остальные — player, banned — player (is_banned=1) |
+| **Прогресс** | Уровень, XP, soft/hard валюта для всех 10 пользователей |
+| **Лидерборд** | 10 записей на `board_code=default, season=1`; 5 записей на `board_code=pvp, season=1` |
+| **Матчи** | 10 матчей: 8 завершённых, 1 в статусе `started` (id=9, owner=alice), 1 заброшенный |
+| **Результаты матчей** | `battle_results` для 9 завершённых матчей |
+| **Игровые сессии** | 6 сессий от разных пользователей |
+| **Армия и здания** | `army_units` и `city_buildings` для 5 игроков |
+| **Статистика** | `statistics_daily` за последние 7 дней для топ-игроков |
+| **Processed events** | 5 записей дедупликации в `processed_events` |
+
+> **Пароль у всех тестовых пользователей:** `password123`
+>
+> **Матч id=9** — в статусе `started`, принадлежит alice (user_id=1). Именно его используют для тестирования `POST /api/v1/match/finish`.
+
+---
+
+### Шаг 4. Проверить, что данные залиты
+
+```sql
+USE strategy_db;
+SELECT COUNT(*) FROM users;           -- должно быть 10
+SELECT COUNT(*) FROM player_progress; -- должно быть 10
+SELECT COUNT(*) FROM leaderboard_scores; -- должно быть 15
+SELECT id, user_id, status FROM matches WHERE id = 9; -- должна быть строка status=started
+```
+
+---
+
+### Шаг 5. Файл `.env` — подключение к БД
+
+В корне проекта должен быть файл `.env` со строкой подключения к MySQL. Без него Flask не знает, к какой БД подключаться.
+
+```text
+SQLALCHEMY_DATABASE_URI=mysql+pymysql://root@localhost:3306/strategy_db?charset=utf8mb4
+DATABASE_URL=mysql+pymysql://root@localhost:3306/strategy_db?charset=utf8mb4
+JWT_SECRET_KEY=change-jwt-secret-in-production
+SECRET_KEY=change-me-in-production
+```
+
+> Если у вашего MySQL есть пароль, формат: `mysql+pymysql://root:ПАРОЛЬ@localhost:3306/strategy_db?charset=utf8mb4`
+
+---
+
+### Полный порядок развёртывания (сводка)
+
+```bash
+# 1. Перейти в папку проекта
+cd C:\Users\gvadoskr\Desktop\project\strategy-support-is
+
+# 2. Активировать виртуальное окружение
+venv\Scripts\activate
+
+# 3. Установить зависимости (если не установлены)
+pip install Flask flask-jwt-extended flask-sqlalchemy flask-cors pymysql python-dotenv bcrypt
+
+# 4. Проверить / создать .env файл с параметрами БД
+
+# 5. Применить схему БД
+mysql -u root -p strategy_db < db/schema.sql
+
+# 6. Залить тестовые данные
+mysql -u root -p strategy_db < seed.sql
+
+# 7. Запустить сервер
+python wsgi.py
+```
+
+После этого сервер доступен по адресу `http://127.0.0.1:5000`.
+
+---
+
+# 5.12. Установка Postman и проверка API
+
+## 5.12.1. Что такое Postman и зачем он нужен
+
+**Postman** — это инструмент для тестирования HTTP API. Позволяет отправлять запросы к серверу, просматривать ответы, сохранять запросы в коллекции и автоматизировать проверки. В отличие от `test_client.html`, Postman предоставляет расширенные возможности: переменные среды, цепочки запросов, скрипты авто-тестов.
+
+## 5.12.2. Установка Postman
+
+### Шаг 1. Скачать Postman
+
+Перейти на официальный сайт:
+
+```
+https://www.postman.com/downloads/
+```
+
+Выбрать версию для Windows и нажать **Download**.
+
+### Шаг 2. Установить
+
+Запустить скачанный установщик `Postman-win64-Setup.exe`. Установка стандартная — Next → Install → Finish.
+
+### Шаг 3. Запустить и пропустить регистрацию
+
+При первом запуске появится окно регистрации. Внизу есть ссылка **«Skip and go to the app»** — нажать её. Регистрация не обязательна для базового использования.
+
+---
+
+## 5.12.3. Настройка переменной `base_url`
+
+Чтобы не вводить адрес сервера в каждый запрос вручную, настроим переменную окружения.
+
+### Создать Environment
+
+1. В левом сайдбаре нажать **Environments** (иконка глаза или раздел в меню).
+2. Нажать **+** (Add Environment).
+3. Назвать среду: `strategy-local`.
+4. Добавить переменную:
+   - **Variable:** `base_url`
+   - **Initial value:** `http://127.0.0.1:5000`
+   - **Current value:** `http://127.0.0.1:5000`
+5. Нажать **Save**.
+6. В правом верхнем углу выбрать среду `strategy-local` из выпадающего списка.
+
+Теперь в запросах можно писать `{{base_url}}/api/v1/auth/login` вместо полного адреса.
+
+---
+
+## 5.12.4. Создание коллекции запросов
+
+### Создать коллекцию
+
+1. В левом сайдбаре нажать **Collections → +** (New Collection).
+2. Назвать: `Strategy IS API`.
+3. Нажать **Create**.
+
+### Добавить папки по группам
+
+Внутри коллекции создать папки (`Add a folder`):
+- `Auth`
+- `Profile`
+- `Leaderboard`
+- `Events`
+- `Match`
+- `System`
+
+---
+
+## 5.12.5. Проверка каждого endpoint'а в Postman
+
+### Запрос 1: Health Check
+
+**Цель:** убедиться, что сервер запущен и отвечает.
+
+1. В папке `System` нажать **Add a request**.
+2. Назвать: `Health Check`.
+3. Метод: `GET`.
+4. URL: `{{base_url}}/health`
+5. Нажать **Send**.
+
+**Ожидаемый ответ:**
+```json
+{ "ok": true, "data": { "status": "ok" } }
+```
+Статус: `200 OK`.
+
+---
+
+### Запрос 2: Регистрация
+
+**Цель:** создать нового пользователя.
+
+1. В папке `Auth` создать запрос `Register`.
+2. Метод: `POST`.
+3. URL: `{{base_url}}/api/v1/auth/register`
+4. Вкладка **Body** → выбрать `raw` → выбрать `JSON`.
+5. Тело запроса:
+
+```json
+{
+  "email":    "testplayer@example.com",
+  "password": "password123",
+  "nickname": "TestPlayer"
+}
+```
+
+6. Нажать **Send**.
+
+**Ожидаемый ответ:**
+```json
+{
+  "ok": true,
+  "data": { "userId": 11, "email": "testplayer@example.com", "nickname": "TestPlayer" }
+}
+```
+Статус: `201 Created`.
+
+**Проверка ошибки 409:** отправить тот же запрос ещё раз — придёт `409 CONFLICT` (email уже занят).
+
+---
+
+### Запрос 3: Логин
+
+**Цель:** получить JWT-токен для защищённых запросов.
+
+1. В папке `Auth` создать запрос `Login`.
+2. Метод: `POST`.
+3. URL: `{{base_url}}/api/v1/auth/login`
+4. Body → raw → JSON:
+
+```json
+{
+  "email":    "alice@example.com",
+  "password": "password123"
+}
+```
+
+5. Нажать **Send**.
+
+**Ожидаемый ответ:**
+```json
+{
+  "ok": true,
+  "data": {
+    "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "userId":      1,
+    "nickname":    "Commander_Alice"
+  }
+}
+```
+Статус: `200 OK`.
+
+### Сохранить токен автоматически (скрипт)
+
+Чтобы токен автоматически сохранялся в переменную и подставлялся в следующие запросы:
+
+1. На вкладке `Login` перейти на вкладку **Scripts** (ранее — Tests).
+2. Вставить скрипт:
+
+```javascript
+const resp = pm.response.json();
+if (resp.ok && resp.data.accessToken) {
+    pm.environment.set("jwt_token", resp.data.accessToken);
+    console.log("Token saved:", resp.data.accessToken.slice(0, 30) + "...");
+}
+```
+
+3. Нажать **Save**.
+
+Теперь после каждого логина токен автоматически записывается в переменную `{{jwt_token}}`.
+
+**Проверка ошибки 401:** отправить с неверным паролем — придёт `401 UNAUTHORIZED`.
+
+**Проверка ошибки 403:** заменить email на `banned@example.com` — придёт `403 FORBIDDEN`.
+
+---
+
+### Запрос 4: Профиль
+
+**Цель:** получить данные профиля авторизованного пользователя.
+
+1. В папке `Profile` создать запрос `My Profile`.
+2. Метод: `GET`.
+3. URL: `{{base_url}}/api/v1/profile`
+4. Вкладка **Auth** → тип `Bearer Token` → в поле Token: `{{jwt_token}}`.
+5. Нажать **Send**.
+
+**Ожидаемый ответ:**
+```json
+{
+  "ok": true,
+  "data": {
+    "userId":   1,
+    "email":    "alice@example.com",
+    "nickname": "Commander_Alice",
+    "roles":    ["player", "admin"],
+    "progress": {
+      "level":        42,
+      "xp":           85400,
+      "softCurrency": 12500,
+      "hardCurrency": 250
+    }
+  }
+}
+```
+Статус: `200 OK`.
+
+**Проверка ошибки 401:** убрать токен (вкладка Auth → No Auth) — придёт `401 UNAUTHORIZED`.
+
+---
+
+### Запрос 5: Лидерборд
+
+**Цель:** получить топ игроков. Endpoint публичный, JWT не требуется.
+
+1. В папке `Leaderboard` создать запрос `Get Leaderboard`.
+2. Метод: `GET`.
+3. URL: `{{base_url}}/api/v1/leaderboard`
+4. Вкладка **Params** добавить параметры:
+
+| Key | Value |
+|---|---|
+| boardCode | default |
+| season | 1 |
+| limit | 10 |
+
+5. Нажать **Send**.
+
+**Ожидаемый ответ:**
+```json
+{
+  "ok": true,
+  "data": {
+    "boardCode": "default",
+    "season": 1,
+    "items": [
+      { "rank": 1, "userId": 5, "nickname": "Siege_Eve",     "score": 9850 },
+      { "rank": 2, "userId": 3, "nickname": "WarLord_Carol", "score": 8720 }
+    ]
+  }
+}
+```
+Статус: `200 OK`.
+
+**Проверка `boardCode=pvp`:** заменить значение параметра — вернётся другая доска.
+
+**Проверка ошибки 400:** удалить параметр `boardCode` — придёт `400 VALIDATION_ERROR`.
+
+---
+
+### Запрос 6: Отправка события
+
+**Цель:** записать игровое событие с дедупликацией по `eventId`.
+
+1. В папке `Events` создать запрос `Post Event`.
+2. Метод: `POST`.
+3. URL: `{{base_url}}/api/v1/events`
+4. Auth → Bearer Token → `{{jwt_token}}`.
+5. Body → raw → JSON:
+
+```json
+{
+  "eventId":   "evt-test-001-unique",
+  "eventType": "unit_deploy",
+  "sessionId": null,
+  "clientTime": "2026-02-27T12:00:00.000Z",
+  "payload": {
+    "matchId":  9,
+    "unitCode": "cavalry",
+    "amount":   40,
+    "atSecond": 15
+  }
+}
+```
+
+6. Нажать **Send**.
+
+**Ожидаемый ответ:**
+```json
+{
+  "ok": true,
+  "data": { "eventId": "evt-test-001-unique", "status": "accepted" }
+}
+```
+Статус: `200 OK`.
+
+**Проверка дедупликации 409:** нажать **Send** ещё раз с тем же `eventId` — придёт `409 EVENT_REJECTED`. Для нового успешного запроса нужно изменить `eventId` (например, на `evt-test-002-unique`).
+
+**Проверка ошибки 400:** удалить поле `eventId` из тела — придёт `400 VALIDATION_ERROR`.
+
+---
+
+### Запрос 7: Завершение матча
+
+**Цель:** завершить матч id=9 (принадлежит alice, статус `started`) и получить начисленные награды.
+
+> ⚠️ Матч id=9 имеет статус `started` только один раз — после первого успешного вызова он перейдёт в `finished`. Для повторного тестирования нужно вернуть статус вручную через MySQL: `UPDATE matches SET status='started', ended_at=NULL WHERE id=9;`
+
+1. В папке `Match` создать запрос `Finish Match`.
+2. Метод: `POST`.
+3. URL: `{{base_url}}/api/v1/match/finish`
+4. Auth → Bearer Token → `{{jwt_token}}`.
+5. Body → raw → JSON:
+
+```json
+{
+  "matchId": 9,
+  "result": {
+    "isWin":           true,
+    "score":           1850,
+    "durationSeconds": 1200
+  }
+}
+```
+
+6. Нажать **Send**.
+
+**Ожидаемый ответ:**
+```json
+{
+  "ok": true,
+  "data": {
+    "matchId":             9,
+    "isWin":               true,
+    "xpGained":            100,
+    "softCurrencyGained":  50
+  }
+}
+```
+Статус: `200 OK`.
+
+**Проверка ошибки 409:** нажать **Send** ещё раз — придёт `409 CONFLICT` (матч уже в статусе `finished`).
+
+**Проверка ошибки 403:** залогиниться как bob и попробовать завершить матч id=9 — придёт `403 FORBIDDEN` (матч принадлежит alice).
+
+---
+
+## 5.12.6. Сводная таблица запросов для коллекции Postman
+
+| Папка | Имя запроса | Метод | URL | Auth | Тело |
+|---|---|---|---|---|---|
+| System | Health Check | GET | `{{base_url}}/health` | — | — |
+| Auth | Register | POST | `{{base_url}}/api/v1/auth/register` | — | JSON |
+| Auth | Login | POST | `{{base_url}}/api/v1/auth/login` | — | JSON |
+| Profile | My Profile | GET | `{{base_url}}/api/v1/profile` | Bearer `{{jwt_token}}` | — |
+| Leaderboard | Get Leaderboard | GET | `{{base_url}}/api/v1/leaderboard` | — | Query params |
+| Events | Post Event | POST | `{{base_url}}/api/v1/events` | Bearer `{{jwt_token}}` | JSON |
+| Match | Finish Match | POST | `{{base_url}}/api/v1/match/finish` | Bearer `{{jwt_token}}` | JSON |
+
+---
+
+## 5.12.7. Экспорт и импорт коллекции
+
+Чтобы передать коллекцию другому разработчику или сохранить резервную копию:
+
+**Экспорт:**
+1. В сайдбаре найти коллекцию `Strategy IS API`.
+2. Нажать `...` → **Export**.
+3. Выбрать формат `Collection v2.1`.
+4. Сохранить файл `strategy-is-api.postman_collection.json`.
+
+**Импорт:**
+1. В Postman нажать **Import** (кнопка рядом с New).
+2. Перетащить JSON-файл или выбрать через диалог.
+3. Коллекция появится в сайдбаре.
+
+---
+
+## 5.12.8. Альтернатива Postman: `test_client.html`
+
+Если Postman устанавливать не хочется, в корне проекта есть готовый HTML-клиент:
+
+```
+strategy-support-is/test_client.html
+```
+
+Открыть двойным кликом в браузере (Chrome, Firefox, Edge). Не требует установки — работает как локальный HTML-файл.
+
+Возможности:
+- Все те же 7 endpoint'ов в одном интерфейсе
+- Автоматическое сохранение JWT после логина
+- Quick Fill кнопки с готовыми тестовыми данными
+- Лог всех запросов с HTTP-статусами и временем выполнения
+- Подсветка JSON-ответов
+
+Подробное описание интерфейса и каждого элемента — в разделе **4.9** документа `backend_implementation.md`.
