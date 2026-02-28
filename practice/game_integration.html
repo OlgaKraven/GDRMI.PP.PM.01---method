@@ -702,7 +702,7 @@
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Что это такое и зачем
+        Смысл раздела
       
     </span>
   </a>
@@ -713,19 +713,19 @@
   <a href="#1-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 1. Теория: как Unity общается с сервером
+        1. Теория: как Unity общается с сервером
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Часть 1. Теория: как Unity общается с сервером">
+    <nav class="md-nav" aria-label="1. Теория: как Unity общается с сервером">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#61-rest-api-unity" class="md-nav__link">
+  <a href="#11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.1. Что такое REST API и почему это важно для Unity
+        1.1. Общая схема взаимодействия
       
     </span>
   </a>
@@ -733,10 +733,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62-http-" class="md-nav__link">
+  <a href="#12-rest-api-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.2. HTTP-методы
+        1.2. Что такое REST API применительно к Unity
       
     </span>
   </a>
@@ -744,10 +744,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#63-json" class="md-nav__link">
+  <a href="#13-json" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.3. JSON — формат обмена данными
+        1.3. Формат данных: JSON
       
     </span>
   </a>
@@ -755,10 +755,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#64-jwt" class="md-nav__link">
+  <a href="#14-jwt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.4. JWT — как работает авторизация
+        1.4. JWT — токен авторизации
       
     </span>
   </a>
@@ -766,10 +766,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#65-unitywebrequest-http-unity" class="md-nav__link">
+  <a href="#15-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.5. UnityWebRequest — HTTP в Unity
+        1.5. Корутины — асинхронность в Unity
       
     </span>
   </a>
@@ -777,10 +777,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#66" class="md-nav__link">
+  <a href="#16-unitywebrequest-http-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.6. Контракт всех ответов сервера
+        1.6. UnityWebRequest — HTTP в Unity
       
     </span>
   </a>
@@ -793,22 +793,88 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#2-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 2. Структура скриптов
+        2. Структура скриптов Unity
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Часть 2. Структура скриптов">
+    <nav class="md-nav" aria-label="2. Структура скриптов Unity">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#21" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Зависимости между слоями
+        2.1. Дерево файлов
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. Зависимости между слоями
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-apiconfigcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. ApiConfig.cs — единая точка конфигурации
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-apimodelscs-dto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4. ApiModels.cs — классы данных (DTO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-authsessioncs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5. AuthSession.cs — хранение токена
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-apiclientcs-http-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6. ApiClient.cs — HTTP-слой
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-gameapiservicecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7. GameApiService.cs — высокоуровневый сервис
       
     </span>
   </a>
@@ -821,22 +887,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-endpoint" class="md-nav__link">
+  <a href="#3-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 3. Endpoint'ы сервера
+        3. Подготовка: что нужно до начала работы в Unity
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Часть 3. Endpoint'ы сервера">
+    <nav class="md-nav" aria-label="3. Подготовка: что нужно до начала работы в Unity">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-endpoint" class="md-nav__link">
+  <a href="#31-flask-" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1. Таблица всех endpoint'ов
+        3.1. Запустить Flask-сервер
       
     </span>
   </a>
@@ -844,22 +910,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-endpoint" class="md-nav__link">
+  <a href="#32" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2. Описание каждого endpoint'а
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3.2. Описание каждого endpoint'а">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#post-apiv1authregister" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        POST /api/v1/auth/register
+        3.2. Проверить наличие тестовых данных в БД
       
     </span>
   </a>
@@ -867,10 +921,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-apiv1authlogin" class="md-nav__link">
+  <a href="#33-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        POST /api/v1/auth/login
+        3.3. Создать проект Unity
       
     </span>
   </a>
@@ -878,10 +932,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get-apiv1profile" class="md-nav__link">
+  <a href="#34" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GET /api/v1/profile
+        3.4. Скопировать скрипты в проект
       
     </span>
   </a>
@@ -889,40 +943,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-apiv1events" class="md-nav__link">
+  <a href="#35-textmeshpro" class="md-nav__link">
     <span class="md-ellipsis">
       
-        POST /api/v1/events
+        3.5. Установить TextMeshPro
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-apiv1matchfinish" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        POST /api/v1/match/finish
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apiv1leaderboard" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/v1/leaderboard
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -932,22 +959,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-unity" class="md-nav__link">
+  <a href="#4-authscene" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 4. Пошаговая сборка проекта Unity
+        4. Сцена AuthScene — экран входа и регистрации
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Часть 4. Пошаговая сборка проекта Unity">
+    <nav class="md-nav" aria-label="4. Сцена AuthScene — экран входа и регистрации">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#41" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 1. Создать проект
+        4.1. Что получится в результате
       
     </span>
   </a>
@@ -955,10 +982,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2_1" class="md-nav__link">
+  <a href="#42" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 2. Скопировать скрипты
+        4.2. Создать сцену
       
     </span>
   </a>
@@ -966,10 +993,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3" class="md-nav__link">
+  <a href="#43-canvas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 3. Настроить адрес сервера
+        4.3. Создать Canvas
       
     </span>
   </a>
@@ -977,10 +1004,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4" class="md-nav__link">
+  <a href="#44-loginpanel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 4. Запустить сервер
+        4.4. Создать LoginPanel
       
     </span>
   </a>
@@ -988,22 +1015,82 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-authscene" class="md-nav__link">
+  <a href="#45-registerpanel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 5. Сцена AuthScene — экран входа
+        4.5. Создать RegisterPanel
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Шаг 5. Сцена AuthScene — экран входа">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6. Создать менеджер сцены
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7. Настроить кнопки переключения панелей
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#48-build-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.8. Добавить сцены в Build Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#49" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.9. Запустить и протестировать
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-mainmenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Сцена MainMenu — профиль и лидерборд
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Сцена MainMenu — профиль и лидерборд">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#51" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.1. Создать сцену
+        5.1. Что получится в результате
       
     </span>
   </a>
@@ -1011,10 +1098,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-canvas" class="md-nav__link">
+  <a href="#52-mainmenu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2. Создать Canvas
+        5.2. Создать сцену MainMenu
       
     </span>
   </a>
@@ -1022,10 +1109,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#53-loginpanel" class="md-nav__link">
+  <a href="#53-canvas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.3. Наполнить LoginPanel
+        5.3. Создать Canvas
       
     </span>
   </a>
@@ -1033,10 +1120,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#54-registerpanel" class="md-nav__link">
+  <a href="#54" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.4. Наполнить RegisterPanel (аналогично)
+        5.4. Панель профиля
       
     </span>
   </a>
@@ -1047,7 +1134,51 @@
   <a href="#55" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.5. Создать менеджер
+        5.5. Настроить менеджер профиля
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6. Панель лидерборда
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-prefab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7. Создать Prefab строки лидерборда
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8. Настроить менеджер лидерборда
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-mainmenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9. Протестировать сцену MainMenu
       
     </span>
   </a>
@@ -1058,24 +1189,24 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#6-mainmenu" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#6-gamescene" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 6. Сцена MainMenu — профиль и лидерборд
+        6. Сцена GameScene — матч и события
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Шаг 6. Сцена MainMenu — профиль и лидерборд">
+    <nav class="md-nav" aria-label="6. Сцена GameScene — матч и события">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#61" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.1. Создать сцену
+        6.1. Что получится в результате
       
     </span>
   </a>
@@ -1083,10 +1214,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62" class="md-nav__link">
+  <a href="#62-gamescene" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.2. Панель профиля
+        6.2. Создать сцену GameScene
       
     </span>
   </a>
@@ -1094,10 +1225,65 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#63" class="md-nav__link">
+  <a href="#63-canvas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.3. Панель лидерборда
+        6.3. Создать Canvas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4. Создать UI элементы
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5. Создать менеджер матча
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-matchcontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6. Как работает MatchController (логика)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7. Как сервер рассчитывает награды
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68-gamescene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8. Протестировать GameScene
       
     </span>
   </a>
@@ -1108,24 +1294,24 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#7-gamescene" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 7. Сцена GameScene — матч
+        7. Отправка событий из любого места игры
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Шаг 7. Сцена GameScene — матч">
+    <nav class="md-nav" aria-label="7. Отправка событий из любого места игры">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#71" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.1. Создать сцену
+        7.1. Что такое игровые события
       
     </span>
   </a>
@@ -1133,10 +1319,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#72" class="md-nav__link">
+  <a href="#72-monobehaviour" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.2. Создать менеджер матча
+        7.2. Как отправить событие из любого MonoBehaviour
       
     </span>
   </a>
@@ -1147,7 +1333,18 @@
   <a href="#73" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.3. Кнопки тестирования
+        7.3. Дедупликация событий
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4. Добавить новый тип события
       
     </span>
   </a>
@@ -1158,46 +1355,201 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#8-build-settings" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#8-playerprefs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 8. Добавить сцены в Build Settings
+        8. Сохранение токена между сессиями (PlayerPrefs)
       
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#9" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Шаг 9. Проверить работу
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#10" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Шаг 10. Отладка
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Шаг 10. Отладка">
+    <nav class="md-nav" aria-label="8. Сохранение токена между сессиями (PlayerPrefs)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#unity" class="md-nav__link">
+  <a href="#81" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Консоль Unity
+        8.1. Сохранение после успешного логина
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2. Восстановление при старте приложения
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3. Выход из аккаунта
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-dev-stage-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Смена сервера (dev / stage / production)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Отладка
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Отладка">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1. Инструменты отладки
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2. Таблица частых ошибок
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3. Проверка данных в БД после теста
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-flask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4. Чтение логов Flask
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-seedsql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Тестовые учётные данные (из seed.sql)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Итог: порядок полной сборки и проверки
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Итог: порядок полной сборки и проверки">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-flask-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Подготовка Flask-сервера
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-unity-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Подготовка Unity-проекта
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-authscene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. AuthScene (экран входа)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-mainmenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. MainMenu (профиль + лидерборд)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-gamescene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. GameScene (матч)
       
     </span>
   </a>
@@ -1208,7 +1560,7 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Частые проблемы
+        Итоговая проверка в БД
       
     </span>
   </a>
@@ -1219,33 +1571,17 @@
     </nav>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
         <li class="md-nav__item">
-  <a href="#5-seedsql" class="md-nav__link">
+  <a href="#12" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 5. Тестовые учётные данные (из seed.sql)
+        12. Описание каждого скрипта
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Часть 6. Описание каждого скрипта
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Часть 6. Описание каждого скрипта">
+    <nav class="md-nav" aria-label="12. Описание каждого скрипта">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1364,15 +1700,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7" class="md-nav__link">
+  <a href="#13" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 7. Расширение проекта
+        13. Расширение проекта
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Часть 7. Расширение проекта">
+    <nav class="md-nav" aria-label="13. Расширение проекта">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1459,7 +1795,7 @@
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Что это такое и зачем
+        Смысл раздела
       
     </span>
   </a>
@@ -1470,19 +1806,19 @@
   <a href="#1-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 1. Теория: как Unity общается с сервером
+        1. Теория: как Unity общается с сервером
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Часть 1. Теория: как Unity общается с сервером">
+    <nav class="md-nav" aria-label="1. Теория: как Unity общается с сервером">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#61-rest-api-unity" class="md-nav__link">
+  <a href="#11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.1. Что такое REST API и почему это важно для Unity
+        1.1. Общая схема взаимодействия
       
     </span>
   </a>
@@ -1490,10 +1826,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62-http-" class="md-nav__link">
+  <a href="#12-rest-api-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.2. HTTP-методы
+        1.2. Что такое REST API применительно к Unity
       
     </span>
   </a>
@@ -1501,10 +1837,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#63-json" class="md-nav__link">
+  <a href="#13-json" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.3. JSON — формат обмена данными
+        1.3. Формат данных: JSON
       
     </span>
   </a>
@@ -1512,10 +1848,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#64-jwt" class="md-nav__link">
+  <a href="#14-jwt" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.4. JWT — как работает авторизация
+        1.4. JWT — токен авторизации
       
     </span>
   </a>
@@ -1523,10 +1859,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#65-unitywebrequest-http-unity" class="md-nav__link">
+  <a href="#15-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.5. UnityWebRequest — HTTP в Unity
+        1.5. Корутины — асинхронность в Unity
       
     </span>
   </a>
@@ -1534,10 +1870,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#66" class="md-nav__link">
+  <a href="#16-unitywebrequest-http-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.6. Контракт всех ответов сервера
+        1.6. UnityWebRequest — HTTP в Unity
       
     </span>
   </a>
@@ -1550,22 +1886,88 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2" class="md-nav__link">
+  <a href="#2-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 2. Структура скриптов
+        2. Структура скриптов Unity
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Часть 2. Структура скриптов">
+    <nav class="md-nav" aria-label="2. Структура скриптов Unity">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#21" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Зависимости между слоями
+        2.1. Дерево файлов
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2. Зависимости между слоями
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-apiconfigcs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3. ApiConfig.cs — единая точка конфигурации
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-apimodelscs-dto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4. ApiModels.cs — классы данных (DTO)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-authsessioncs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5. AuthSession.cs — хранение токена
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-apiclientcs-http-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6. ApiClient.cs — HTTP-слой
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-gameapiservicecs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7. GameApiService.cs — высокоуровневый сервис
       
     </span>
   </a>
@@ -1578,22 +1980,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-endpoint" class="md-nav__link">
+  <a href="#3-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 3. Endpoint'ы сервера
+        3. Подготовка: что нужно до начала работы в Unity
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Часть 3. Endpoint'ы сервера">
+    <nav class="md-nav" aria-label="3. Подготовка: что нужно до начала работы в Unity">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#31-endpoint" class="md-nav__link">
+  <a href="#31-flask-" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.1. Таблица всех endpoint'ов
+        3.1. Запустить Flask-сервер
       
     </span>
   </a>
@@ -1601,22 +2003,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#32-endpoint" class="md-nav__link">
+  <a href="#32" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3.2. Описание каждого endpoint'а
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="3.2. Описание каждого endpoint'а">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#post-apiv1authregister" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        POST /api/v1/auth/register
+        3.2. Проверить наличие тестовых данных в БД
       
     </span>
   </a>
@@ -1624,10 +2014,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-apiv1authlogin" class="md-nav__link">
+  <a href="#33-unity" class="md-nav__link">
     <span class="md-ellipsis">
       
-        POST /api/v1/auth/login
+        3.3. Создать проект Unity
       
     </span>
   </a>
@@ -1635,10 +2025,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#get-apiv1profile" class="md-nav__link">
+  <a href="#34" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GET /api/v1/profile
+        3.4. Скопировать скрипты в проект
       
     </span>
   </a>
@@ -1646,40 +2036,13 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#post-apiv1events" class="md-nav__link">
+  <a href="#35-textmeshpro" class="md-nav__link">
     <span class="md-ellipsis">
       
-        POST /api/v1/events
+        3.5. Установить TextMeshPro
       
     </span>
   </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#post-apiv1matchfinish" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        POST /api/v1/match/finish
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#get-apiv1leaderboard" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GET /api/v1/leaderboard
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1689,22 +2052,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-unity" class="md-nav__link">
+  <a href="#4-authscene" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 4. Пошаговая сборка проекта Unity
+        4. Сцена AuthScene — экран входа и регистрации
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Часть 4. Пошаговая сборка проекта Unity">
+    <nav class="md-nav" aria-label="4. Сцена AuthScene — экран входа и регистрации">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1" class="md-nav__link">
+  <a href="#41" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 1. Создать проект
+        4.1. Что получится в результате
       
     </span>
   </a>
@@ -1712,10 +2075,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2_1" class="md-nav__link">
+  <a href="#42" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 2. Скопировать скрипты
+        4.2. Создать сцену
       
     </span>
   </a>
@@ -1723,10 +2086,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#3" class="md-nav__link">
+  <a href="#43-canvas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 3. Настроить адрес сервера
+        4.3. Создать Canvas
       
     </span>
   </a>
@@ -1734,10 +2097,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4" class="md-nav__link">
+  <a href="#44-loginpanel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 4. Запустить сервер
+        4.4. Создать LoginPanel
       
     </span>
   </a>
@@ -1745,22 +2108,82 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-authscene" class="md-nav__link">
+  <a href="#45-registerpanel" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 5. Сцена AuthScene — экран входа
+        4.5. Создать RegisterPanel
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Шаг 5. Сцена AuthScene — экран входа">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#46" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.6. Создать менеджер сцены
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#47" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.7. Настроить кнопки переключения панелей
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#48-build-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.8. Добавить сцены в Build Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#49" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.9. Запустить и протестировать
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-mainmenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Сцена MainMenu — профиль и лидерборд
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Сцена MainMenu — профиль и лидерборд">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#51" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.1. Создать сцену
+        5.1. Что получится в результате
       
     </span>
   </a>
@@ -1768,10 +2191,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#52-canvas" class="md-nav__link">
+  <a href="#52-mainmenu" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.2. Создать Canvas
+        5.2. Создать сцену MainMenu
       
     </span>
   </a>
@@ -1779,10 +2202,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#53-loginpanel" class="md-nav__link">
+  <a href="#53-canvas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.3. Наполнить LoginPanel
+        5.3. Создать Canvas
       
     </span>
   </a>
@@ -1790,10 +2213,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#54-registerpanel" class="md-nav__link">
+  <a href="#54" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.4. Наполнить RegisterPanel (аналогично)
+        5.4. Панель профиля
       
     </span>
   </a>
@@ -1804,7 +2227,51 @@
   <a href="#55" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5.5. Создать менеджер
+        5.5. Настроить менеджер профиля
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6. Панель лидерборда
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-prefab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7. Создать Prefab строки лидерборда
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#58" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.8. Настроить менеджер лидерборда
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#59-mainmenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.9. Протестировать сцену MainMenu
       
     </span>
   </a>
@@ -1815,24 +2282,24 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#6-mainmenu" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#6-gamescene" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 6. Сцена MainMenu — профиль и лидерборд
+        6. Сцена GameScene — матч и события
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Шаг 6. Сцена MainMenu — профиль и лидерборд">
+    <nav class="md-nav" aria-label="6. Сцена GameScene — матч и события">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#61" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.1. Создать сцену
+        6.1. Что получится в результате
       
     </span>
   </a>
@@ -1840,10 +2307,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#62" class="md-nav__link">
+  <a href="#62-gamescene" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.2. Панель профиля
+        6.2. Создать сцену GameScene
       
     </span>
   </a>
@@ -1851,10 +2318,65 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#63" class="md-nav__link">
+  <a href="#63-canvas" class="md-nav__link">
     <span class="md-ellipsis">
       
-        6.3. Панель лидерборда
+        6.3. Создать Canvas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4. Создать UI элементы
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5. Создать менеджер матча
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#66-matchcontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.6. Как работает MatchController (логика)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#67" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.7. Как сервер рассчитывает награды
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#68-gamescene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.8. Протестировать GameScene
       
     </span>
   </a>
@@ -1865,24 +2387,24 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#7-gamescene" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 7. Сцена GameScene — матч
+        7. Отправка событий из любого места игры
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Шаг 7. Сцена GameScene — матч">
+    <nav class="md-nav" aria-label="7. Отправка событий из любого места игры">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
   <a href="#71" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.1. Создать сцену
+        7.1. Что такое игровые события
       
     </span>
   </a>
@@ -1890,10 +2412,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#72" class="md-nav__link">
+  <a href="#72-monobehaviour" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.2. Создать менеджер матча
+        7.2. Как отправить событие из любого MonoBehaviour
       
     </span>
   </a>
@@ -1904,7 +2426,18 @@
   <a href="#73" class="md-nav__link">
     <span class="md-ellipsis">
       
-        7.3. Кнопки тестирования
+        7.3. Дедупликация событий
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4. Добавить новый тип события
       
     </span>
   </a>
@@ -1915,46 +2448,201 @@
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#8-build-settings" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#8-playerprefs" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Шаг 8. Добавить сцены в Build Settings
+        8. Сохранение токена между сессиями (PlayerPrefs)
       
     </span>
   </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#9" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Шаг 9. Проверить работу
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#10" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Шаг 10. Отладка
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Шаг 10. Отладка">
+    <nav class="md-nav" aria-label="8. Сохранение токена между сессиями (PlayerPrefs)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#unity" class="md-nav__link">
+  <a href="#81" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Консоль Unity
+        8.1. Сохранение после успешного логина
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2. Восстановление при старте приложения
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3. Выход из аккаунта
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-dev-stage-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Смена сервера (dev / stage / production)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Отладка
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Отладка">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1. Инструменты отладки
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2. Таблица частых ошибок
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3. Проверка данных в БД после теста
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#104-flask" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.4. Чтение логов Flask
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-seedsql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Тестовые учётные данные (из seed.sql)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Итог: порядок полной сборки и проверки
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Итог: порядок полной сборки и проверки">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-flask-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Подготовка Flask-сервера
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-unity-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Подготовка Unity-проекта
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-authscene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. AuthScene (экран входа)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-mainmenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. MainMenu (профиль + лидерборд)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-gamescene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. GameScene (матч)
       
     </span>
   </a>
@@ -1965,7 +2653,7 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Частые проблемы
+        Итоговая проверка в БД
       
     </span>
   </a>
@@ -1976,33 +2664,17 @@
     </nav>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
         <li class="md-nav__item">
-  <a href="#5-seedsql" class="md-nav__link">
+  <a href="#12" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 5. Тестовые учётные данные (из seed.sql)
+        12. Описание каждого скрипта
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Часть 6. Описание каждого скрипта
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Часть 6. Описание каждого скрипта">
+    <nav class="md-nav" aria-label="12. Описание каждого скрипта">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2121,15 +2793,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#7" class="md-nav__link">
+  <a href="#13" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Часть 7. Расширение проекта
+        13. Расширение проекта
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Часть 7. Расширение проекта">
+    <nav class="md-nav" aria-label="13. Расширение проекта">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2187,536 +2859,1847 @@
 
 
 
-<h1 id="2-6-unity-strategy-support-is">2. Практика 6. Руководство по сборке Unity-клиента для strategy-support-is</h1>
-<h2 id="_1">Что это такое и зачем</h2>
-<p>Данный документ — пошаговая инструкция по созданию Unity-приложения, которое подключается к Flask-бэкенду <code>strategy-support-is</code> и обменивается с ним данными. Уровень реализации — учебный MVP: авторизация, профиль, события, завершение матча, лидерборд.</p>
-<p>После выполнения всех шагов у вас будет Unity-приложение с тремя сценами, которое:
-- Регистрирует и авторизует пользователей через Flask JWT
-- Отображает профиль и прогресс игрока
-- Отправляет игровые события с UUID-дедупликацией
-- Завершает матч и получает начисленные сервером награды
-- Показывает таблицу лидеров</p>
+<h1 id="2-6-unity-strategy-support-is">2. Практика. 6. Интеграция Unity с ИС сопровождения игрового продукта (strategy-support-is)</h1>
+<h2 id="_1">Смысл раздела</h2>
+<p>Этот раздел — пошаговое руководство по тому, как Unity-клиент подключается к Flask-бэкенду
+<code>strategy-support-is</code>, обменивается данными по REST API и отображает результаты игроку.</p>
+<p>Задача раздела: получить <strong>работающую связку</strong> Unity ↔ Flask, где:
+- Игрок входит в аккаунт через Unity-форму
+- Данные профиля и прогресса подтягиваются с сервера
+- Игровые события отправляются в реальном времени
+- Результат матча записывается на сервере, клиент получает начисленные награды
+- Таблица лидеров отображается из реальной БД</p>
 <hr>
-<h2 id="1-unity">Часть 1. Теория: как Unity общается с сервером</h2>
-<h3 id="61-rest-api-unity">6.1. Что такое REST API и почему это важно для Unity</h3>
-<p>REST API — это набор URL-адресов (endpoint'ов) на сервере, к которым клиент обращается по протоколу HTTP. Unity выступает клиентом: она формирует запрос, отправляет его серверу и получает ответ в формате JSON.</p>
-<p>Главное правило: <strong>сервер — источник истины</strong>. Unity не хранит постоянные данные о прогрессе, очках и наградах в себе. Всё это живёт в базе данных на сервере и запрашивается по API.</p>
-<h3 id="62-http-">6.2. HTTP-методы</h3>
+<h2 id="1-unity">1. Теория: как Unity общается с сервером</h2>
+<h3 id="11">1.1. Общая схема взаимодействия</h3>
+<div class="highlight"><pre><span></span><code>Unity-клиент
+    │
+    │  HTTP-запрос (JSON + JWT)
+    ▼
+Flask REST API (http://127.0.0.1:5000)
+    │
+    │  SQL
+    ▼
+MySQL 8.0 (strategy_db)
+</code></pre></div>
+<p>Unity — <strong>клиент</strong>, Flask — <strong>сервер</strong>. Сервер является источником истины:
+он хранит все данные игрока, рассчитывает награды, проверяет права.
+Unity только отправляет факты и отображает ответ.</p>
+<hr>
+<h3 id="12-rest-api-unity">1.2. Что такое REST API применительно к Unity</h3>
+<p>REST API — это набор URL-адресов (endpoint'ов) на сервере, к которым Unity обращается
+по протоколу HTTP. Каждый endpoint выполняет одну конкретную функцию:</p>
 <table>
 <thead>
 <tr>
+<th>Endpoint</th>
 <th>Метод</th>
-<th>Назначение</th>
-<th>Пример</th>
+<th>Что делает</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>GET</td>
-<td>Получить данные</td>
-<td><code>GET /api/v1/profile</code></td>
-</tr>
-<tr>
-<td>POST</td>
-<td>Создать / выполнить действие</td>
-<td><code>POST /api/v1/match/finish</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="63-json">6.3. JSON — формат обмена данными</h3>
-<p>Все запросы и ответы используют JSON. Unity сериализует классы C# в JSON с помощью <code>JsonUtility.ToJson()</code> и десериализует ответы обратно через <code>JsonUtility.FromJson&lt;T&gt;()</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Пример запроса к /api/v1/auth/login</span>
-<span class="p">{</span><span class="w"> </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"alice@example.com"</span><span class="p">,</span><span class="w"> </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"password123"</span><span class="w"> </span><span class="p">}</span>
-
-<span class="c1">// Пример успешного ответа</span>
-<span class="p">{</span><span class="w"> </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"accessToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJ..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Commander_Alice"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-
-<span class="c1">// Пример ответа с ошибкой</span>
-<span class="p">{</span><span class="w"> </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UNAUTHORIZED"</span><span class="p">,</span><span class="w"> </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invalid credentials"</span><span class="p">,</span><span class="w"> </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"req_abc123"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-</code></pre></div>
-<h3 id="64-jwt">6.4. JWT — как работает авторизация</h3>
-<p><strong>JWT (JSON Web Token)</strong> — это зашифрованный токен, который сервер выдаёт после успешного входа. Все последующие запросы к защищённым endpoint'ам отправляются с заголовком:</p>
-<div class="highlight"><pre><span></span><code>Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-</code></pre></div>
-<p>Токен хранится в памяти приложения (в классе <code>AuthSession</code>) и не сохраняется на диск (в учебном проекте). При перезапуске приложения нужно войти заново.</p>
-<h3 id="65-unitywebrequest-http-unity">6.5. UnityWebRequest — HTTP в Unity</h3>
-<p>Unity не может использовать <code>HttpClient</code> из .NET напрямую в корутинах. Для работы с HTTP используется <code>UnityWebRequest</code> — встроенный класс Unity.</p>
-<p>Все вызовы API выполняются как <strong>корутины</strong> (IEnumerator + StartCoroutine). Это значит: HTTP-запрос не блокирует основной поток, а выполняется асинхронно в фоне.</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Паттерн корутины</span>
-<span class="n">StartCoroutine</span><span class="p">(</span><span class="n">api</span><span class="p">.</span><span class="n">Login</span><span class="p">(</span><span class="s">"email"</span><span class="p">,</span><span class="w"> </span><span class="s">"pass"</span><span class="p">,</span>
-<span class="w">    </span><span class="n">onSuccess</span><span class="p">:</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Debug</span><span class="p">.</span><span class="n">Log</span><span class="p">(</span><span class="s">"OK: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">resp</span><span class="p">.</span><span class="n">nickname</span><span class="p">),</span>
-<span class="w">    </span><span class="n">onError</span><span class="p">:</span><span class="w">   </span><span class="n">err</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogError</span><span class="p">(</span><span class="s">"Fail: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">err</span><span class="p">)));</span>
-</code></pre></div>
-<h3 id="66">6.6. Контракт всех ответов сервера</h3>
-<p>Все ответы сервера имеют единую структуру:</p>
-<div class="highlight"><pre><span></span><code>{ "ok": true/false, "data": {...} }   ← успех
-{ "ok": false, "error": {...} }       ← ошибка
-</code></pre></div>
-<p>В Unity это отражено классом <code>ApiResponse&lt;T&gt;</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="na">[Serializable]</span>
-<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ApiResponse</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span>
-<span class="p">{</span>
-<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">bool</span><span class="w">     </span><span class="n">ok</span><span class="p">;</span>
-<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">T</span><span class="w">        </span><span class="n">data</span><span class="p">;</span>
-<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">ApiError</span><span class="w"> </span><span class="n">error</span><span class="p">;</span>
-<span class="p">}</span>
-</code></pre></div>
-<hr>
-<h2 id="2">Часть 2. Структура скриптов</h2>
-<div class="highlight"><pre><span></span><code>Assets/
-  Scripts/
-    API/
-      ApiConfig.cs        ← адрес сервера и все URL
-      ApiModels.cs        ← все DTO (классы запросов/ответов)
-      AuthSession.cs      ← хранит JWT-токен и UserId
-      ApiClient.cs        ← низкоуровневый HTTP (Get/Post)
-      GameApiService.cs   ← высокоуровневый сервис (Login/Profile/...)
-    UI/
-      AuthController.cs   ← экран входа/регистрации
-      ProfileController.cs← экран профиля
-      LeaderboardController.cs ← таблица лидеров
-    Game/
-      MatchController.cs  ← управление матчем
-      EventSender.cs      ← отправка произвольных событий
-</code></pre></div>
-<h3 id="_2">Зависимости между слоями</h3>
-<div class="highlight"><pre><span></span><code>UI / Game
-    ↓  вызывают
-GameApiService
-    ↓  использует
-ApiClient  +  AuthSession
-    ↓  использует
-UnityWebRequest  (встроен в Unity)
-</code></pre></div>
-<hr>
-<h2 id="3-endpoint">Часть 3. Endpoint'ы сервера</h2>
-<h3 id="31-endpoint">3.1. Таблица всех endpoint'ов</h3>
-<table>
-<thead>
-<tr>
-<th>Метод</th>
-<th>URL</th>
-<th>Авторизация</th>
-<th>Описание</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>POST</td>
 <td><code>/api/v1/auth/register</code></td>
-<td>Нет</td>
-<td>Регистрация</td>
+<td>POST</td>
+<td>Создать новый аккаунт</td>
 </tr>
 <tr>
-<td>POST</td>
 <td><code>/api/v1/auth/login</code></td>
-<td>Нет</td>
-<td>Вход, получить JWT</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/v1/profile</code></td>
-<td>Bearer JWT</td>
-<td>Профиль + прогресс</td>
-</tr>
-<tr>
 <td>POST</td>
+<td>Войти, получить JWT-токен</td>
+</tr>
+<tr>
+<td><code>/api/v1/profile</code></td>
+<td>GET</td>
+<td>Получить профиль и прогресс игрока</td>
+</tr>
+<tr>
 <td><code>/api/v1/events</code></td>
-<td>Bearer JWT</td>
+<td>POST</td>
 <td>Отправить игровое событие</td>
 </tr>
 <tr>
-<td>POST</td>
 <td><code>/api/v1/match/finish</code></td>
-<td>Bearer JWT</td>
-<td>Завершить матч</td>
+<td>POST</td>
+<td>Завершить матч, получить награды</td>
 </tr>
 <tr>
-<td>GET</td>
 <td><code>/api/v1/leaderboard</code></td>
-<td>Нет</td>
-<td>Таблица лидеров</td>
+<td>GET</td>
+<td>Получить таблицу лидеров</td>
+</tr>
+<tr>
+<td><code>/health</code></td>
+<td>GET</td>
+<td>Проверить что сервер работает</td>
 </tr>
 </tbody>
 </table>
-<h3 id="32-endpoint">3.2. Описание каждого endpoint'а</h3>
-<h4 id="post-apiv1authregister">POST /api/v1/auth/register</h4>
-<p><strong>Запрос:</strong>
-</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"email"</span><span class="p">:</span><span class="w">    </span><span class="s2">"player@example.com"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mypassword"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Commander"</span>
-<span class="p">}</span>
-</code></pre></div><p></p>
-<p><strong>Ответ 201:</strong>
-</p><div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w"> </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Commander"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-</code></pre></div><p></p>
-<p><strong>Ошибки:</strong>
-- <code>400</code> — не заполнены поля / пароль &lt; 6 символов
-- <code>409</code> — email уже зарегистрирован</p>
 <hr>
-<h4 id="post-apiv1authlogin">POST /api/v1/auth/login</h4>
-<p><strong>Запрос:</strong>
+<h3 id="13-json">1.3. Формат данных: JSON</h3>
+<p>Все запросы и ответы используются в формате JSON. Примеры:</p>
+<p><strong>Запрос логина:</strong>
 </p><div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"alice@example.com"</span><span class="p">,</span><span class="w"> </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"password123"</span><span class="w"> </span><span class="p">}</span>
 </code></pre></div><p></p>
-<p><strong>Ответ 200:</strong>
+<p><strong>Успешный ответ (все ответы имеют единую оболочку):</strong>
 </p><div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"accessToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJ..."</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"userId"</span><span class="p">:</span><span class="w">      </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w">    </span><span class="s2">"Commander_Alice"</span>
+<span class="w">    </span><span class="nt">"accessToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Commander_Alice"</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div><p></p>
-<p><strong>Ошибки:</strong>
-- <code>401</code> — неверный пароль или email
-- <code>403</code> — аккаунт заблокирован</p>
+<p><strong>Ответ с ошибкой:</strong>
+</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UNAUTHORIZED"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invalid credentials"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"requestId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"req_a1b2c3d4"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p></p>
+<p>Поле <code>ok</code> всегда присутствует: <code>true</code> — успех, <code>false</code> — ошибка.
+При успехе данные лежат в <code>data</code>, при ошибке — в <code>error</code>.</p>
+<hr>
+<h3 id="14-jwt">1.4. JWT — токен авторизации</h3>
+<p><strong>JWT (JSON Web Token)</strong> — это строка, которую сервер выдаёт при успешном логине.
+Она содержит зашифрованную информацию о пользователе (userId, roles) и срок действия.</p>
+<p>После логина каждый защищённый запрос к API должен содержать заголовок:
+</p><div class="highlight"><pre><span></span><code>Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+</code></pre></div><p></p>
+<p>Без этого заголовка сервер вернёт <code>401 UNAUTHORIZED</code>.</p>
+<p>В Unity токен хранится в статическом классе <code>AuthSession</code> в памяти приложения.
+<code>ApiClient</code> добавляет заголовок автоматически при каждом запросе, если токен есть.</p>
+<hr>
+<h3 id="15-unity">1.5. Корутины — асинхронность в Unity</h3>
+<p>Unity не позволяет блокировать главный поток во время HTTP-запроса.
+Для этого используются <strong>корутины</strong> (IEnumerator + StartCoroutine).</p>
+<p>Схема работы:
+</p><div class="highlight"><pre><span></span><code>Нажата кнопка "Войти"
+    │
+    ▼
+StartCoroutine(api.Login(...))  ← запускает фоновое выполнение
+    │
+    │  кадры игры продолжают рендериться
+    │
+    ▼
+HTTP-запрос выполнен
+    │
+    ▼
+onSuccess(resp) или onError(err)  ← вызывается в главном потоке
+</code></pre></div><p></p>
+<p>Ключевой паттерн:
+</p><div class="highlight"><pre><span></span><code><span class="n">StartCoroutine</span><span class="p">(</span><span class="n">api</span><span class="p">.</span><span class="n">Login</span><span class="p">(</span><span class="s">"email"</span><span class="p">,</span><span class="w"> </span><span class="s">"pass"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">onSuccess</span><span class="p">:</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Debug</span><span class="p">.</span><span class="n">Log</span><span class="p">(</span><span class="s">"Добро пожаловать, "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">resp</span><span class="p">.</span><span class="n">nickname</span><span class="p">),</span>
+<span class="w">    </span><span class="n">onError</span><span class="p">:</span><span class="w">   </span><span class="n">err</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogError</span><span class="p">(</span><span class="s">"Ошибка: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">err</span><span class="p">)));</span>
+</code></pre></div><p></p>
+<hr>
+<h3 id="16-unitywebrequest-http-unity">1.6. UnityWebRequest — HTTP в Unity</h3>
+<p><code>UnityWebRequest</code> — встроенный класс Unity для HTTP-запросов.
+<code>ApiClient.cs</code> оборачивает его в удобные методы <code>Get&lt;T&gt;</code> и <code>Post&lt;T,R&gt;</code>.</p>
+<p>Что делает <code>ApiClient</code> автоматически:
+- Добавляет <code>Content-Type: application/json</code>
+- Добавляет <code>Authorization: Bearer &lt;token&gt;</code> если пользователь залогинен
+- Разбирает ответ из JSON в C#-класс
+- Вызывает <code>onSuccess</code> или <code>onError</code> в зависимости от статуса ответа</p>
+<hr>
+<h2 id="2-unity">2. Структура скриптов Unity</h2>
+<h3 id="21">2.1. Дерево файлов</h3>
+<div class="highlight"><pre><span></span><code>Assets/
+  Scripts/
+    API/
+      ApiConfig.cs          ← адрес сервера и все URL
+      ApiModels.cs          ← все DTO (классы запросов и ответов)
+      AuthSession.cs        ← хранит JWT, userId, nickname в памяти
+      ApiClient.cs          ← низкоуровневый HTTP: Get/Post через UnityWebRequest
+      GameApiService.cs     ← высокоуровневый сервис: Login/Profile/Events/Match/Leaderboard
+    UI/
+      AuthController.cs     ← MonoBehaviour экрана входа/регистрации
+      ProfileController.cs  ← MonoBehaviour экрана профиля
+      LeaderboardController.cs ← MonoBehaviour таблицы лидеров
+    Game/
+      MatchController.cs    ← MonoBehaviour управления матчем
+      EventSender.cs        ← статический хелпер отправки событий
+</code></pre></div>
+<h3 id="22">2.2. Зависимости между слоями</h3>
+<div class="highlight"><pre><span></span><code>AuthController, ProfileController, LeaderboardController, MatchController
+                          │
+                          │  вызывают
+                          ▼
+                   GameApiService        ← добавляется на GameObject как компонент
+                          │
+              ┌───────────┴───────────┐
+              │                       │
+              ▼                       ▼
+          ApiClient              AuthSession
+              │                       │
+              ▼                       │
+       UnityWebRequest           (статический,
+       (встроен в Unity)          в памяти)
+</code></pre></div>
+<p>Правило: UI-скрипты не работают напрямую с <code>ApiClient</code> — только через <code>GameApiService</code>.</p>
+<hr>
+<h3 id="23-apiconfigcs">2.3. <code>ApiConfig.cs</code> — единая точка конфигурации</h3>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">StrategyGame.API</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ApiConfig</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Меняется только здесь при смене сервера</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">BaseUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"http://127.0.0.1:5000"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Все endpoint'ы</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Register</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">BaseUrl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"/api/v1/auth/register"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Login</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">BaseUrl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"/api/v1/auth/login"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Profile</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">BaseUrl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"/api/v1/profile"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Events</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">BaseUrl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"/api/v1/events"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">MatchFinish</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BaseUrl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"/api/v1/match/finish"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Leaderboard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BaseUrl</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"/api/v1/leaderboard"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Параметры по умолчанию для лидерборда</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">DefaultBoard</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s">"default"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w">    </span><span class="n">DefaultSeason</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w">    </span><span class="n">DefaultLimit</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Когда менять BaseUrl:</strong>
+- Локальная разработка: <code>http://127.0.0.1:5000</code>
+- Flask запущен на другой машине в сети: <code>http://192.168.1.100:5000</code>
+- Production: <code>https://your-server.com</code></p>
+<hr>
+<h3 id="24-apimodelscs-dto">2.4. <code>ApiModels.cs</code> — классы данных (DTO)</h3>
+<p>Каждый класс точно соответствует JSON-полям в запросах и ответах сервера.
+Атрибут <code>[Serializable]</code> обязателен — без него <code>JsonUtility</code> не сможет преобразовать объект.</p>
+<p>Имена полей в C#-классах должны совпадать с именами JSON-ключей сервера:
+сервер возвращает <code>"accessToken"</code> → поле называется <code>public string accessToken</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Запрос логина — POST /api/v1/auth/login</span>
+<span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">LoginRequest</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">email</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">password</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Ответ логина — data: { accessToken, userId, nickname }</span>
+<span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">LoginResponse</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">accessToken</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w">    </span><span class="n">userId</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">nickname</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Ответ профиля — data: { userId, email, nickname, roles, progress }</span>
+<span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ProfileResponse</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w">           </span><span class="n">userId</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w">        </span><span class="n">email</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w">        </span><span class="n">nickname</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w">      </span><span class="n">roles</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">PlayerProgress</span><span class="w"> </span><span class="n">progress</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">PlayerProgress</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">level</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">xp</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">softCurrency</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">hardCurrency</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h3 id="25-authsessioncs">2.5. <code>AuthSession.cs</code> — хранение токена</h3>
+<p>Статический класс. Хранит данные текущей сессии в памяти приложения.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AuthSession</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">AccessToken</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w">    </span><span class="n">UserId</span><span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Nickname</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">get</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">set</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w">   </span><span class="n">IsLoggedIn</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">!</span><span class="kt">string</span><span class="p">.</span><span class="n">IsNullOrEmpty</span><span class="p">(</span><span class="n">AccessToken</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Вызывается после успешного логина</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Save</span><span class="p">(</span><span class="n">LoginResponse</span><span class="w"> </span><span class="n">resp</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">AccessToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resp</span><span class="p">.</span><span class="n">accessToken</span><span class="p">;</span>
+<span class="w">        </span><span class="n">UserId</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">resp</span><span class="p">.</span><span class="n">userId</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Nickname</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">resp</span><span class="p">.</span><span class="n">nickname</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Вызывается при выходе из аккаунта</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Clear</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">AccessToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+<span class="w">        </span><span class="n">UserId</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Nickname</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>ApiClient</code> читает <code>AuthSession.IsLoggedIn</code> и <code>AuthSession.AccessToken</code> автоматически
+перед каждым запросом.</p>
+<hr>
+<h3 id="26-apiclientcs-http-">2.6. <code>ApiClient.cs</code> — HTTP-слой</h3>
+<p>Низкоуровневый компонент. Не используется напрямую из UI — только через <code>GameApiService</code>.</p>
+<p><strong>Метод GET:</strong>
+</p><div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IEnumerator</span><span class="w"> </span><span class="n">Get</span><span class="o">&lt;</span><span class="n">TResponse</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">url</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">TResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onSuccess</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Action</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w">    </span><span class="n">onError</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UnityWebRequest</span><span class="p">.</span><span class="n">Get</span><span class="p">(</span><span class="n">url</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Добавить JWT если пользователь залогинен</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">AuthSession</span><span class="p">.</span><span class="n">IsLoggedIn</span><span class="p">)</span>
+<span class="w">        </span><span class="n">req</span><span class="p">.</span><span class="n">SetRequestHeader</span><span class="p">(</span><span class="s">"Authorization"</span><span class="p">,</span><span class="w"> </span><span class="s">"Bearer "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">AuthSession</span><span class="p">.</span><span class="n">AccessToken</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">yield</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">req</span><span class="p">.</span><span class="n">SendWebRequest</span><span class="p">();</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="n">result</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">UnityWebRequest</span><span class="p">.</span><span class="n">Result</span><span class="p">.</span><span class="n">Success</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">onError</span><span class="o">?.</span><span class="n">Invoke</span><span class="p">(</span><span class="s">$"[{req.responseCode}] {req.error}"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">yield</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">var</span><span class="w"> </span><span class="n">wrapper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonUtility</span><span class="p">.</span><span class="n">FromJson</span><span class="o">&lt;</span><span class="n">ApiResponse</span><span class="o">&lt;</span><span class="n">TResponse</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">req</span><span class="p">.</span><span class="n">downloadHandler</span><span class="p">.</span><span class="n">text</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">wrapper</span><span class="p">.</span><span class="n">ok</span><span class="p">)</span>
+<span class="w">        </span><span class="n">onSuccess</span><span class="o">?.</span><span class="n">Invoke</span><span class="p">(</span><span class="n">wrapper</span><span class="p">.</span><span class="n">data</span><span class="p">);</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">        </span><span class="n">onError</span><span class="o">?.</span><span class="n">Invoke</span><span class="p">(</span><span class="n">wrapper</span><span class="p">.</span><span class="n">error</span><span class="o">?.</span><span class="n">message</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s">"Unknown error"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p></p>
+<p><strong>Метод POST:</strong>
+</p><div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">IEnumerator</span><span class="w"> </span><span class="n">Post</span><span class="o">&lt;</span><span class="n">TRequest</span><span class="p">,</span><span class="w"> </span><span class="n">TResponse</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="kt">string</span><span class="w">    </span><span class="n">url</span><span class="p">,</span>
+<span class="w">    </span><span class="n">TRequest</span><span class="w">  </span><span class="n">body</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">TResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onSuccess</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Action</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w">    </span><span class="n">onError</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">withAuth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">string</span><span class="w"> </span><span class="n">json</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonUtility</span><span class="p">.</span><span class="n">ToJson</span><span class="p">(</span><span class="n">body</span><span class="p">);</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">req</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UnityWebRequest</span><span class="p">(</span><span class="n">url</span><span class="p">,</span><span class="w"> </span><span class="s">"POST"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">req</span><span class="p">.</span><span class="n">uploadHandler</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UploadHandlerRaw</span><span class="p">(</span><span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="n">GetBytes</span><span class="p">(</span><span class="n">json</span><span class="p">));</span>
+<span class="w">    </span><span class="n">req</span><span class="p">.</span><span class="n">downloadHandler</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DownloadHandlerBuffer</span><span class="p">();</span>
+<span class="w">    </span><span class="n">req</span><span class="p">.</span><span class="n">SetRequestHeader</span><span class="p">(</span><span class="s">"Content-Type"</span><span class="p">,</span><span class="w"> </span><span class="s">"application/json"</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">withAuth</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">AuthSession</span><span class="p">.</span><span class="n">IsLoggedIn</span><span class="p">)</span>
+<span class="w">        </span><span class="n">req</span><span class="p">.</span><span class="n">SetRequestHeader</span><span class="p">(</span><span class="s">"Authorization"</span><span class="p">,</span><span class="w"> </span><span class="s">"Bearer "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">AuthSession</span><span class="p">.</span><span class="n">AccessToken</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">yield</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">req</span><span class="p">.</span><span class="n">SendWebRequest</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// аналогично Get: разобрать ответ и вызвать onSuccess/onError</span>
+<span class="p">}</span>
+</code></pre></div><p></p>
+<hr>
+<h3 id="27-gameapiservicecs">2.7. <code>GameApiService.cs</code> — высокоуровневый сервис</h3>
+<p>MonoBehaviour-компонент. Добавляется на GameObject в сцене.
+Предоставляет удобные методы для всех операций с API.</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">GameApiService</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Логин — автоматически сохраняет токен в AuthSession после успеха</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IEnumerator</span><span class="w"> </span><span class="nf">Login</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">password</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">LoginResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onSuccess</span><span class="p">,</span><span class="w"> </span><span class="n">Action</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onError</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Профиль</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IEnumerator</span><span class="w"> </span><span class="nf">GetProfile</span><span class="p">(</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">ProfileResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onSuccess</span><span class="p">,</span><span class="w"> </span><span class="n">Action</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onError</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Событие — eventId генерируется автоматически через Guid.NewGuid()</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IEnumerator</span><span class="w"> </span><span class="nf">SendEvent</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">eventType</span><span class="p">,</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">EventResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onSuccess</span><span class="p">,</span><span class="w"> </span><span class="n">Action</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onError</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int?</span><span class="w"> </span><span class="n">sessionId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">clientTime</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Завершение матча</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IEnumerator</span><span class="w"> </span><span class="nf">FinishMatch</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">matchId</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isWin</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">durationSeconds</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">MatchFinishResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onSuccess</span><span class="p">,</span><span class="w"> </span><span class="n">Action</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onError</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int?</span><span class="w"> </span><span class="n">powerDelta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Лидерборд</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="n">IEnumerator</span><span class="w"> </span><span class="nf">GetLeaderboard</span><span class="p">(</span>
+<span class="w">        </span><span class="n">Action</span><span class="o">&lt;</span><span class="n">LeaderboardResponse</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onSuccess</span><span class="p">,</span><span class="w"> </span><span class="n">Action</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">onError</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">string</span><span class="w"> </span><span class="n">boardCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ApiConfig</span><span class="p">.</span><span class="n">DefaultBoard</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">season</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ApiConfig</span><span class="p">.</span><span class="n">DefaultSeason</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">limit</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">ApiConfig</span><span class="p">.</span><span class="n">DefaultLimit</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr>
+<h2 id="3-unity">3. Подготовка: что нужно до начала работы в Unity</h2>
+<h3 id="31-flask-">3.1. Запустить Flask-сервер</h3>
+<p>Перед любым тестированием в Unity сервер должен быть запущен.</p>
+<ol>
+<li>
+<p>Открыть терминал и перейти в папку проекта:
+</p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>C:<span class="se">\U</span>sers<span class="se">\g</span>vadoskr<span class="se">\D</span>esktop<span class="se">\p</span>roject<span class="se">\s</span>trategy-support-is
+</code></pre></div><p></p>
+</li>
+<li>
+<p>Активировать виртуальное окружение:
+</p><div class="highlight"><pre><span></span><code>venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+</code></pre></div><p></p>
+</li>
+<li>
+<p>Запустить сервер:
+</p><div class="highlight"><pre><span></span><code>python<span class="w"> </span>wsgi.py
+</code></pre></div><p></p>
+</li>
+</ol>
+<p>Ожидаемый вывод в терминале:
+</p><div class="highlight"><pre><span></span><code> * Running on http://127.0.0.1:5000
+ * Debug mode: on
+</code></pre></div><p></p>
+<ol>
+<li>Проверить в браузере: открыть <code>http://127.0.0.1:5000/health</code></li>
+</ol>
+<p>Ожидаемый ответ:
+</p><div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div><p></p>
 <blockquote>
-<p>Данные из <code>seed.sql</code>: <code>alice@example.com</code> / <code>password123</code></p>
+<p>⚠️ Если браузер показывает ошибку — сервер не запущен. Нельзя тестировать Unity
+до тех пор, пока Flask не отвечает на <code>/health</code>.</p>
 </blockquote>
 <hr>
-<h4 id="get-apiv1profile">GET /api/v1/profile</h4>
-<p><strong>Заголовок:</strong> <code>Authorization: Bearer &lt;token&gt;</code></p>
-<p><strong>Ответ 200:</strong>
-</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"userId"</span><span class="p">:</span><span class="w">   </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"email"</span><span class="p">:</span><span class="w">    </span><span class="s2">"alice@example.com"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Commander_Alice"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"roles"</span><span class="p">:</span><span class="w">    </span><span class="p">[</span><span class="s2">"player"</span><span class="p">],</span>
-<span class="w">    </span><span class="nt">"progress"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">"level"</span><span class="p">:</span><span class="w">        </span><span class="mi">42</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"xp"</span><span class="p">:</span><span class="w">           </span><span class="mi">85400</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"softCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">12500</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">"hardCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
+<h3 id="32">3.2. Проверить наличие тестовых данных в БД</h3>
+<p>Для работы примеров нужны данные из <code>seed.sql</code>. Если они ещё не залиты:
+</p><div class="highlight"><pre><span></span><code>mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>strategy_db<span class="w"> </span>&lt;<span class="w"> </span>db/schema.sql
+mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>strategy_db<span class="w"> </span>&lt;<span class="w"> </span>seed.sql
 </code></pre></div><p></p>
-<p><strong>Ошибки:</strong>
-- <code>401</code> — токен отсутствует или устарел
-- <code>403</code> — аккаунт заблокирован</p>
+<p>Проверить в MySQL:
+</p><div class="highlight"><pre><span></span><code><span class="n">USE</span><span class="w"> </span><span class="n">strategy_db</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="n">nickname</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span>
+</code></pre></div><p></p>
+<p>Матч <code>id=9</code> должен иметь <code>status = 'started'</code> и <code>user_id = 1</code> (alice).</p>
 <hr>
-<h4 id="post-apiv1events">POST /api/v1/events</h4>
-<p><strong>Заголовок:</strong> <code>Authorization: Bearer &lt;token&gt;</code></p>
-<p><strong>Запрос:</strong>
-</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"eventId"</span><span class="p">:</span><span class="w">   </span><span class="s2">"550e8400-e29b-41d4-a716-446655440000"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unit_deploy"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"clientTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-27T12:00:00.000Z"</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w">  </span><span class="mi">9</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"unitCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cavalry"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"amount"</span><span class="p">:</span><span class="w">   </span><span class="mi">40</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"atSecond"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p></p>
-<p><strong>Ответ 200:</strong>
-</p><div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"eventId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"550e..."</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accepted"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
-</code></pre></div><p></p>
-<p><strong>Важно:</strong> <code>eventId</code> — уникальный UUID на каждое событие. Сервер отклонит повторный запрос с тем же <code>eventId</code> с кодом <code>409</code>.</p>
-<p><strong>Ошибки:</strong>
-- <code>400</code> — неверная структура
-- <code>409</code> — дублирующийся <code>eventId</code></p>
-<hr>
-<h4 id="post-apiv1matchfinish">POST /api/v1/match/finish</h4>
-<p><strong>Заголовок:</strong> <code>Authorization: Bearer &lt;token&gt;</code></p>
-<p><strong>Запрос:</strong>
-</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w">           </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w">           </span><span class="mi">1850</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p></p>
-<p><strong>Ответ 200:</strong>
-</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w">             </span><span class="mi">9</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w">               </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"xpGained"</span><span class="p">:</span><span class="w">            </span><span class="mi">100</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"softCurrencyGained"</span><span class="p">:</span><span class="w">  </span><span class="mi">50</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p></p>
-<p><strong>Важно:</strong> XP и монеты <strong>рассчитывает сервер</strong>, клиент их не присылает.</p>
-<p><strong>Ошибки:</strong>
-- <code>404</code> — матч не найден
-- <code>403</code> — матч принадлежит другому игроку
-- <code>409</code> — матч уже завершён (status ≠ started)</p>
-<hr>
-<h4 id="get-apiv1leaderboard">GET /api/v1/leaderboard</h4>
-<p><strong>Параметры запроса:</strong> <code>?boardCode=default&amp;season=1&amp;limit=10</code></p>
-<p><strong>Ответ 200:</strong>
-</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"boardCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"season"</span><span class="p">:</span><span class="w">    </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"rank"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Siege_Eve"</span><span class="p">,</span><span class="w">     </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">9850</span><span class="w"> </span><span class="p">},</span>
-<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"rank"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WarLord_Carol"</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">8720</span><span class="w"> </span><span class="p">}</span>
-<span class="w">    </span><span class="p">]</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><p></p>
-<hr>
-<h2 id="4-unity">Часть 4. Пошаговая сборка проекта Unity</h2>
-<h3 id="1">Шаг 1. Создать проект</h3>
+<h3 id="33-unity">3.3. Создать проект Unity</h3>
 <ol>
-<li>Открыть <strong>Unity Hub</strong>.</li>
-<li>Нажать <strong>New Project</strong> → выбрать шаблон <strong>2D</strong> (или <strong>3D</strong>) → назвать <code>StrategyClient</code>.</li>
-<li>Нажать <strong>Create project</strong>.</li>
+<li>
+<p>Открыть Unity Hub.</p>
+</li>
+<li>
+<p>Нажать <strong>New Project</strong>.</p>
+</li>
+<li>
+<p>Выбрать шаблон <strong>2D</strong> (для простоты; можно 3D — разницы в скриптах нет).</p>
+</li>
+<li>
+<p>Назвать проект: <code>StrategyClient</code>.</p>
+</li>
+<li>
+<p>Нажать <strong>Create project</strong>. Дождаться инициализации.</p>
+</li>
 </ol>
 <hr>
-<h3 id="2_1">Шаг 2. Скопировать скрипты</h3>
+<h3 id="34">3.4. Скопировать скрипты в проект</h3>
 <ol>
-<li>В папке проекта откройте <code>Assets</code>.</li>
-<li>Создайте структуру папок:
-   <div class="highlight"><pre><span></span><code>Assets/Scripts/API/
-Assets/Scripts/UI/
-Assets/Scripts/Game/
-</code></pre></div></li>
-<li>Скопируйте все <code>.cs</code>-файлы из пакета в соответствующие папки:</li>
-<li><code>API/</code> → <code>ApiConfig.cs</code>, <code>ApiModels.cs</code>, <code>AuthSession.cs</code>, <code>ApiClient.cs</code>, <code>GameApiService.cs</code></li>
-<li><code>UI/</code>  → <code>AuthController.cs</code>, <code>ProfileController.cs</code>, <code>LeaderboardController.cs</code></li>
-<li><code>Game/</code> → <code>MatchController.cs</code>, <code>EventSender.cs</code></li>
-</ol>
-<hr>
-<h3 id="3">Шаг 3. Настроить адрес сервера</h3>
-<p>Откройте <code>Assets/Scripts/API/ApiConfig.cs</code>. По умолчанию:</p>
-<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">BaseUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"http://127.0.0.1:5000"</span><span class="p">;</span>
-</code></pre></div>
-<p>Если Flask запущен на другом порту или машине — замените адрес здесь. Менять нужно только эту одну строчку.</p>
-<hr>
-<h3 id="4">Шаг 4. Запустить сервер</h3>
-<p>Перед тестированием в Unity убедитесь, что Flask-сервер запущен:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>strategy-support-is
-python<span class="w"> </span>wsgi.py
-</code></pre></div>
-<p>Сервер должен выводить:
-</p><div class="highlight"><pre><span></span><code>* Running on http://127.0.0.1:5000
+<li>
+<p>В окне Project (нижняя панель Unity) перейти в папку <code>Assets</code>.</p>
+</li>
+<li>
+<p>Создать структуру папок (ПКМ → Create → Folder):
+</p><div class="highlight"><pre><span></span><code>Assets/
+  Scripts/
+    API/
+    UI/
+    Game/
 </code></pre></div><p></p>
-<hr>
-<h3 id="5-authscene">Шаг 5. Сцена AuthScene — экран входа</h3>
-<h4 id="51">5.1. Создать сцену</h4>
-<p><code>File → New Scene → Save As → Scenes/AuthScene</code>.</p>
-<h4 id="52-canvas">5.2. Создать Canvas</h4>
-<ol>
-<li><code>GameObject → UI → Canvas</code>.</li>
-<li>В Canvas создайте два панели: <code>LoginPanel</code> и <code>RegisterPanel</code>.</li>
+</li>
+<li>
+<p>Скопировать C#-файлы в соответствующие папки:</p>
+</li>
 </ol>
-<h4 id="53-loginpanel">5.3. Наполнить LoginPanel</h4>
-<p>Добавьте в <strong>LoginPanel</strong>:</p>
 <table>
 <thead>
 <tr>
-<th>Объект</th>
-<th>Компонент</th>
-<th>Назначение</th>
+<th>Файл</th>
+<th>Папка назначения</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>EmailInput</code></td>
-<td>TMP_InputField</td>
-<td>Поле email</td>
+<td><code>ApiConfig.cs</code></td>
+<td><code>Assets/Scripts/API/</code></td>
 </tr>
 <tr>
-<td><code>PasswordInput</code></td>
-<td>TMP_InputField</td>
-<td>Поле пароля (Password)</td>
+<td><code>ApiModels.cs</code></td>
+<td><code>Assets/Scripts/API/</code></td>
 </tr>
 <tr>
-<td><code>LoginButton</code></td>
-<td>Button + TMP_Text</td>
-<td>Кнопка "Войти"</td>
+<td><code>AuthSession.cs</code></td>
+<td><code>Assets/Scripts/API/</code></td>
 </tr>
 <tr>
-<td><code>StatusText</code></td>
-<td>TMP_Text</td>
-<td>Статус / ошибка</td>
+<td><code>ApiClient.cs</code></td>
+<td><code>Assets/Scripts/API/</code></td>
 </tr>
 <tr>
-<td><code>GoToRegisterButton</code></td>
-<td>Button</td>
-<td>Переключить панель</td>
+<td><code>GameApiService.cs</code></td>
+<td><code>Assets/Scripts/API/</code></td>
+</tr>
+<tr>
+<td><code>AuthController.cs</code></td>
+<td><code>Assets/Scripts/UI/</code></td>
+</tr>
+<tr>
+<td><code>ProfileController.cs</code></td>
+<td><code>Assets/Scripts/UI/</code></td>
+</tr>
+<tr>
+<td><code>LeaderboardController.cs</code></td>
+<td><code>Assets/Scripts/UI/</code></td>
+</tr>
+<tr>
+<td><code>MatchController.cs</code></td>
+<td><code>Assets/Scripts/Game/</code></td>
+</tr>
+<tr>
+<td><code>EventSender.cs</code></td>
+<td><code>Assets/Scripts/Game/</code></td>
 </tr>
 </tbody>
 </table>
-<h4 id="54-registerpanel">5.4. Наполнить RegisterPanel (аналогично)</h4>
-<p>Добавьте поля email, password, nickname, кнопку регистрации и статус.</p>
-<h4 id="55">5.5. Создать менеджер</h4>
 <ol>
-<li><code>GameObject → Create Empty</code> → назвать <code>AuthManager</code>.</li>
-<li>Добавьте компоненты: <code>AuthController</code> и <code>GameApiService</code>.</li>
-<li>Привяжите поля в Inspector:</li>
-<li><code>loginPanel</code> → объект <code>LoginPanel</code></li>
-<li><code>registerPanel</code> → объект <code>RegisterPanel</code></li>
-<li><code>loginEmail</code> → <code>EmailInput</code></li>
-<li><code>loginPassword</code> → <code>PasswordInput</code></li>
-<li><code>loginButton</code> → <code>LoginButton</code></li>
-<li><code>regEmail</code>, <code>regPassword</code>, <code>regNickname</code> → соответствующие поля</li>
-<li><code>registerButton</code> → кнопка регистрации</li>
-<li><code>statusText</code> → <code>StatusText</code></li>
-<li>
-<p><code>sceneAfterLogin</code> → <code>"MainMenu"</code> (имя следующей сцены)</p>
-</li>
-<li>
-<p>На <code>GoToRegisterButton</code> в Inspector → <code>Button.OnClick</code>:</p>
-</li>
-<li>Добавить → выбрать <code>AuthManager</code> → метод <code>AuthController.ShowRegister</code>.</li>
+<li>Убедиться, что в Console (Window → Console) нет красных ошибок компиляции.</li>
 </ol>
-<hr>
-<h3 id="6-mainmenu">Шаг 6. Сцена MainMenu — профиль и лидерборд</h3>
-<h4 id="61">6.1. Создать сцену</h4>
-<p><code>File → New Scene → Save As → Scenes/MainMenu</code>.</p>
-<h4 id="62">6.2. Панель профиля</h4>
-<ol>
-<li>Создайте <code>GameObject → Create Empty</code> → <code>ProfileManager</code>.</li>
-<li>Добавьте <code>ProfileController</code> и <code>GameApiService</code>.</li>
-<li>В Canvas создайте панель <code>ProfilePanel</code> с TMP_Text-полями:</li>
-<li><code>NicknameText</code>, <code>EmailText</code>, <code>LevelText</code>, <code>XpText</code>, <code>SoftText</code>, <code>HardText</code>, <code>StatusText</code></li>
-<li>Привяжите все поля в Inspector у <code>ProfileController</code>.</li>
-<li>Кнопка "Обновить" → <code>ProfileController.Refresh()</code>.</li>
-</ol>
-<h4 id="63">6.3. Панель лидерборда</h4>
-<ol>
-<li>Создайте <code>GameObject → Create Empty</code> → <code>LeaderboardManager</code>.</li>
-<li>Добавьте <code>LeaderboardController</code> и <code>GameApiService</code>.</li>
-<li>В Canvas создайте <code>ScrollView</code> для списка.</li>
-<li>Создайте Prefab строки:</li>
-<li><code>GameObject → Create Empty</code> → <code>LeaderboardRow</code>.</li>
-<li>Добавьте три <code>TMP_Text</code>: <code>RankText</code>, <code>NicknameText</code>, <code>ScoreText</code>.</li>
-<li>Сохраните в <code>Assets/Prefabs/LeaderboardRow.prefab</code>.</li>
-<li>В Inspector <code>LeaderboardController</code>:</li>
-<li><code>rowContainer</code> → <code>ScrollView/Viewport/Content</code></li>
-<li><code>rowPrefab</code> → <code>LeaderboardRow.prefab</code></li>
-</ol>
-<hr>
-<h3 id="7-gamescene">Шаг 7. Сцена GameScene — матч</h3>
-<h4 id="71">7.1. Создать сцену</h4>
-<p><code>File → New Scene → Save As → Scenes/GameScene</code>.</p>
-<h4 id="72">7.2. Создать менеджер матча</h4>
-<ol>
-<li><code>GameObject → Create Empty</code> → <code>MatchManager</code>.</li>
-<li>Добавьте <code>MatchController</code> и <code>GameApiService</code>.</li>
-<li>В Inspector:</li>
-<li><code>matchId</code> → <code>9</code> (матч из seed.sql, принадлежащий alice)</li>
-<li>Привяжите: <code>timerText</code>, <code>statusText</code>, <code>rewardText</code>, <code>resultPanel</code></li>
-</ol>
-<h4 id="73">7.3. Кнопки тестирования</h4>
-<p>Добавьте два Button:</p>
-<ul>
-<li><code>WinButton</code> → в OnClick: <code>MatchController.EndMatchWin()</code> или напишите обёртку:</li>
-</ul>
-<div class="highlight"><pre><span></span><code><span class="c1">// Добавьте в MatchController для привязки кнопок в Inspector:</span>
-<span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">EndMatchWin</span><span class="p">()</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">EndMatch</span><span class="p">(</span><span class="n">isWin</span><span class="p">:</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w">  </span><span class="n">score</span><span class="p">:</span><span class="w"> </span><span class="m">1850</span><span class="p">);</span>
-<span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">EndMatchLose</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">EndMatch</span><span class="p">(</span><span class="n">isWin</span><span class="p">:</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">:</span><span class="w">  </span><span class="m">300</span><span class="p">);</span>
-</code></pre></div>
-<hr>
-<h3 id="8-build-settings">Шаг 8. Добавить сцены в Build Settings</h3>
-<ol>
-<li><code>File → Build Settings</code>.</li>
-<li>Нажать <strong>Add Open Scenes</strong> для каждой сцены: <code>AuthScene</code>, <code>MainMenu</code>, <code>GameScene</code>.</li>
-<li>Убедиться, что <code>AuthScene</code> стоит первой (index 0).</li>
-</ol>
-<hr>
-<h3 id="9">Шаг 9. Проверить работу</h3>
-<p><strong>Порядок тестирования:</strong></p>
-<ol>
-<li>Запустить Flask: <code>python wsgi.py</code>.</li>
-<li>Нажать <strong>Play</strong> в Unity.</li>
-<li>Войти с данными из <code>seed.sql</code>: <code>alice@example.com</code> / <code>password123</code>.</li>
-<li>После входа автоматически откроется <code>MainMenu</code>.</li>
-<li>Проверить профиль — должны появиться данные уровня/XP.</li>
-<li>Проверить лидерборд — должны появиться строки.</li>
-<li>Перейти в <code>GameScene</code>, нажать "Победа" — должны появиться награды.</li>
-</ol>
-<hr>
-<h3 id="10">Шаг 10. Отладка</h3>
-<h4 id="unity">Консоль Unity</h4>
-<p>Все запросы и ответы логируются через <code>Debug.Log</code>. При ошибке будет:
-</p><div class="highlight"><pre><span></span><code>[Match] FinishMatch error: [409] Match is not in started state
-</code></pre></div><p></p>
-<h4 id="_3">Частые проблемы</h4>
+<p>Типичные ошибки после копирования и их решения:</p>
 <table>
 <thead>
 <tr>
-<th>Проблема</th>
+<th>Ошибка</th>
 <th>Причина</th>
 <th>Решение</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>Connection refused</code></td>
-<td>Flask не запущен</td>
-<td><code>python wsgi.py</code></td>
+<td><code>The type or namespace 'TMPro' could not be found</code></td>
+<td>TextMeshPro не установлен</td>
+<td>Window → Package Manager → TextMeshPro → Install</td>
 </tr>
 <tr>
-<td><code>401 UNAUTHORIZED</code></td>
-<td>Не выполнен вход</td>
-<td>Вызвать Login() перед другими запросами</td>
+<td><code>The type 'MonoBehaviour' could not be found</code></td>
+<td>Неверный namespace</td>
+<td>Проверить что файл лежит в папке Assets</td>
 </tr>
 <tr>
-<td><code>409 CONFLICT</code> при finish</td>
-<td>Матч уже закрыт</td>
-<td>Создать новый матч в БД или использовать другой <code>matchId</code></td>
-</tr>
-<tr>
-<td><code>400 VALIDATION_ERROR</code></td>
-<td>Неверный тип поля</td>
-<td>Проверить DTO в <code>ApiModels.cs</code></td>
-</tr>
-<tr>
-<td>JSON parse error</td>
-<td>Ответ сервера не совпадает с моделью</td>
-<td>Проверить поля класса в <code>ApiModels.cs</code></td>
+<td><code>CS0246: type not found</code></td>
+<td>Опечатка в имени класса</td>
+<td>Проверить имена классов в файлах</td>
 </tr>
 </tbody>
 </table>
 <hr>
-<h2 id="5-seedsql">Часть 5. Тестовые учётные данные (из seed.sql)</h2>
+<h3 id="35-textmeshpro">3.5. Установить TextMeshPro</h3>
+<p>Скрипты UI используют <code>TMP_Text</code> и <code>TMP_InputField</code> вместо стандартных <code>Text</code> и <code>InputField</code>.
+TextMeshPro нужно установить отдельно.</p>
+<ol>
+<li>
+<p>Window → Package Manager.</p>
+</li>
+<li>
+<p>В выпадающем списке вверху выбрать <strong>Unity Registry</strong>.</p>
+</li>
+<li>
+<p>Найти <strong>TextMeshPro</strong> в списке.</p>
+</li>
+<li>
+<p>Нажать <strong>Install</strong>.</p>
+</li>
+<li>
+<p>Появится диалог <strong>Import TMP Essentials</strong> — нажать <strong>Import TMP Essentials</strong>.</p>
+</li>
+</ol>
+<p>После этого в Console должны пропасть все ошибки <code>TMPro not found</code>.</p>
+<hr>
+<h2 id="4-authscene">4. Сцена AuthScene — экран входа и регистрации</h2>
+<h3 id="41">4.1. Что получится в результате</h3>
+<p>После выполнения всех шагов этого раздела у вас будет работающий экран входа:
+- Поля email и пароль
+- Кнопка «Войти» — отправляет запрос <code>POST /api/v1/auth/login</code>
+- При успехе — переход в сцену <code>MainMenu</code>
+- При ошибке — отображение текста ошибки под кнопкой
+- Кнопка перехода к форме регистрации
+- Форма регистрации — отправляет <code>POST /api/v1/auth/register</code></p>
+<hr>
+<h3 id="42">4.2. Создать сцену</h3>
+<ol>
+<li>
+<p>File → New Scene.</p>
+</li>
+<li>
+<p>File → Save As... → создать папку <code>Assets/Scenes/</code> → имя <code>AuthScene</code>.</p>
+</li>
+</ol>
+<hr>
+<h3 id="43-canvas">4.3. Создать Canvas</h3>
+<ol>
+<li>
+<p>В Hierarchy (левая панель) ПКМ → UI → Canvas.</p>
+</li>
+<li>
+<p>Выбрать созданный объект <code>Canvas</code> в Hierarchy.</p>
+</li>
+<li>
+<p>В Inspector настроить Canvas Scaler:</p>
+</li>
+<li><strong>UI Scale Mode:</strong> Scale With Screen Size</li>
+<li><strong>Reference Resolution:</strong> 1920 × 1080</li>
+</ol>
+<hr>
+<h3 id="44-loginpanel">4.4. Создать LoginPanel</h3>
+<ol>
+<li>
+<p>В Hierarchy ПКМ на Canvas → UI → Panel. Переименовать в <code>LoginPanel</code>.</p>
+</li>
+<li>
+<p>Настроить RectTransform: растянуть на весь экран
+(в Inspector нажать кнопку якоря → выбрать Stretch All).</p>
+</li>
+<li>
+<p>Добавить дочерние объекты в <code>LoginPanel</code>
+(ПКМ на LoginPanel → UI → нужный тип):</p>
+</li>
+</ol>
 <table>
 <thead>
 <tr>
-<th>Пользователь</th>
-<th>Email</th>
-<th>Пароль</th>
-<th>Матч id=9</th>
+<th>Имя объекта</th>
+<th>Тип UI</th>
+<th>Назначение</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>alice</td>
-<td><code>alice@example.com</code></td>
-<td><code>password123</code></td>
-<td>✅ owner</td>
+<td><code>Title</code></td>
+<td>Text - TextMeshPro</td>
+<td>Заголовок «Войти»</td>
 </tr>
 <tr>
-<td>bob</td>
-<td><code>bob@example.com</code></td>
-<td><code>password123</code></td>
-<td>—</td>
+<td><code>EmailInput</code></td>
+<td>Input Field - TextMeshPro</td>
+<td>Поле ввода email</td>
 </tr>
 <tr>
-<td>banned</td>
-<td><code>banned@example.com</code></td>
-<td><code>password123</code></td>
-<td>заблокирован</td>
+<td><code>PasswordInput</code></td>
+<td>Input Field - TextMeshPro</td>
+<td>Поле ввода пароля</td>
+</tr>
+<tr>
+<td><code>LoginButton</code></td>
+<td>Button - TextMeshPro</td>
+<td>Кнопка «Войти»</td>
+</tr>
+<tr>
+<td><code>StatusText</code></td>
+<td>Text - TextMeshPro</td>
+<td>Статус / текст ошибки</td>
+</tr>
+<tr>
+<td><code>GoToRegisterButton</code></td>
+<td>Button - TextMeshPro</td>
+<td>Кнопка «Нет аккаунта?»</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Настроить поле пароля — скрыть вводимые символы:</li>
+<li>Выбрать <code>PasswordInput</code> → в Inspector найти компонент <strong>TMP_InputField</strong></li>
+<li>
+<p>Поле <strong>Content Type</strong> → выбрать <code>Password</code></p>
+</li>
+<li>
+<p>Расположить элементы по экрану через RectTransform:
+</p><div class="highlight"><pre><span></span><code>         [Title]                ← верхняя , по центру, крупный шрифт
+         [EmailInput]           ← середина экрана, ширина ~400px
+         [PasswordInput]        ← под email, та же ширина
+         [LoginButton]          ← под паролем, зелёный
+         [StatusText]           ← под кнопкой, мелкий, по умолчанию пустой
+         [GoToRegisterButton]   ← внизу, мелкий серый текст
+</code></pre></div><p></p>
+</li>
+</ol>
+<hr>
+<h3 id="45-registerpanel">4.5. Создать RegisterPanel</h3>
+<ol>
+<li>
+<p>В Hierarchy ПКМ на Canvas → UI → Panel. Переименовать в <code>RegisterPanel</code>.</p>
+</li>
+<li>
+<p>Добавить дочерние объекты:</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Имя объекта</th>
+<th>Тип UI</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Title</code></td>
+<td>Text - TextMeshPro</td>
+<td>Заголовок «Регистрация»</td>
+</tr>
+<tr>
+<td><code>EmailInput</code></td>
+<td>Input Field - TextMeshPro</td>
+<td>Поле email</td>
+</tr>
+<tr>
+<td><code>PasswordInput</code></td>
+<td>Input Field - TextMeshPro</td>
+<td>Поле пароля (Content Type: Password)</td>
+</tr>
+<tr>
+<td><code>NicknameInput</code></td>
+<td>Input Field - TextMeshPro</td>
+<td>Поле никнейма</td>
+</tr>
+<tr>
+<td><code>RegisterButton</code></td>
+<td>Button - TextMeshPro</td>
+<td>Кнопка «Зарегистрироваться»</td>
+</tr>
+<tr>
+<td><code>StatusText</code></td>
+<td>Text - TextMeshPro</td>
+<td>Статус ошибки</td>
+</tr>
+<tr>
+<td><code>GoToLoginButton</code></td>
+<td>Button - TextMeshPro</td>
+<td>Кнопка «Уже есть аккаунт?»</td>
 </tr>
 </tbody>
 </table>
 <hr>
-<h2 id="6">Часть 6. Описание каждого скрипта</h2>
+<h3 id="46">4.6. Создать менеджер сцены</h3>
+<ol>
+<li>
+<p>В Hierarchy ПКМ → Create Empty. Переименовать в <code>AuthManager</code>.</p>
+</li>
+<li>
+<p>Выбрать <code>AuthManager</code> в Hierarchy.</p>
+</li>
+<li>
+<p>В Inspector нажать <strong>Add Component</strong> и добавить по очереди:</p>
+</li>
+<li><code>AuthController</code></li>
+<li>
+<p><code>GameApiService</code></p>
+</li>
+<li>
+<p>В компоненте <code>AuthController</code> привязать поля (перетащить из Hierarchy):</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Поле в Inspector</th>
+<th>Откуда брать объект</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Login Panel</strong></td>
+<td><code>LoginPanel</code></td>
+</tr>
+<tr>
+<td><strong>Register Panel</strong></td>
+<td><code>RegisterPanel</code></td>
+</tr>
+<tr>
+<td><strong>Login Email</strong></td>
+<td><code>LoginPanel/EmailInput</code></td>
+</tr>
+<tr>
+<td><strong>Login Password</strong></td>
+<td><code>LoginPanel/PasswordInput</code></td>
+</tr>
+<tr>
+<td><strong>Login Button</strong></td>
+<td><code>LoginPanel/LoginButton</code></td>
+</tr>
+<tr>
+<td><strong>Reg Email</strong></td>
+<td><code>RegisterPanel/EmailInput</code></td>
+</tr>
+<tr>
+<td><strong>Reg Password</strong></td>
+<td><code>RegisterPanel/PasswordInput</code></td>
+</tr>
+<tr>
+<td><strong>Reg Nickname</strong></td>
+<td><code>RegisterPanel/NicknameInput</code></td>
+</tr>
+<tr>
+<td><strong>Register Button</strong></td>
+<td><code>RegisterPanel/RegisterButton</code></td>
+</tr>
+<tr>
+<td><strong>Status Text</strong></td>
+<td><code>LoginPanel/StatusText</code></td>
+</tr>
+<tr>
+<td><strong>Scene After Login</strong></td>
+<td>Ввести строку <code>MainMenu</code> вручную</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="47">4.7. Настроить кнопки переключения панелей</h3>
+<p><strong>Кнопка GoToRegisterButton (в LoginPanel):</strong></p>
+<ol>
+<li>Выбрать <code>LoginPanel/GoToRegisterButton</code> в Hierarchy.</li>
+<li>В Inspector → компонент <strong>Button</strong> → секция <strong>On Click ()</strong> → нажать <strong>+</strong>.</li>
+<li>Перетащить <code>AuthManager</code> в появившееся поле объекта.</li>
+<li>В выпадающем списке функции выбрать <code>AuthController → ShowRegister</code>.</li>
+</ol>
+<p><strong>Кнопка GoToLoginButton (в RegisterPanel):</strong></p>
+<ol>
+<li>Выбрать <code>RegisterPanel/GoToLoginButton</code>.</li>
+<li>On Click () → <strong>+</strong> → перетащить <code>AuthManager</code> → выбрать <code>AuthController → ShowLogin</code>.</li>
+</ol>
+<hr>
+<h3 id="48-build-settings">4.8. Добавить сцены в Build Settings</h3>
+<p>Чтобы <code>SceneManager.LoadScene("MainMenu")</code> сработал, сцена должна быть в списке сборки.</p>
+<ol>
+<li>
+<p>File → Build Settings.</p>
+</li>
+<li>
+<p>Нажать <strong>Add Open Scenes</strong> — текущая <code>AuthScene</code> добавится в список.</p>
+</li>
+<li>
+<p>Убедиться что <code>AuthScene</code> стоит на индексе 0 (первая в списке).
+Это значит она запустится первой при старте игры.</p>
+</li>
+</ol>
+<p>Позже туда же нужно добавить <code>MainMenu</code> и <code>GameScene</code>.</p>
+<hr>
+<h3 id="49">4.9. Запустить и протестировать</h3>
+<ol>
+<li>
+<p>Убедиться что Flask запущен (<code>python wsgi.py</code>).</p>
+</li>
+<li>
+<p>Нажать <strong>▶ Play</strong> в Unity.</p>
+</li>
+<li>
+<p>Ввести тестовые данные из <code>seed.sql</code>:</p>
+</li>
+<li>Email: <code>alice@example.com</code></li>
+<li>
+<p>Password: <code>password123</code></p>
+</li>
+<li>
+<p>Нажать кнопку «Войти».</p>
+</li>
+</ol>
+<p><strong>Ожидаемый результат:</strong>
+- В Console (Window → Console) появится лог с <code>Authorization: Bearer eyJ...</code>
+- Поле StatusText изменится на «Добро пожаловать, Commander_Alice!»
+- Произойдёт переход в сцену <code>MainMenu</code> (если она уже создана)</p>
+<p><strong>Проверка ошибочных сценариев:</strong></p>
+<ul>
+<li>Ввести неверный пароль → StatusText = «Invalid credentials» (красный)</li>
+<li>Ввести email <code>banned@example.com</code> → StatusText = «Account is banned»</li>
+<li>Остановить Flask и нажать «Войти» → StatusText = «Could not connect»</li>
+</ul>
+<p><strong>Диагностика если кнопка не реагирует:</strong>
+- Проверить что <code>AuthManager</code> содержит компоненты <code>AuthController</code> и <code>GameApiService</code>
+- Проверить что поле <strong>Login Button</strong> в Inspector привязано к объекту <code>LoginButton</code>
+- Проверить что в Console нет красных ошибок компиляции</p>
+<p><strong>Диагностика ошибки CORS:</strong>
+- Убедиться что <code>flask-cors</code> установлен: <code>pip install flask-cors</code>
+- Перезапустить сервер</p>
+<p><strong>Диагностика <code>401 UNAUTHORIZED</code>:</strong>
+- Проверить в MySQL: <code>SELECT * FROM users WHERE email='alice@example.com';</code>
+- Если строк нет — залить seed.sql: <code>mysql -u root -p strategy_db &lt; seed.sql</code></p>
+<hr>
+<h2 id="5-mainmenu">5. Сцена MainMenu — профиль и лидерборд</h2>
+<h3 id="51">5.1. Что получится в результате</h3>
+<p>После выполнения этого раздела:
+- На экране отображается никнейм, уровень, XP и валюта из БД
+- Нажатие кнопки «Обновить» запрашивает свежие данные с сервера
+- Таблица лидеров загружается автоматически при открытии экрана
+- Есть кнопка перехода в игровую сцену</p>
+<hr>
+<h3 id="52-mainmenu">5.2. Создать сцену MainMenu</h3>
+<ol>
+<li>
+<p>File → New Scene.</p>
+</li>
+<li>
+<p>File → Save As... → <code>Assets/Scenes/MainMenu</code>.</p>
+</li>
+<li>
+<p>File → Build Settings → Add Open Scenes.</p>
+</li>
+</ol>
+<hr>
+<h3 id="53-canvas">5.3. Создать Canvas</h3>
+<p>ПКМ в Hierarchy → UI → Canvas. Настройки — как в AuthScene
+(Scale With Screen Size, Reference Resolution 1920×1080).</p>
+<hr>
+<h3 id="54">5.4. Панель профиля</h3>
+<ol>
+<li>
+<p>ПКМ на Canvas → UI → Panel. Переименовать в <code>ProfilePanel</code>.</p>
+</li>
+<li>
+<p>Добавить дочерние Text-TMP и кнопки:</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Объект</th>
+<th>Тип</th>
+<th>Отображает</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>NicknameText</code></td>
+<td>Text - TextMeshPro</td>
+<td>Никнейм игрока</td>
+</tr>
+<tr>
+<td><code>EmailText</code></td>
+<td>Text - TextMeshPro</td>
+<td>Email</td>
+</tr>
+<tr>
+<td><code>LevelText</code></td>
+<td>Text - TextMeshPro</td>
+<td>«Уровень 42»</td>
+</tr>
+<tr>
+<td><code>XpText</code></td>
+<td>Text - TextMeshPro</td>
+<td>«XP: 85400»</td>
+</tr>
+<tr>
+<td><code>SoftCurrencyText</code></td>
+<td>Text - TextMeshPro</td>
+<td>«Монеты: 12500»</td>
+</tr>
+<tr>
+<td><code>HardCurrencyText</code></td>
+<td>Text - TextMeshPro</td>
+<td>«Гемы: 250»</td>
+</tr>
+<tr>
+<td><code>StatusText</code></td>
+<td>Text - TextMeshPro</td>
+<td>Статус загрузки</td>
+</tr>
+<tr>
+<td><code>RefreshButton</code></td>
+<td>Button - TextMeshPro</td>
+<td>Кнопка «Обновить»</td>
+</tr>
+<tr>
+<td><code>PlayButton</code></td>
+<td>Button - TextMeshPro</td>
+<td>Кнопка «Играть»</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="55">5.5. Настроить менеджер профиля</h3>
+<ol>
+<li>
+<p>ПКМ в Hierarchy → Create Empty → <code>ProfileManager</code>.</p>
+</li>
+<li>
+<p>Add Component:</p>
+</li>
+<li><code>ProfileController</code></li>
+<li>
+<p><code>GameApiService</code></p>
+</li>
+<li>
+<p>В компоненте <code>ProfileController</code> привязать поля:</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Поле Inspector</th>
+<th>Объект из Hierarchy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nickname Text</strong></td>
+<td><code>ProfilePanel/NicknameText</code></td>
+</tr>
+<tr>
+<td><strong>Email Text</strong></td>
+<td><code>ProfilePanel/EmailText</code></td>
+</tr>
+<tr>
+<td><strong>Level Text</strong></td>
+<td><code>ProfilePanel/LevelText</code></td>
+</tr>
+<tr>
+<td><strong>Xp Text</strong></td>
+<td><code>ProfilePanel/XpText</code></td>
+</tr>
+<tr>
+<td><strong>Soft Currency Text</strong></td>
+<td><code>ProfilePanel/SoftCurrencyText</code></td>
+</tr>
+<tr>
+<td><strong>Hard Currency Text</strong></td>
+<td><code>ProfilePanel/HardCurrencyText</code></td>
+</tr>
+<tr>
+<td><strong>Status Text</strong></td>
+<td><code>ProfilePanel/StatusText</code></td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Настроить кнопку «Обновить»:</li>
+<li>Выбрать <code>RefreshButton</code> → On Click () → <strong>+</strong></li>
+<li>
+<p>Перетащить <code>ProfileManager</code> → выбрать <code>ProfileController.Refresh</code></p>
+</li>
+<li>
+<p>Настроить кнопку «Играть» — переход в GameScene.
+Создать отдельный скрипт <code>SceneLoader.cs</code>:
+</p><div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">UnityEngine.SceneManagement</span><span class="p">;</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">SceneLoader</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">LoadGame</span><span class="p">()</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">SceneManager</span><span class="p">.</span><span class="n">LoadScene</span><span class="p">(</span><span class="s">"GameScene"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">LoadMenu</span><span class="p">()</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">SceneManager</span><span class="p">.</span><span class="n">LoadScene</span><span class="p">(</span><span class="s">"MainMenu"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">LoadAuth</span><span class="p">()</span><span class="w">   </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">SceneManager</span><span class="p">.</span><span class="n">LoadScene</span><span class="p">(</span><span class="s">"AuthScene"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><p></p>
+</li>
+</ol>
+<p>Добавить <code>SceneLoader</code> на <code>ProfileManager</code>, затем:
+- <code>PlayButton</code> → On Click () → <code>ProfileManager</code> → <code>SceneLoader.LoadGame</code></p>
+<hr>
+<h3 id="56">5.6. Панель лидерборда</h3>
+<ol>
+<li>
+<p>ПКМ на Canvas → UI → Panel → <code>LeaderboardPanel</code>.</p>
+</li>
+<li>
+<p>Добавить в <code>LeaderboardPanel</code>:</p>
+</li>
+<li><code>TitleText</code> — Text-TMP, текст «Таблица лидеров»</li>
+<li><code>StatusText</code> — Text-TMP, текст статуса загрузки</li>
+<li>
+<p><code>ScrollView</code> — UI → Scroll View</p>
+</li>
+<li>
+<p>В <code>ScrollView</code> → Inspector → компонент <strong>Scroll Rect</strong>:</p>
+</li>
+<li><strong>Horizontal:</strong> отключить (таблица скроллится только вертикально)</li>
+</ol>
+<hr>
+<h3 id="57-prefab">5.7. Создать Prefab строки лидерборда</h3>
+<p>Каждая строка таблицы — отдельный Prefab. Скрипт создаёт экземпляры программно при загрузке.</p>
+<ol>
+<li>
+<p>В Hierarchy ПКМ → Create Empty → <code>LeaderboardRow</code>.</p>
+</li>
+<li>
+<p>Add Component → Layout → <strong>Horizontal Layout Group</strong>.
+Настройки: Child Alignment = Middle Left, Spacing = 20.</p>
+</li>
+<li>
+<p>Добавить три дочерних Text-TMP в <code>LeaderboardRow</code>:</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Объект</th>
+<th>Начальный текст</th>
+<th>Примерная ширина</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RankText</code></td>
+<td>«1»</td>
+<td>60px</td>
+</tr>
+<tr>
+<td><code>NicknameText</code></td>
+<td>«Commander»</td>
+<td>280px</td>
+</tr>
+<tr>
+<td><code>ScoreText</code></td>
+<td>«9850»</td>
+<td>120px</td>
+</tr>
+</tbody>
+</table>
+<p>Настроить ширину через компонент <strong>Layout Element</strong> (Add Component → Layout → Layout Element)
+на каждом из трёх объектов: установить <strong>Preferred Width</strong>.</p>
+<ol>
+<li>
+<p>Создать папку <code>Assets/Prefabs/</code>.</p>
+</li>
+<li>
+<p>Перетащить <code>LeaderboardRow</code> из Hierarchy в папку <code>Assets/Prefabs/</code>.
+Объект в Hierarchy станет синим — это признак Prefab.</p>
+</li>
+<li>
+<p>Удалить <code>LeaderboardRow</code> из Hierarchy (теперь он нужен только как Prefab).</p>
+</li>
+</ol>
+<hr>
+<h3 id="58">5.8. Настроить менеджер лидерборда</h3>
+<ol>
+<li>
+<p>ПКМ в Hierarchy → Create Empty → <code>LeaderboardManager</code>.</p>
+</li>
+<li>
+<p>Add Component:</p>
+</li>
+<li><code>LeaderboardController</code></li>
+<li>
+<p><code>GameApiService</code></p>
+</li>
+<li>
+<p>В <code>LeaderboardController</code> привязать:</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Поле Inspector</th>
+<th>Что привязать</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Row Container</strong></td>
+<td><code>LeaderboardPanel/ScrollView/Viewport/Content</code></td>
+</tr>
+<tr>
+<td><strong>Row Prefab</strong></td>
+<td>Перетащить Prefab <code>LeaderboardRow</code> из Assets/Prefabs</td>
+</tr>
+<tr>
+<td><strong>Status Text</strong></td>
+<td><code>LeaderboardPanel/StatusText</code></td>
+</tr>
+<tr>
+<td><strong>Board Code</strong></td>
+<td>Ввести строку <code>default</code></td>
+</tr>
+<tr>
+<td><strong>Season</strong></td>
+<td>Ввести <code>1</code></td>
+</tr>
+<tr>
+<td><strong>Limit</strong></td>
+<td>Ввести <code>10</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="59-mainmenu">5.9. Протестировать сцену MainMenu</h3>
+<blockquote>
+<p>Важно: <code>AuthScene</code> должна быть первой в Build Settings (индекс 0),
+<code>MainMenu</code> — второй. Запуск напрямую из <code>MainMenu</code> без логина даст пустые данные
+и ошибки 401, потому что <code>AuthSession.IsLoggedIn = false</code>.</p>
+</blockquote>
+<ol>
+<li>
+<p>Запустить Flask: <code>python wsgi.py</code></p>
+</li>
+<li>
+<p>В Unity: убедиться что в Build Settings открыта <code>AuthScene</code> первой.</p>
+</li>
+<li>
+<p>▶ Play → ввести <code>alice@example.com</code> / <code>password123</code> → войти.</p>
+</li>
+</ol>
+<p><strong>Ожидаемые результаты в MainMenu:</strong>
+- <code>NicknameText</code> = «Commander_Alice»
+- <code>LevelText</code> = «Уровень 42»
+- <code>XpText</code> = «XP: 85400»
+- <code>SoftCurrencyText</code> = «Монеты: 12500»
+- В таблице лидеров появятся строки:
+  - 1. Siege_Eve — 9850
+  - 2. WarLord_Carol — 8720
+  - 3. Empress_Grace — 7600
+  - ...</p>
+<p><strong>Если профиль не загружается:</strong>
+- Console: строка <code>[401]</code> → нет токена → нужно зайти через AuthScene
+- Console: строка <code>[404]</code> → пользователь не найден → залить seed.sql</p>
+<p><strong>Если лидерборд пустой:</strong>
+- Console: строка <code>[400]</code> → неверные параметры → проверить поля Board Code / Season / Limit в Inspector
+- Проверить в MySQL: <code>SELECT * FROM leaderboard_scores WHERE board_code='default';</code>
+  Если пусто — залить seed.sql</p>
+<hr>
+<h2 id="6-gamescene">6. Сцена GameScene — матч и события</h2>
+<h3 id="61">6.1. Что получится в результате</h3>
+<p>После выполнения этого раздела:
+- При старте сцены автоматически отправляется событие <code>match_start</code> на сервер
+- Идёт таймер матча
+- Кнопки «Победа» и «Поражение» завершают матч через <code>POST /api/v1/match/finish</code>
+- После ответа сервера отображаются начисленные XP и монеты</p>
+<hr>
+<h3 id="62-gamescene">6.2. Создать сцену GameScene</h3>
+<ol>
+<li>
+<p>File → New Scene → Save As → <code>Assets/Scenes/GameScene</code>.</p>
+</li>
+<li>
+<p>File → Build Settings → Add Open Scenes.</p>
+</li>
+</ol>
+<p>После этого порядок в Build Settings должен быть:
+</p><div class="highlight"><pre><span></span><code>0: AuthScene
+1: MainMenu
+2: GameScene
+</code></pre></div><p></p>
+<hr>
+<h3 id="63-canvas">6.3. Создать Canvas</h3>
+<p>ПКМ в Hierarchy → UI → Canvas.</p>
+<hr>
+<h3 id="64-ui">6.4. Создать UI элементы</h3>
+<p>Добавить в Canvas:</p>
+<table>
+<thead>
+<tr>
+<th>Объект</th>
+<th>Тип</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TimerText</code></td>
+<td>Text - TMP</td>
+<td>Таймер матча в формате <code>MM:SS</code></td>
+</tr>
+<tr>
+<td><code>StatusText</code></td>
+<td>Text - TMP</td>
+<td>Статус (например, «Матч начался!»)</td>
+</tr>
+<tr>
+<td><code>WinButton</code></td>
+<td>Button - TMP</td>
+<td>Кнопка «Победа (1850 очков)»</td>
+</tr>
+<tr>
+<td><code>LoseButton</code></td>
+<td>Button - TMP</td>
+<td>Кнопка «Поражение (300 очков)»</td>
+</tr>
+<tr>
+<td><code>ResultPanel</code></td>
+<td>Panel</td>
+<td>Панель результата (изначально скрытая)</td>
+</tr>
+</tbody>
+</table>
+<p>В <code>ResultPanel</code> добавить:
+- <code>RewardText</code> — Text-TMP: будет показывать «+100 XP  +50 монет»</p>
+<hr>
+<h3 id="65">6.5. Создать менеджер матча</h3>
+<ol>
+<li>
+<p>ПКМ в Hierarchy → Create Empty → <code>MatchManager</code>.</p>
+</li>
+<li>
+<p>Add Component:</p>
+</li>
+<li><code>MatchController</code></li>
+<li>
+<p><code>GameApiService</code></p>
+</li>
+<li>
+<p>В <code>MatchController</code> привязать поля:</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Поле Inspector</th>
+<th>Значение или объект</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Match Id</strong></td>
+<td><code>9</code> (матч из seed.sql, принадлежит alice)</td>
+</tr>
+<tr>
+<td><strong>Timer Text</strong></td>
+<td><code>TimerText</code></td>
+</tr>
+<tr>
+<td><strong>Status Text</strong></td>
+<td><code>StatusText</code></td>
+</tr>
+<tr>
+<td><strong>Reward Text</strong></td>
+<td><code>ResultPanel/RewardText</code></td>
+</tr>
+<tr>
+<td><strong>Result Panel</strong></td>
+<td><code>ResultPanel</code></td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>В файле <code>MatchController.cs</code> добавить два публичных метода:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="c1">// Добавить в класс MatchController:</span>
+<span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">EndMatchWin</span><span class="p">()</span><span class="w">  </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">EndMatch</span><span class="p">(</span><span class="n">isWin</span><span class="p">:</span><span class="w"> </span><span class="k">true</span><span class="p">,</span><span class="w">  </span><span class="n">score</span><span class="p">:</span><span class="w"> </span><span class="m">1850</span><span class="p">);</span>
+<span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">EndMatchLose</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">EndMatch</span><span class="p">(</span><span class="n">isWin</span><span class="p">:</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">:</span><span class="w">  </span><span class="m">300</span><span class="p">);</span>
+</code></pre></div>
+<ol>
+<li>Настроить кнопки:</li>
+<li><code>WinButton</code> → On Click () → <code>MatchManager</code> → <code>MatchController.EndMatchWin</code></li>
+<li><code>LoseButton</code> → On Click () → <code>MatchManager</code> → <code>MatchController.EndMatchLose</code></li>
+</ol>
+<hr>
+<h3 id="66-matchcontroller">6.6. Как работает MatchController (логика)</h3>
+<div class="highlight"><pre><span></span><code>Start()
+  │
+  ├─ _running = true, _elapsed = 0
+  ├─ StatusText = "Матч начался!"
+  └─ Отправить событие "match_start" через EventSender
+         └─ POST /api/v1/events { eventType: "match_start", eventId: &lt;uuid&gt;, payload: {...} }
+
+Update() каждый кадр:
+  └─ Если _running: _elapsed += Time.deltaTime, обновить TimerText ("01:23")
+
+EndMatch(isWin, score)
+  │
+  ├─ _running = false (таймер остановлен)
+  ├─ duration = round(_elapsed) в секундах
+  ├─ StatusText = "Отправляем результат..."
+  │
+  └─ StartCoroutine(api.FinishMatch(matchId=9, isWin, score, duration, ...))
+                           │
+                           │  POST /api/v1/match/finish
+                           │  { "matchId": 9, "result": { "isWin": true, "score": 1850, "durationSeconds": 73 } }
+                           │
+                           ▼
+                    Сервер отвечает:
+                    { "ok": true, "data": { "xpGained": 100, "softCurrencyGained": 50 } }
+                           │
+                           ▼
+                    ShowResult(data)
+                      ├─ ResultPanel.SetActive(true)
+                      ├─ RewardText = "+100 XP\n+50 монет"
+                      └─ StatusText = "🏆 ПОБЕДА!" или "💀 ПОРАЖЕНИЕ"
+</code></pre></div>
+<hr>
+<h3 id="67">6.7. Как сервер рассчитывает награды</h3>
+<p>Награды фиксированы в коде сервера (<code>app/services/match_service.py</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="n">_XP_WIN</span>   <span class="o">=</span> <span class="mi">100</span>   <span class="c1"># XP за победу</span>
+<span class="n">_XP_LOSS</span>  <span class="o">=</span> <span class="mi">30</span>    <span class="c1"># XP за поражение</span>
+<span class="n">_SOFT_WIN</span> <span class="o">=</span> <span class="mi">50</span>    <span class="c1"># монеты за победу</span>
+<span class="n">_SOFT_LOSS</span> <span class="o">=</span> <span class="mi">10</span>   <span class="c1"># монеты за поражение</span>
+</code></pre></div>
+<p><strong>Клиент не присылает суммы наград</strong> — только факты (<code>isWin</code>, <code>score</code>, <code>durationSeconds</code>).
+Все расчёты выполняет сервер. Это защита от читерства.</p>
+<p>Сервер дополнительно в одной транзакции:
+1. Проверяет что матч <code>id=9</code> принадлежит текущему пользователю из JWT
+2. Проверяет что статус матча = <code>started</code>
+3. Обновляет: <code>matches</code> (статус → finished), <code>battle_results</code>, <code>player_progress</code>, <code>statistics_daily</code>, <code>leaderboard_scores</code>
+4. При любой ошибке откатывает все изменения (<code>rollback</code>)</p>
+<hr>
+<h3 id="68-gamescene">6.8. Протестировать GameScene</h3>
+<ol>
+<li>
+<p>Запустить Flask: <code>python wsgi.py</code></p>
+</li>
+<li>
+<p>Запустить AuthScene → войти как <code>alice@example.com</code>.</p>
+</li>
+<li>
+<p>Нажать «Играть» → перейти в GameScene.</p>
+</li>
+<li>
+<p>В Console должно появиться:
+</p><div class="highlight"><pre><span></span><code>[Match] match_start принят
+</code></pre></div><p></p>
+</li>
+</ol>
+<p>Это значит событие <code>match_start</code> успешно записалось в БД.</p>
+<ol>
+<li>
+<p>Подождать несколько секунд — убедиться что TimerText считает: <code>00:01</code>, <code>00:02</code>...</p>
+</li>
+<li>
+<p>Нажать «Победа».</p>
+</li>
+</ol>
+<p><strong>Ожидаемый результат:</strong>
+- ResultPanel появляется
+- RewardText = «+100 XP  +50 монет»
+- StatusText = «🏆 ПОБЕДА!»
+- Console: <code>[Match] Завершён. isWin=True xp=100 soft=50</code></p>
+<ol>
+<li>Нажать «Победа» ещё раз.</li>
+</ol>
+<p><strong>Ожидаемый результат:</strong>
+- Console: <code>[Match] FinishMatch error: [409] Match is not in started state</code>
+- StatusText = «Ошибка: ...»</p>
+<p>Это корректное поведение — матч уже завершён. Для повторного тестирования:
+</p><div class="highlight"><pre><span></span><code><span class="k">UPDATE</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">status</span><span class="o">=</span><span class="s1">'started'</span><span class="p">,</span><span class="w"> </span><span class="n">ended_at</span><span class="o">=</span><span class="k">NULL</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="o">=</span><span class="mi">9</span><span class="p">;</span>
+</code></pre></div><p></p>
+<hr>
+<h2 id="7">7. Отправка событий из любого места игры</h2>
+<h3 id="71">7.1. Что такое игровые события</h3>
+<p><strong>Игровые события</strong> — факты о действиях игрока, которые записываются в таблицу <code>game_events</code>.
+Используются для аналитики, статистики и балансировки игры.</p>
+<p>Примеры событий для стратегической игры:</p>
+<table>
+<thead>
+<tr>
+<th><code>eventType</code></th>
+<th>Когда отправлять</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>match_start</code></td>
+<td>В начале матча</td>
+</tr>
+<tr>
+<td><code>unit_deploy</code></td>
+<td>Игрок разместил отряд</td>
+</tr>
+<tr>
+<td><code>unit_retreat</code></td>
+<td>Отряд отступил</td>
+</tr>
+<tr>
+<td><code>building_upgrade</code></td>
+<td>Игрок улучшил здание</td>
+</tr>
+<tr>
+<td><code>resource_collect</code></td>
+<td>Собраны ресурсы</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="72-monobehaviour">7.2. Как отправить событие из любого MonoBehaviour</h3>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">StrategyGame.Game</span><span class="p">;</span>
+
+<span class="c1">// Пример: игрок разместил кавалерию</span>
+<span class="kt">var</span><span class="w"> </span><span class="n">payload</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">UnitDeployPayload</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">matchId</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">9</span><span class="p">,</span>
+<span class="w">    </span><span class="n">unitCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"cavalry"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">amount</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="m">40</span><span class="p">,</span>
+<span class="w">    </span><span class="n">atSecond</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">15</span>
+<span class="p">};</span>
+
+<span class="n">EventSender</span><span class="p">.</span><span class="n">Send</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s">"unit_deploy"</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">,</span>
+<span class="w">    </span><span class="n">onSuccess</span><span class="p">:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Debug</span><span class="p">.</span><span class="n">Log</span><span class="p">(</span><span class="s">"Событие записано"</span><span class="p">),</span>
+<span class="w">    </span><span class="n">onError</span><span class="p">:</span><span class="w">   </span><span class="n">err</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Debug</span><span class="p">.</span><span class="n">LogWarning</span><span class="p">(</span><span class="s">"Ошибка отправки: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">err</span><span class="p">));</span>
+</code></pre></div>
+<p><code>EventSender.Send</code> автоматически:
+- Генерирует уникальный <code>eventId</code> через <code>Guid.NewGuid().ToString()</code>
+- Находит <code>GameApiService</code> в сцене
+- Отправляет <code>POST /api/v1/events</code></p>
+<hr>
+<h3 id="73">7.3. Дедупликация событий</h3>
+<p>Каждое событие имеет уникальный <code>eventId</code> (UUID). Если одно и то же событие
+отправить дважды — сервер отклонит второй запрос с кодом <code>409 EVENT_REJECTED</code>.</p>
+<p><code>EventSender</code> генерирует новый UUID при каждом вызове, поэтому дублей
+при нормальной работе не будет. Дедупликация защищает от:
+- Повторной отправки при прерывании соединения
+- Баги двойной отправки в клиентском коде</p>
+<hr>
+<h3 id="74">7.4. Добавить новый тип события</h3>
+<ol>
+<li>В файле <code>EventSender.cs</code> добавить новый payload-класс:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="na">[Serializable]</span>
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ResourceCollectPayload</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">resourceType</span><span class="p">;</span><span class="w">  </span><span class="c1">// "gold" / "wood" / "food"</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w">    </span><span class="n">amount</span><span class="p">;</span>
+<span class="w">    </span><span class="k">public</span><span class="w"> </span><span class="kt">int</span><span class="w">    </span><span class="n">matchId</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<ol>
+<li>Вызвать из нужного места в игре:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="n">EventSender</span><span class="p">.</span><span class="n">Send</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="s">"resource_collect"</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ResourceCollectPayload</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">resourceType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gold"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">amount</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="m">250</span><span class="p">,</span>
+<span class="w">    </span><span class="n">matchId</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="m">9</span>
+<span class="p">});</span>
+</code></pre></div>
+<ol>
+<li>Проверить в MySQL что событие записалось:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">event_type</span><span class="p">,</span><span class="w"> </span><span class="n">payload_json</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">game_events</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">created_at</span><span class="w"> </span><span class="k">DESC</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</code></pre></div>
+<hr>
+<h2 id="8-playerprefs">8. Сохранение токена между сессиями (PlayerPrefs)</h2>
+<p>По умолчанию <code>AuthSession</code> хранит токен только в памяти.
+При перезапуске приложения пользователю придётся входить снова.</p>
+<p>Чтобы сохранять токен между сессиями, используйте <code>PlayerPrefs</code>:</p>
+<h3 id="81">8.1. Сохранение после успешного логина</h3>
+<p>Добавить в <code>OnLoginClick</code> в <code>AuthController.cs</code> сразу после <code>AuthSession.Save(resp)</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">SetString</span><span class="p">(</span><span class="s">"token"</span><span class="p">,</span><span class="w">    </span><span class="n">AuthSession</span><span class="p">.</span><span class="n">AccessToken</span><span class="p">);</span>
+<span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">SetInt</span><span class="w">   </span><span class="p">(</span><span class="s">"userId"</span><span class="p">,</span><span class="w">   </span><span class="n">AuthSession</span><span class="p">.</span><span class="n">UserId</span><span class="p">);</span>
+<span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">SetString</span><span class="p">(</span><span class="s">"nickname"</span><span class="p">,</span><span class="w"> </span><span class="n">AuthSession</span><span class="p">.</span><span class="n">Nickname</span><span class="p">);</span>
+<span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">Save</span><span class="p">();</span>
+</code></pre></div>
+<h3 id="82">8.2. Восстановление при старте приложения</h3>
+<p>Создать скрипт <code>AppBootstrap.cs</code> и добавить его на GameObject в <code>AuthScene</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">using</span><span class="w"> </span><span class="nn">UnityEngine</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">UnityEngine.SceneManagement</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="nn">StrategyGame.API</span><span class="p">;</span>
+
+<span class="k">public</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">AppBootstrap</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">MonoBehaviour</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">void</span><span class="w"> </span><span class="nf">Awake</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">HasKey</span><span class="p">(</span><span class="s">"token"</span><span class="p">))</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Токен сохранён — восстановить сессию</span>
+<span class="w">            </span><span class="kt">var</span><span class="w"> </span><span class="n">resp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">LoginResponse</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="n">accessToken</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">GetString</span><span class="p">(</span><span class="s">"token"</span><span class="p">),</span>
+<span class="w">                </span><span class="n">userId</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">GetInt</span><span class="p">(</span><span class="s">"userId"</span><span class="p">),</span>
+<span class="w">                </span><span class="n">nickname</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">GetString</span><span class="p">(</span><span class="s">"nickname"</span><span class="p">)</span>
+<span class="w">            </span><span class="p">};</span>
+<span class="w">            </span><span class="n">AuthSession</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="n">resp</span><span class="p">);</span>
+
+<span class="w">            </span><span class="c1">// Пропустить экран логина</span>
+<span class="w">            </span><span class="n">SceneManager</span><span class="p">.</span><span class="n">LoadScene</span><span class="p">(</span><span class="s">"MainMenu"</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// Если токена нет — остаться на AuthScene</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="83">8.3. Выход из аккаунта</h3>
+<p>Добавить метод в кнопку «Выйти» в MainMenu:</p>
+<div class="highlight"><pre><span></span><code><span class="k">public</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">LogOut</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">DeleteKey</span><span class="p">(</span><span class="s">"token"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">DeleteKey</span><span class="p">(</span><span class="s">"userId"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">PlayerPrefs</span><span class="p">.</span><span class="n">DeleteKey</span><span class="p">(</span><span class="s">"nickname"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">AuthSession</span><span class="p">.</span><span class="n">Clear</span><span class="p">();</span>
+<span class="w">    </span><span class="n">SceneManager</span><span class="p">.</span><span class="n">LoadScene</span><span class="p">(</span><span class="s">"AuthScene"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>⚠️ Токен хранится как обычная строка в PlayerPrefs — это небезопасно
+на устройствах с root/jailbreak. Для production-сборок используйте
+платформенные Keychain (iOS) / Keystore (Android) API.</p>
+</blockquote>
+<hr>
+<h2 id="9-dev-stage-production">9. Смена сервера (dev / stage / production)</h2>
+<p>В файле <code>ApiConfig.cs</code> изменить только одну строку <code>BaseUrl</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Локальная разработка (Flask запущен на той же машине):</span>
+<span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">BaseUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"http://127.0.0.1:5000"</span><span class="p">;</span>
+
+<span class="c1">// Flask запущен на другой машине в локальной сети:</span>
+<span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">BaseUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"http://192.168.1.100:5000"</span><span class="p">;</span>
+
+<span class="c1">// Production-сервер (HTTPS обязателен для публичного деплоя):</span>
+<span class="k">public</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">BaseUrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"https://strategy-api.your-domain.com"</span><span class="p">;</span>
+</code></pre></div>
+<p><code>UnityWebRequest</code> поддерживает HTTPS нативно — в коде Unity ничего менять не нужно.
+На сервере должен быть валидный SSL-сертификат.</p>
+<hr>
+<h2 id="10">10. Отладка</h2>
+<h3 id="101">10.1. Инструменты отладки</h3>
+<table>
+<thead>
+<tr>
+<th>Инструмент</th>
+<th>Как открыть</th>
+<th>Что показывает</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unity Console</td>
+<td>Window → Console</td>
+<td>Debug.Log, ошибки C#, ответы API</td>
+</tr>
+<tr>
+<td>Flask-терминал</td>
+<td>Терминал где запущен <code>python wsgi.py</code></td>
+<td>Все HTTP-запросы с кодами ответов и временем</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td><code>mysql -u root -p strategy_db</code></td>
+<td>Содержимое таблиц после тестов</td>
+</tr>
+<tr>
+<td>test_client.html</td>
+<td>Двойной клик на файле в Explorer</td>
+<td>Ручное тестирование API без Unity</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="102">10.2. Таблица частых ошибок</h3>
+<table>
+<thead>
+<tr>
+<th>Ошибка в Console</th>
+<th>Причина</th>
+<th>Решение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[0] Could not connect</code></td>
+<td>Flask не запущен</td>
+<td><code>python wsgi.py</code> в терминале</td>
+</tr>
+<tr>
+<td><code>[401] JWT is missing</code></td>
+<td>Нет токена</td>
+<td>Войти через AuthScene, не запускать MainMenu напрямую</td>
+</tr>
+<tr>
+<td><code>[403] Insufficient role</code></td>
+<td>Роль пользователя не совпадает</td>
+<td>Проверить роли: <code>SELECT * FROM user_roles WHERE user_id=1;</code></td>
+</tr>
+<tr>
+<td><code>[404] Match not found</code></td>
+<td>Неверный matchId</td>
+<td>Проверить что в Inspector стоит <code>matchId = 9</code></td>
+</tr>
+<tr>
+<td><code>[409] Match is not in started state</code></td>
+<td>Матч уже завершён</td>
+<td><code>UPDATE matches SET status='started', ended_at=NULL WHERE id=9;</code></td>
+</tr>
+<tr>
+<td><code>[409] Duplicate eventId</code></td>
+<td>Повтор UUID</td>
+<td>Ошибка логики — проверить что <code>EventSender</code> не вызывается дважды</td>
+</tr>
+<tr>
+<td><code>[500] Unexpected error</code></td>
+<td>Ошибка на сервере</td>
+<td>Найти traceback в терминале Flask</td>
+</tr>
+<tr>
+<td><code>JsonException</code> или <code>null data</code></td>
+<td>Поле DTO не совпадает с JSON</td>
+<td>Проверить имена полей в <code>ApiModels.cs</code> — должны точно совпадать</td>
+</tr>
+<tr>
+<td><code>NullReferenceException</code></td>
+<td>Поле не привязано в Inspector</td>
+<td>Проверить все поля компонентов через Inspector</td>
+</tr>
+<tr>
+<td><code>CORS error</code></td>
+<td>Flask отклоняет запрос</td>
+<td><code>pip install flask-cors</code>, перезапустить сервер</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="103">10.3. Проверка данных в БД после теста</h3>
+<p>После нажатия «Победа» в GameScene выполнить в MySQL:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- Матч должен стать finished</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">ended_at</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span>
+
+<span class="c1">-- Результат боя должен быть записан</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">match_id</span><span class="p">,</span><span class="w"> </span><span class="n">is_win</span><span class="p">,</span><span class="w"> </span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="n">duration_seconds</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">battle_results</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">match_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span>
+
+<span class="c1">-- XP и монеты alice должны вырасти</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">xp</span><span class="p">,</span><span class="w"> </span><span class="n">soft_currency</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">player_progress</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="c1">-- Дневная статистика обновлена</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">day</span><span class="p">,</span><span class="w"> </span><span class="n">wins</span><span class="p">,</span><span class="w"> </span><span class="n">losses</span><span class="p">,</span><span class="w"> </span><span class="n">score_sum</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">statistics_daily</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">day</span><span class="w"> </span><span class="k">DESC</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="c1">-- Лидерборд обновлён (должен показать новый score)</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="n">updated_at</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">leaderboard_scores</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">board_code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'default'</span><span class="p">;</span>
+</code></pre></div>
+<hr>
+<h3 id="104-flask">10.4. Чтение логов Flask</h3>
+<p>В терминале Flask каждый запрос от Unity выводится в формате:
+</p><div class="highlight"><pre><span></span><code>req_a1b2c3d4  user=1  POST /api/v1/match/finish  200  45ms
+req_b2c3d4e5  user=1  GET  /api/v1/profile       200  12ms
+req_c3d4e5f6  user=-  POST /api/v1/auth/login    401  8ms
+</code></pre></div><p></p>
+<p>Поля: <code>requestId | userId | метод | путь | статус | время_мс</code></p>
+<p><code>user=-</code> означает что запрос без токена или с невалидным токеном.</p>
+<p>Если видите много строк <code>401</code> после входа — скорее всего <code>AuthSession</code>
+не сохраняется между сценами. Убедитесь что переход из AuthScene, а не
+прямой запуск MainMenu через ▶ Play.</p>
+<hr>
+<h2 id="11-seedsql">11. Тестовые учётные данные (из seed.sql)</h2>
+<p>Все пользователи имеют пароль <code>password123</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Email</th>
+<th>Никнейм</th>
+<th>Роли</th>
+<th>Особенности</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>alice@example.com</code></td>
+<td>Commander_Alice</td>
+<td>player, admin</td>
+<td>Матч id=9 в статусе started</td>
+</tr>
+<tr>
+<td><code>bob@example.com</code></td>
+<td>General_Bob</td>
+<td>player, moderator</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>carol@example.com</code></td>
+<td>WarLord_Carol</td>
+<td>player</td>
+<td>2-е место в лидерборде</td>
+</tr>
+<tr>
+<td><code>dave@example.com</code></td>
+<td>Tactician_Dave</td>
+<td>player</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>eve@example.com</code></td>
+<td>Siege_Eve</td>
+<td>player</td>
+<td>1-е место (9850 очков)</td>
+</tr>
+<tr>
+<td><code>frank@example.com</code></td>
+<td>Scout_Frank</td>
+<td>player</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>grace@example.com</code></td>
+<td>Empress_Grace</td>
+<td>player</td>
+<td>3-е место (7600 очков)</td>
+</tr>
+<tr>
+<td><code>hank@example.com</code></td>
+<td>Iron_Hank</td>
+<td>player</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>ivan@example.com</code></td>
+<td>Phantom_Ivan</td>
+<td>player</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>banned@example.com</code></td>
+<td>Cheater_X</td>
+<td>player</td>
+<td><code>is_banned=1</code> → вернёт 403 при логине</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>⚠️ Для тестирования <code>POST /api/v1/match/finish</code> обязательно войти как <strong>alice</strong> —
+матч <code>id=9</code> принадлежит ей. При попытке завершить этот матч под другим аккаунтом
+сервер вернёт <code>403 FORBIDDEN</code>.</p>
+</blockquote>
+<hr>
+<h2 id="_2">Итог: порядок полной сборки и проверки</h2>
+<p>Ниже — минимальный путь от нуля до работающей связки Unity ↔ Flask.</p>
+<h3 id="1-flask-">1. Подготовка Flask-сервера</h3>
+<p></p><div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>C:<span class="se">\U</span>sers<span class="se">\g</span>vadoskr<span class="se">\D</span>esktop<span class="se">\p</span>roject<span class="se">\s</span>trategy-support-is
+venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>strategy_db<span class="w"> </span>&lt;<span class="w"> </span>db/schema.sql
+mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>strategy_db<span class="w"> </span>&lt;<span class="w"> </span>seed.sql
+python<span class="w"> </span>wsgi.py
+</code></pre></div>
+Проверка в браузере: <code>http://127.0.0.1:5000/health</code> → <code>{"ok": true}</code><p></p>
+<h3 id="2-unity-">2. Подготовка Unity-проекта</h3>
+<ol>
+<li>Создать проект <code>StrategyClient</code> в Unity Hub (шаблон 2D)</li>
+<li>Установить TextMeshPro (Window → Package Manager → TMP → Install → Import Essentials)</li>
+<li>Создать папки <code>Assets/Scripts/API</code>, <code>UI</code>, <code>Game</code></li>
+<li>Скопировать все 10 <code>.cs</code>-файлов</li>
+<li>Убедиться что Console без красных ошибок компиляции</li>
+</ol>
+<h3 id="3-authscene">3. AuthScene (экран входа)</h3>
+<ol>
+<li>Создать Canvas с LoginPanel и RegisterPanel</li>
+<li>Создать <code>AuthManager</code> → Add Component: AuthController + GameApiService</li>
+<li>Привязать все поля через Inspector</li>
+<li>Добавить в Build Settings на индекс 0</li>
+<li>▶ Play → войти как <code>alice@example.com</code> / <code>password123</code> → «Добро пожаловать»</li>
+</ol>
+<h3 id="4-mainmenu">4. MainMenu (профиль + лидерборд)</h3>
+<ol>
+<li>Создать ProfilePanel с TMP-полями</li>
+<li>Создать LeaderboardPanel + ScrollView</li>
+<li>Создать Prefab <code>LeaderboardRow</code> (3 TMP-поля + Horizontal Layout Group)</li>
+<li>Создать <code>ProfileManager</code> (ProfileController + GameApiService) и <code>LeaderboardManager</code> (LeaderboardController + GameApiService)</li>
+<li>Привязать все поля в Inspector</li>
+<li>Добавить в Build Settings</li>
+<li>▶ Play из AuthScene → войти → перейти в MainMenu → профиль и лидерборд загрузятся</li>
+</ol>
+<h3 id="5-gamescene">5. GameScene (матч)</h3>
+<ol>
+<li>Создать кнопки Win/Lose, TimerText, StatusText, ResultPanel с RewardText</li>
+<li>Создать <code>MatchManager</code> → Add Component: MatchController + GameApiService</li>
+<li>Установить в Inspector: <code>matchId = 9</code></li>
+<li>Привязать кнопки Win/Lose к <code>EndMatchWin()</code> и <code>EndMatchLose()</code></li>
+<li>Добавить в Build Settings</li>
+<li>▶ Play из AuthScene → войти → GameScene → нажать «Победа» → <code>+100 XP</code>, <code>+50 монет</code></li>
+</ol>
+<h3 id="_3">Итоговая проверка в БД</h3>
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">ended_at</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="o">=</span><span class="mi">9</span><span class="p">;</span>
+<span class="c1">-- Ожидается: finished</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="n">xp</span><span class="p">,</span><span class="w"> </span><span class="n">soft_currency</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">player_progress</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+<span class="c1">-- Ожидается: xp выросло на 100, soft_currency на 50</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">leaderboard_scores</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="n">board_code</span><span class="o">=</span><span class="s1">'default'</span><span class="p">;</span>
+<span class="c1">-- Ожидается: 7200 или больше (зависит от score в EndMatchWin)</span>
+</code></pre></div>
+<hr>
+<h2 id="12">12. Описание каждого скрипта</h2>
 <h3 id="apiconfigcs">ApiConfig.cs</h3>
 <p>Единственное место где хранится <code>BaseUrl</code> и все строки URL. При смене адреса сервера меняется только здесь.</p>
 <div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">StrategyGame.API</span>
@@ -3779,7 +5762,7 @@ python<span class="w"> </span>wsgi.py
 </code></pre></div>
 <hr>
 <hr>
-<h2 id="7">Часть 7. Расширение проекта</h2>
+<h2 id="13">13. Расширение проекта</h2>
 <h3 id="_4">Добавить новое событие</h3>
 <ol>
 <li>
