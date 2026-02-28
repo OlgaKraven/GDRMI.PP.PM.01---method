@@ -1194,7 +1194,7 @@ Error → errorHandler → JSON + logging
     profile.py
     events.py
     leaderboard.py
-    health.py
+    health.py        ← GET / и GET /health
   controllers/
     auth_controller.py
     match_controller.py
@@ -1202,6 +1202,7 @@ Error → errorHandler → JSON + logging
     events_controller.py
     leaderboard_controller.py
   services/
+    __init__.py
     auth_service.py
     match_service.py
     profile_service.py
@@ -1215,6 +1216,7 @@ Error → errorHandler → JSON + logging
     users_repo.py
     roles_repo.py
     matches_repo.py
+    sessions_repo.py ← работа с game_sessions
     dedupe_repo.py
   middleware/
     request_id.py
@@ -1222,6 +1224,11 @@ Error → errorHandler → JSON + logging
     validate_api.py
     error_handler.py
 wsgi.py              ← точка входа
+.env                 ← переменные окружения (не коммитить в Git!)
+db/
+  schema.sql         ← DDL: CREATE TABLE для всех таблиц
+seed.sql             ← тестовые данные (10 пользователей, матчи, прогресс)
+test_client.html     ← HTML-клиент для ручного тестирования в браузере
 </code></pre></div>
 <p>Важно: middleware остаётся общим для всех endpoint'ов (requestId/errorHandler), а <code>auth_required</code> и валидаторы подключаются там, где требуется.</p>
 <hr>
@@ -1230,20 +1237,40 @@ wsgi.py              ← точка входа
 <hr>
 <h2 id="561-blueprint-app__init__py">5.6.1. Регистрация blueprint'ов в <code>app/__init__.py</code></h2>
 <p>Назначение: подключить все группы маршрутов к приложению, чтобы endpoints реально появились.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">.routes.match</span> <span class="kn">import</span> <span class="n">match_bp</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">.extensions</span> <span class="kn">import</span> <span class="n">db</span><span class="p">,</span> <span class="n">jwt</span><span class="p">,</span> <span class="n">cors</span>
+<span class="kn">from</span> <span class="nn">.middleware.error_handler</span> <span class="kn">import</span> <span class="n">register_error_handlers</span>
+<span class="kn">from</span> <span class="nn">.middleware.request_id</span> <span class="kn">import</span> <span class="n">register_request_id</span>
 <span class="kn">from</span> <span class="nn">.routes.auth</span> <span class="kn">import</span> <span class="n">auth_bp</span>
-<span class="kn">from</span> <span class="nn">.routes.profile</span> <span class="kn">import</span> <span class="n">profile_bp</span>
 <span class="kn">from</span> <span class="nn">.routes.events</span> <span class="kn">import</span> <span class="n">events_bp</span>
-<span class="kn">from</span> <span class="nn">.routes.leaderboard</span> <span class="kn">import</span> <span class="n">leaderboard_bp</span>
 <span class="kn">from</span> <span class="nn">.routes.health</span> <span class="kn">import</span> <span class="n">health_bp</span>
+<span class="kn">from</span> <span class="nn">.routes.leaderboard</span> <span class="kn">import</span> <span class="n">leaderboard_bp</span>
+<span class="kn">from</span> <span class="nn">.routes.profile</span> <span class="kn">import</span> <span class="n">profile_bp</span>
+<span class="kn">from</span> <span class="nn">.routes.match</span> <span class="kn">import</span> <span class="n">match_bp</span>
 
-<span class="c1"># Регистрируем blueprint'ы, чтобы Flask начал обслуживать маршруты</span>
-<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">auth_bp</span><span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">events_bp</span><span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">health_bp</span><span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">leaderboard_bp</span><span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">profile_bp</span><span class="p">)</span>
-<span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">match_bp</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="n">config</span> <span class="ow">or</span> <span class="s2">"app.config.Config"</span><span class="p">)</span>
+
+    <span class="c1"># Инициализация расширений (порядок важен: db → jwt → cors)</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="n">jwt</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+    <span class="n">cors</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">resources</span><span class="o">=</span><span class="p">{</span><span class="sa">r</span><span class="s2">"/*"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"origins"</span><span class="p">:</span> <span class="s2">"*"</span><span class="p">}})</span>
+
+    <span class="c1"># Регистрация глобального middleware</span>
+    <span class="n">register_error_handlers</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>   <span class="c1"># AppError + HTTPException + Exception → единый JSON</span>
+    <span class="n">register_request_id</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>       <span class="c1"># X-Request-Id заголовок + логирование всех запросов</span>
+
+    <span class="c1"># Регистрируем blueprint'ы, чтобы Flask начал обслуживать маршруты</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">auth_bp</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">events_bp</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">health_bp</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">leaderboard_bp</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">profile_bp</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">register_blueprint</span><span class="p">(</span><span class="n">match_bp</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">app</span>
 </code></pre></div>
 <p>Комментарий: если blueprint не зарегистрирован — соответствующий endpoint отсутствует в приложении и не может быть протестирован.</p>
 <hr>
@@ -1308,17 +1335,16 @@ wsgi.py              ← точка входа
 <h3 id="approutesleaderboardpy"><code>app/routes/leaderboard.py</code></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Blueprint</span>
 <span class="kn">from</span> <span class="nn">app.controllers.leaderboard_controller</span> <span class="kn">import</span> <span class="n">leaderboard_controller</span>
-<span class="kn">from</span> <span class="nn">app.middleware.auth_jwt</span> <span class="kn">import</span> <span class="n">auth_required</span>
 <span class="kn">from</span> <span class="nn">app.middleware.validate_api</span> <span class="kn">import</span> <span class="n">validate_leaderboard_query</span>
 
 <span class="c1"># Назначение: выдача таблицы лидеров с фильтрацией через query-параметры</span>
+<span class="c1"># Примечание: leaderboard — публичный endpoint, auth_required не требуется</span>
 <span class="n">leaderboard_bp</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s2">"leaderboard"</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s2">"/api/v1"</span><span class="p">)</span>
 
 
 <span class="nd">@leaderboard_bp</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/leaderboard"</span><span class="p">)</span>
-<span class="nd">@auth_required</span><span class="p">(</span><span class="n">roles</span><span class="o">=</span><span class="p">[</span><span class="s2">"player"</span><span class="p">])</span>        <span class="c1"># доступ по JWT</span>
 <span class="nd">@validate_leaderboard_query</span>             <span class="c1"># проверка query: boardCode/season/limit</span>
-<span class="k">def</span> <span class="nf">leaderboard</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">get_leaderboard</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">leaderboard_controller</span><span class="p">()</span>
 </code></pre></div>
 <hr>
@@ -1395,8 +1421,8 @@ wsgi.py              ← точка входа
 
 <span class="k">def</span> <span class="nf">leaderboard_controller</span><span class="p">():</span>
     <span class="n">board_code</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"boardCode"</span><span class="p">)</span>
-    <span class="n">season</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"season"</span><span class="p">))</span>
-    <span class="n">limit</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"limit"</span><span class="p">))</span>
+    <span class="n">season</span>     <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"season"</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">limit</span>      <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"limit"</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="n">leaderboard_service</span><span class="p">(</span><span class="n">board_code</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
 
@@ -1474,10 +1500,12 @@ wsgi.py              ← точка входа
 <hr>
 <h3 id="appservicesprofile_servicepy"><code>app/services/profile_service.py</code></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">app.middleware.error_handler</span> <span class="kn">import</span> <span class="n">AppError</span>
-<span class="kn">from</span> <span class="nn">app.repositories.users_repo</span> <span class="kn">import</span> <span class="n">get_user_by_id</span>
+<span class="kn">from</span> <span class="nn">app.repositories.users_repo</span> <span class="kn">import</span> <span class="n">get_user_by_id</span><span class="p">,</span> <span class="n">get_user_roles</span>
 <span class="kn">from</span> <span class="nn">app.repositories.progress_repo</span> <span class="kn">import</span> <span class="n">get_progress_by_user</span>
 
-<span class="c1"># Назначение: собрать витрину профиля (user + progress) из БД.</span>
+<span class="c1"># Назначение: собрать витрину профиля (user + roles + progress) из БД.</span>
+<span class="c1"># Примечание: is_banned не проверяется здесь повторно — auth_jwt уже не пропустит</span>
+<span class="c1"># заблокированного пользователя (если is_banned проверяется при логине).</span>
 
 
 <span class="k">def</span> <span class="nf">profile_service</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -1485,18 +1513,15 @@ wsgi.py              ← точка входа
     <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"NOT_FOUND"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"User not found"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">404</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"is_banned"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="n">AppError</span><span class="p">(</span><span class="n">code</span><span class="o">=</span><span class="s2">"FORBIDDEN"</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">"Account is banned"</span><span class="p">,</span> <span class="n">http_status</span><span class="o">=</span><span class="mi">403</span><span class="p">)</span>
-
+    <span class="n">roles</span>    <span class="o">=</span> <span class="n">get_user_roles</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
     <span class="n">progress</span> <span class="o">=</span> <span class="n">get_progress_by_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">"user"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"id"</span><span class="p">:</span>       <span class="n">user</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
-            <span class="s2">"email"</span><span class="p">:</span>    <span class="n">user</span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span>
-            <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">user</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">]</span>
-        <span class="p">},</span>
-        <span class="s2">"progress"</span><span class="p">:</span> <span class="n">progress</span>
+        <span class="s2">"userId"</span><span class="p">:</span>   <span class="n">user</span><span class="p">[</span><span class="s2">"id"</span><span class="p">],</span>
+        <span class="s2">"email"</span><span class="p">:</span>    <span class="n">user</span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span>
+        <span class="s2">"nickname"</span><span class="p">:</span> <span class="n">user</span><span class="p">[</span><span class="s2">"nickname"</span><span class="p">],</span>
+        <span class="s2">"roles"</span><span class="p">:</span>    <span class="n">roles</span><span class="p">,</span>
+        <span class="s2">"progress"</span><span class="p">:</span> <span class="n">progress</span><span class="p">,</span>
     <span class="p">}</span>
 </code></pre></div>
 <hr>
@@ -1925,7 +1950,7 @@ wsgi.py              ← точка входа
 </ul>
 <hr>
 <h2 id="573-get-apiv1profile">5.7.3. <code>GET /api/v1/profile</code></h2>
-<p><strong>Назначение:</strong> отдать "витрину" профиля: user + progress.</p>
+<p><strong>Назначение:</strong> отдать \"витрину\" профиля: userId, email, nickname, roles, progress.</p>
 <p><strong>Request</strong></p>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/profile</span>
 <span class="err">Authorization: Bearer &lt;JWT&gt;</span>
@@ -1934,7 +1959,10 @@ wsgi.py              ← точка входа
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"alice@example.com"</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Commander_Alice"</span><span class="w"> </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"userId"</span><span class="p">:</span><span class="w">   </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"email"</span><span class="p">:</span><span class="w">    </span><span class="s2">"alice@example.com"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Commander_Alice"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"roles"</span><span class="p">:</span><span class="w">    </span><span class="p">[</span><span class="s2">"player"</span><span class="p">,</span><span class="w"> </span><span class="s2">"admin"</span><span class="p">],</span>
 <span class="w">    </span><span class="nt">"progress"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"level"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w"> </span><span class="nt">"xp"</span><span class="p">:</span><span class="w"> </span><span class="mi">85400</span><span class="p">,</span><span class="w"> </span><span class="nt">"softCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">12500</span><span class="p">,</span><span class="w"> </span><span class="nt">"hardCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="w"> </span><span class="p">}</span>
 <span class="w">  </span><span class="p">}</span>
 <span class="p">}</span>
@@ -1942,7 +1970,7 @@ wsgi.py              ← точка входа
 <p>Ошибки:</p>
 <ul>
 <li><code>401 UNAUTHORIZED</code></li>
-<li><code>403 FORBIDDEN</code> — пользователь заблокирован</li>
+<li><code>404 NOT_FOUND</code> — пользователь удалён из БД после выдачи токена</li>
 </ul>
 <hr>
 <h2 id="574-post-apiv1events">5.7.4. <code>POST /api/v1/events</code></h2>
@@ -1978,9 +2006,9 @@ wsgi.py              ← точка входа
 </ul>
 <hr>
 <h2 id="575-get-apiv1leaderboard">5.7.5. <code>GET /api/v1/leaderboard</code></h2>
+<p><strong>Назначение:</strong> вернуть топ игроков по заданной доске и сезону. Endpoint публичный — JWT не требуется.</p>
 <p><strong>Request</strong></p>
 <div class="highlight"><pre><span></span><code><span class="err">GET /api/v1/leaderboard?boardCode=default&amp;season=1&amp;limit=10</span>
-<span class="err">Authorization: Bearer &lt;JWT&gt;</span>
 </code></pre></div>
 <p><strong>Response (200)</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span>
@@ -1997,11 +2025,13 @@ wsgi.py              ← точка входа
 </code></pre></div>
 <p>Ошибки:</p>
 <ul>
-<li><code>400 VALIDATION_ERROR</code> (невалидные query-параметры)</li>
-<li><code>401 UNAUTHORIZED</code></li>
+<li><code>400 VALIDATION_ERROR</code> (невалидные query-параметры: отсутствует boardCode, season или limit выходит за диапазон 1–1000)</li>
 </ul>
 <hr>
 <h1 id="58-postman-test_clienthtml">5.8. Требование к воспроизводимости проверок (Postman / test_client.html)</h1>
+<blockquote>
+<p>Пошаговые инструкции по Postman — в разделе <strong>5.12</strong>. Инструкция по <code>test_client.html</code> — в разделе <strong>4.9</strong> документа <code>backend_implementation.md</code>.</p>
+</blockquote>
 <p>Должно быть возможно проверить:</p>
 <ul>
 <li><code>201</code> при регистрации</li>
@@ -2061,6 +2091,578 @@ wsgi.py              ← точка входа
 <span class="w">      </span><span class="nt">scheme</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bearer</span>
 <span class="w">      </span><span class="nt">bearerFormat</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">JWT</span>
 </code></pre></div>
+<hr>
+<h1 id="511">5.11. ⚠️ Напоминание: заполнение базы данных перед работой</h1>
+<blockquote>
+<p><strong>Без выполнения этого шага API не будет работать корректно.</strong> Таблицы окажутся пустыми, логин с тестовыми данными не пройдёт, лидерборд вернёт пустой список, матч с id=9 не будет найден.</p>
+</blockquote>
+<p>Порядок заполнения БД обязателен и выполняется <strong>один раз</strong> после создания базы данных.</p>
+<h2 id="5111">5.11.1. Что нужно выполнить и в каком порядке</h2>
+<h3 id="1">Шаг 1. Создать базу данных (если ещё не создана)</h3>
+<p>Подключиться к MySQL и выполнить:</p>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">strategy_db</span>
+<span class="w">  </span><span class="nb">CHARACTER</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">utf8mb4</span>
+<span class="w">  </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">utf8mb4_0900_ai_ci</span><span class="p">;</span>
+</code></pre></div>
+<blockquote>
+<p>Имя базы, хост, пользователь и пароль должны совпадать с тем, что прописано в <code>.env</code>.</p>
+</blockquote>
+<hr>
+<h3 id="2-dbschemasql">Шаг 2. Применить схему (<code>db/schema.sql</code>)</h3>
+<p><code>db/schema.sql</code> содержит все <code>CREATE TABLE</code> — структуру всех таблиц. Без этого файла БД пустая и Python-код упадёт с ошибкой «Table not found».</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Из корня проекта:</span>
+mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>strategy_db<span class="w"> </span>&lt;<span class="w"> </span>db/schema.sql
+</code></pre></div>
+<p><strong>Что создаётся этим файлом:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Таблица</th>
+<th>Назначение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>roles</code></td>
+<td>Роли: player, moderator, admin</td>
+</tr>
+<tr>
+<td><code>users</code></td>
+<td>Аккаунты игроков (email, bcrypt-пароль, nickname)</td>
+</tr>
+<tr>
+<td><code>user_roles</code></td>
+<td>Связь пользователь ↔ роль</td>
+</tr>
+<tr>
+<td><code>game_sessions</code></td>
+<td>Игровые сессии (платформа, версия клиента)</td>
+</tr>
+<tr>
+<td><code>game_events</code></td>
+<td>Поток игровых событий с JSON-payload</td>
+</tr>
+<tr>
+<td><code>player_progress</code></td>
+<td>Уровень, XP, валюта каждого игрока</td>
+</tr>
+<tr>
+<td><code>statistics_daily</code></td>
+<td>Агрегированная статистика по дням</td>
+</tr>
+<tr>
+<td><code>leaderboard_scores</code></td>
+<td>Рейтинговые очки (board_code, season)</td>
+</tr>
+<tr>
+<td><code>matches</code></td>
+<td>Матчи (pve/pvp, карта, статус)</td>
+</tr>
+<tr>
+<td><code>battle_results</code></td>
+<td>Итоги матча 1:1 с matches</td>
+</tr>
+<tr>
+<td><code>army_units</code></td>
+<td>Армия пользователя (тип юнита, количество)</td>
+</tr>
+<tr>
+<td><code>city_buildings</code></td>
+<td>Здания города (тип, уровень, статус)</td>
+</tr>
+<tr>
+<td><code>processed_events</code></td>
+<td>Реестр обработанных eventId (дедупликация)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 id="3-seedsql">Шаг 3. Залить тестовые данные (<code>seed.sql</code>)</h3>
+<p><code>seed.sql</code> содержит тестовых пользователей, матчи, прогресс, лидерборд — всё что нужно для тестирования API прямо после запуска.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Из корня проекта:</span>
+mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>strategy_db<span class="w"> </span>&lt;<span class="w"> </span>seed.sql
+</code></pre></div>
+<p><strong>Что создаётся тестовыми данными:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Данные</th>
+<th>Подробности</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>10 пользователей</strong></td>
+<td>alice, bob, carol, dave, eve, frank, grace, hank, ivan, banned</td>
+</tr>
+<tr>
+<td><strong>Роли</strong></td>
+<td>alice — player+admin, bob — player+moderator, остальные — player, banned — player (is_banned=1)</td>
+</tr>
+<tr>
+<td><strong>Прогресс</strong></td>
+<td>Уровень, XP, soft/hard валюта для всех 10 пользователей</td>
+</tr>
+<tr>
+<td><strong>Лидерборд</strong></td>
+<td>10 записей на <code>board_code=default, season=1</code>; 5 записей на <code>board_code=pvp, season=1</code></td>
+</tr>
+<tr>
+<td><strong>Матчи</strong></td>
+<td>10 матчей: 8 завершённых, 1 в статусе <code>started</code> (id=9, owner=alice), 1 заброшенный</td>
+</tr>
+<tr>
+<td><strong>Результаты матчей</strong></td>
+<td><code>battle_results</code> для 9 завершённых матчей</td>
+</tr>
+<tr>
+<td><strong>Игровые сессии</strong></td>
+<td>6 сессий от разных пользователей</td>
+</tr>
+<tr>
+<td><strong>Армия и здания</strong></td>
+<td><code>army_units</code> и <code>city_buildings</code> для 5 игроков</td>
+</tr>
+<tr>
+<td><strong>Статистика</strong></td>
+<td><code>statistics_daily</code> за последние 7 дней для топ-игроков</td>
+</tr>
+<tr>
+<td><strong>Processed events</strong></td>
+<td>5 записей дедупликации в <code>processed_events</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Пароль у всех тестовых пользователей:</strong> <code>password123</code></p>
+<p><strong>Матч id=9</strong> — в статусе <code>started</code>, принадлежит alice (user_id=1). Именно его используют для тестирования <code>POST /api/v1/match/finish</code>.</p>
+</blockquote>
+<hr>
+<h3 id="4">Шаг 4. Проверить, что данные залиты</h3>
+<div class="highlight"><pre><span></span><code><span class="n">USE</span><span class="w"> </span><span class="n">strategy_db</span><span class="p">;</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="p">;</span><span class="w">           </span><span class="c1">-- должно быть 10</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">player_progress</span><span class="p">;</span><span class="w"> </span><span class="c1">-- должно быть 10</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">leaderboard_scores</span><span class="p">;</span><span class="w"> </span><span class="c1">-- должно быть 15</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">user_id</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">matches</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">9</span><span class="p">;</span><span class="w"> </span><span class="c1">-- должна быть строка status=started</span>
+</code></pre></div>
+<hr>
+<h3 id="5-env">Шаг 5. Файл <code>.env</code> — подключение к БД</h3>
+<p>В корне проекта должен быть файл <code>.env</code> со строкой подключения к MySQL. Без него Flask не знает, к какой БД подключаться.</p>
+<div class="highlight"><pre><span></span><code>SQLALCHEMY_DATABASE_URI=mysql+pymysql://root@localhost:3306/strategy_db?charset=utf8mb4
+DATABASE_URL=mysql+pymysql://root@localhost:3306/strategy_db?charset=utf8mb4
+JWT_SECRET_KEY=change-jwt-secret-in-production
+SECRET_KEY=change-me-in-production
+</code></pre></div>
+<blockquote>
+<p>Если у вашего MySQL есть пароль, формат: <code>mysql+pymysql://root:ПАРОЛЬ@localhost:3306/strategy_db?charset=utf8mb4</code></p>
+</blockquote>
+<hr>
+<h3 id="_3">Полный порядок развёртывания (сводка)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Перейти в папку проекта</span>
+<span class="nb">cd</span><span class="w"> </span>C:<span class="se">\U</span>sers<span class="se">\g</span>vadoskr<span class="se">\D</span>esktop<span class="se">\p</span>roject<span class="se">\s</span>trategy-support-is
+
+<span class="c1"># 2. Активировать виртуальное окружение</span>
+venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+
+<span class="c1"># 3. Установить зависимости (если не установлены)</span>
+pip<span class="w"> </span>install<span class="w"> </span>Flask<span class="w"> </span>flask-jwt-extended<span class="w"> </span>flask-sqlalchemy<span class="w"> </span>flask-cors<span class="w"> </span>pymysql<span class="w"> </span>python-dotenv<span class="w"> </span>bcrypt
+
+<span class="c1"># 4. Проверить / создать .env файл с параметрами БД</span>
+
+<span class="c1"># 5. Применить схему БД</span>
+mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>strategy_db<span class="w"> </span>&lt;<span class="w"> </span>db/schema.sql
+
+<span class="c1"># 6. Залить тестовые данные</span>
+mysql<span class="w"> </span>-u<span class="w"> </span>root<span class="w"> </span>-p<span class="w"> </span>strategy_db<span class="w"> </span>&lt;<span class="w"> </span>seed.sql
+
+<span class="c1"># 7. Запустить сервер</span>
+python<span class="w"> </span>wsgi.py
+</code></pre></div>
+<p>После этого сервер доступен по адресу <code>http://127.0.0.1:5000</code>.</p>
+<hr>
+<h1 id="512-postman-api">5.12. Установка Postman и проверка API</h1>
+<h2 id="5121-postman">5.12.1. Что такое Postman и зачем он нужен</h2>
+<p><strong>Postman</strong> — это инструмент для тестирования HTTP API. Позволяет отправлять запросы к серверу, просматривать ответы, сохранять запросы в коллекции и автоматизировать проверки. В отличие от <code>test_client.html</code>, Postman предоставляет расширенные возможности: переменные среды, цепочки запросов, скрипты авто-тестов.</p>
+<h2 id="5122-postman">5.12.2. Установка Postman</h2>
+<h3 id="1-postman">Шаг 1. Скачать Postman</h3>
+<p>Перейти на официальный сайт:</p>
+<div class="highlight"><pre><span></span><code>https://www.postman.com/downloads/
+</code></pre></div>
+<p>Выбрать версию для Windows и нажать <strong>Download</strong>.</p>
+<h3 id="2">Шаг 2. Установить</h3>
+<p>Запустить скачанный установщик <code>Postman-win64-Setup.exe</code>. Установка стандартная — Next → Install → Finish.</p>
+<h3 id="3">Шаг 3. Запустить и пропустить регистрацию</h3>
+<p>При первом запуске появится окно регистрации. Внизу есть ссылка <strong>«Skip and go to the app»</strong> — нажать её. Регистрация не обязательна для базового использования.</p>
+<hr>
+<h2 id="5123-base_url">5.12.3. Настройка переменной <code>base_url</code></h2>
+<p>Чтобы не вводить адрес сервера в каждый запрос вручную, настроим переменную окружения.</p>
+<h3 id="environment">Создать Environment</h3>
+<ol>
+<li>В левом сайдбаре нажать <strong>Environments</strong> (иконка глаза или раздел в меню).</li>
+<li>Нажать <strong>+</strong> (Add Environment).</li>
+<li>Назвать среду: <code>strategy-local</code>.</li>
+<li>Добавить переменную:</li>
+<li><strong>Variable:</strong> <code>base_url</code></li>
+<li><strong>Initial value:</strong> <code>http://127.0.0.1:5000</code></li>
+<li><strong>Current value:</strong> <code>http://127.0.0.1:5000</code></li>
+<li>Нажать <strong>Save</strong>.</li>
+<li>В правом верхнем углу выбрать среду <code>strategy-local</code> из выпадающего списка.</li>
+</ol>
+<p>Теперь в запросах можно писать <code>{{base_url}}/api/v1/auth/login</code> вместо полного адреса.</p>
+<hr>
+<h2 id="5124">5.12.4. Создание коллекции запросов</h2>
+<h3 id="_4">Создать коллекцию</h3>
+<ol>
+<li>В левом сайдбаре нажать <strong>Collections → +</strong> (New Collection).</li>
+<li>Назвать: <code>Strategy IS API</code>.</li>
+<li>Нажать <strong>Create</strong>.</li>
+</ol>
+<h3 id="_5">Добавить папки по группам</h3>
+<p>Внутри коллекции создать папки (<code>Add a folder</code>):
+- <code>Auth</code>
+- <code>Profile</code>
+- <code>Leaderboard</code>
+- <code>Events</code>
+- <code>Match</code>
+- <code>System</code></p>
+<hr>
+<h2 id="5125-endpoint-postman">5.12.5. Проверка каждого endpoint'а в Postman</h2>
+<h3 id="1-health-check">Запрос 1: Health Check</h3>
+<p><strong>Цель:</strong> убедиться, что сервер запущен и отвечает.</p>
+<ol>
+<li>В папке <code>System</code> нажать <strong>Add a request</strong>.</li>
+<li>Назвать: <code>Health Check</code>.</li>
+<li>Метод: <code>GET</code>.</li>
+<li>URL: <code>{{base_url}}/health</code></li>
+<li>Нажать <strong>Send</strong>.</li>
+</ol>
+<p><strong>Ожидаемый ответ:</strong>
+</p><div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ok"</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+Статус: <code>200 OK</code>.<p></p>
+<hr>
+<h3 id="2_1">Запрос 2: Регистрация</h3>
+<p><strong>Цель:</strong> создать нового пользователя.</p>
+<ol>
+<li>В папке <code>Auth</code> создать запрос <code>Register</code>.</li>
+<li>Метод: <code>POST</code>.</li>
+<li>URL: <code>{{base_url}}/api/v1/auth/register</code></li>
+<li>Вкладка <strong>Body</strong> → выбрать <code>raw</code> → выбрать <code>JSON</code>.</li>
+<li>Тело запроса:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"email"</span><span class="p">:</span><span class="w">    </span><span class="s2">"testplayer@example.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"password123"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TestPlayer"</span>
+<span class="p">}</span>
+</code></pre></div>
+<ol>
+<li>Нажать <strong>Send</strong>.</li>
+</ol>
+<p><strong>Ожидаемый ответ:</strong>
+</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">11</span><span class="p">,</span><span class="w"> </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"testplayer@example.com"</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"TestPlayer"</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+Статус: <code>201 Created</code>.<p></p>
+<p><strong>Проверка ошибки 409:</strong> отправить тот же запрос ещё раз — придёт <code>409 CONFLICT</code> (email уже занят).</p>
+<hr>
+<h3 id="3_1">Запрос 3: Логин</h3>
+<p><strong>Цель:</strong> получить JWT-токен для защищённых запросов.</p>
+<ol>
+<li>В папке <code>Auth</code> создать запрос <code>Login</code>.</li>
+<li>Метод: <code>POST</code>.</li>
+<li>URL: <code>{{base_url}}/api/v1/auth/login</code></li>
+<li>Body → raw → JSON:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"email"</span><span class="p">:</span><span class="w">    </span><span class="s2">"alice@example.com"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"password123"</span>
+<span class="p">}</span>
+</code></pre></div>
+<ol>
+<li>Нажать <strong>Send</strong>.</li>
+</ol>
+<p><strong>Ожидаемый ответ:</strong>
+</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"accessToken"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"userId"</span><span class="p">:</span><span class="w">      </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w">    </span><span class="s2">"Commander_Alice"</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+Статус: <code>200 OK</code>.<p></p>
+<h3 id="_6">Сохранить токен автоматически (скрипт)</h3>
+<p>Чтобы токен автоматически сохранялся в переменную и подставлялся в следующие запросы:</p>
+<ol>
+<li>На вкладке <code>Login</code> перейти на вкладку <strong>Scripts</strong> (ранее — Tests).</li>
+<li>Вставить скрипт:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">resp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">pm</span><span class="p">.</span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">();</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">resp</span><span class="p">.</span><span class="nx">ok</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">resp</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">pm</span><span class="p">.</span><span class="nx">environment</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">"jwt_token"</span><span class="p">,</span><span class="w"> </span><span class="nx">resp</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">"Token saved:"</span><span class="p">,</span><span class="w"> </span><span class="nx">resp</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">accessToken</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">30</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"..."</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<ol>
+<li>Нажать <strong>Save</strong>.</li>
+</ol>
+<p>Теперь после каждого логина токен автоматически записывается в переменную <code>{{jwt_token}}</code>.</p>
+<p><strong>Проверка ошибки 401:</strong> отправить с неверным паролем — придёт <code>401 UNAUTHORIZED</code>.</p>
+<p><strong>Проверка ошибки 403:</strong> заменить email на <code>banned@example.com</code> — придёт <code>403 FORBIDDEN</code>.</p>
+<hr>
+<h3 id="4_1">Запрос 4: Профиль</h3>
+<p><strong>Цель:</strong> получить данные профиля авторизованного пользователя.</p>
+<ol>
+<li>В папке <code>Profile</code> создать запрос <code>My Profile</code>.</li>
+<li>Метод: <code>GET</code>.</li>
+<li>URL: <code>{{base_url}}/api/v1/profile</code></li>
+<li>Вкладка <strong>Auth</strong> → тип <code>Bearer Token</code> → в поле Token: <code>{{jwt_token}}</code>.</li>
+<li>Нажать <strong>Send</strong>.</li>
+</ol>
+<p><strong>Ожидаемый ответ:</strong>
+</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"userId"</span><span class="p">:</span><span class="w">   </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"email"</span><span class="p">:</span><span class="w">    </span><span class="s2">"alice@example.com"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Commander_Alice"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"roles"</span><span class="p">:</span><span class="w">    </span><span class="p">[</span><span class="s2">"player"</span><span class="p">,</span><span class="w"> </span><span class="s2">"admin"</span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"progress"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"level"</span><span class="p">:</span><span class="w">        </span><span class="mi">42</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"xp"</span><span class="p">:</span><span class="w">           </span><span class="mi">85400</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"softCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">12500</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">"hardCurrency"</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+Статус: <code>200 OK</code>.<p></p>
+<p><strong>Проверка ошибки 401:</strong> убрать токен (вкладка Auth → No Auth) — придёт <code>401 UNAUTHORIZED</code>.</p>
+<hr>
+<h3 id="5">Запрос 5: Лидерборд</h3>
+<p><strong>Цель:</strong> получить топ игроков. Endpoint публичный, JWT не требуется.</p>
+<ol>
+<li>В папке <code>Leaderboard</code> создать запрос <code>Get Leaderboard</code>.</li>
+<li>Метод: <code>GET</code>.</li>
+<li>URL: <code>{{base_url}}/api/v1/leaderboard</code></li>
+<li>Вкладка <strong>Params</strong> добавить параметры:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boardCode</td>
+<td>default</td>
+</tr>
+<tr>
+<td>season</td>
+<td>1</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>10</td>
+</tr>
+</tbody>
+</table>
+<ol>
+<li>Нажать <strong>Send</strong>.</li>
+</ol>
+<p><strong>Ожидаемый ответ:</strong>
+</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"boardCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"default"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"season"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"rank"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Siege_Eve"</span><span class="p">,</span><span class="w">     </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">9850</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="p">{</span><span class="w"> </span><span class="nt">"rank"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="nt">"userId"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="nt">"nickname"</span><span class="p">:</span><span class="w"> </span><span class="s2">"WarLord_Carol"</span><span class="p">,</span><span class="w"> </span><span class="nt">"score"</span><span class="p">:</span><span class="w"> </span><span class="mi">8720</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+Статус: <code>200 OK</code>.<p></p>
+<p><strong>Проверка <code>boardCode=pvp</code>:</strong> заменить значение параметра — вернётся другая доска.</p>
+<p><strong>Проверка ошибки 400:</strong> удалить параметр <code>boardCode</code> — придёт <code>400 VALIDATION_ERROR</code>.</p>
+<hr>
+<h3 id="6">Запрос 6: Отправка события</h3>
+<p><strong>Цель:</strong> записать игровое событие с дедупликацией по <code>eventId</code>.</p>
+<ol>
+<li>В папке <code>Events</code> создать запрос <code>Post Event</code>.</li>
+<li>Метод: <code>POST</code>.</li>
+<li>URL: <code>{{base_url}}/api/v1/events</code></li>
+<li>Auth → Bearer Token → <code>{{jwt_token}}</code>.</li>
+<li>Body → raw → JSON:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"eventId"</span><span class="p">:</span><span class="w">   </span><span class="s2">"evt-test-001-unique"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"eventType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unit_deploy"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"sessionId"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"clientTime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2026-02-27T12:00:00.000Z"</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"payload"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w">  </span><span class="mi">9</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"unitCode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cavalry"</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"amount"</span><span class="p">:</span><span class="w">   </span><span class="mi">40</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"atSecond"</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<ol>
+<li>Нажать <strong>Send</strong>.</li>
+</ol>
+<p><strong>Ожидаемый ответ:</strong>
+</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"eventId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"evt-test-001-unique"</span><span class="p">,</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"accepted"</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+Статус: <code>200 OK</code>.<p></p>
+<p><strong>Проверка дедупликации 409:</strong> нажать <strong>Send</strong> ещё раз с тем же <code>eventId</code> — придёт <code>409 EVENT_REJECTED</code>. Для нового успешного запроса нужно изменить <code>eventId</code> (например, на <code>evt-test-002-unique</code>).</p>
+<p><strong>Проверка ошибки 400:</strong> удалить поле <code>eventId</code> из тела — придёт <code>400 VALIDATION_ERROR</code>.</p>
+<hr>
+<h3 id="7">Запрос 7: Завершение матча</h3>
+<p><strong>Цель:</strong> завершить матч id=9 (принадлежит alice, статус <code>started</code>) и получить начисленные награды.</p>
+<blockquote>
+<p>⚠️ Матч id=9 имеет статус <code>started</code> только один раз — после первого успешного вызова он перейдёт в <code>finished</code>. Для повторного тестирования нужно вернуть статус вручную через MySQL: <code>UPDATE matches SET status='started', ended_at=NULL WHERE id=9;</code></p>
+</blockquote>
+<ol>
+<li>В папке <code>Match</code> создать запрос <code>Finish Match</code>.</li>
+<li>Метод: <code>POST</code>.</li>
+<li>URL: <code>{{base_url}}/api/v1/match/finish</code></li>
+<li>Auth → Bearer Token → <code>{{jwt_token}}</code>.</li>
+<li>Body → raw → JSON:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w"> </span><span class="mi">9</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w">           </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"score"</span><span class="p">:</span><span class="w">           </span><span class="mi">1850</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"durationSeconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">1200</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<ol>
+<li>Нажать <strong>Send</strong>.</li>
+</ol>
+<p><strong>Ожидаемый ответ:</strong>
+</p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">"ok"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"matchId"</span><span class="p">:</span><span class="w">             </span><span class="mi">9</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"isWin"</span><span class="p">:</span><span class="w">               </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"xpGained"</span><span class="p">:</span><span class="w">            </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"softCurrencyGained"</span><span class="p">:</span><span class="w">  </span><span class="mi">50</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+Статус: <code>200 OK</code>.<p></p>
+<p><strong>Проверка ошибки 409:</strong> нажать <strong>Send</strong> ещё раз — придёт <code>409 CONFLICT</code> (матч уже в статусе <code>finished</code>).</p>
+<p><strong>Проверка ошибки 403:</strong> залогиниться как bob и попробовать завершить матч id=9 — придёт <code>403 FORBIDDEN</code> (матч принадлежит alice).</p>
+<hr>
+<h2 id="5126-postman">5.12.6. Сводная таблица запросов для коллекции Postman</h2>
+<table>
+<thead>
+<tr>
+<th>Папка</th>
+<th>Имя запроса</th>
+<th>Метод</th>
+<th>URL</th>
+<th>Auth</th>
+<th>Тело</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System</td>
+<td>Health Check</td>
+<td>GET</td>
+<td><code>{{base_url}}/health</code></td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Register</td>
+<td>POST</td>
+<td><code>{{base_url}}/api/v1/auth/register</code></td>
+<td>—</td>
+<td>JSON</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Login</td>
+<td>POST</td>
+<td><code>{{base_url}}/api/v1/auth/login</code></td>
+<td>—</td>
+<td>JSON</td>
+</tr>
+<tr>
+<td>Profile</td>
+<td>My Profile</td>
+<td>GET</td>
+<td><code>{{base_url}}/api/v1/profile</code></td>
+<td>Bearer <code>{{jwt_token}}</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Leaderboard</td>
+<td>Get Leaderboard</td>
+<td>GET</td>
+<td><code>{{base_url}}/api/v1/leaderboard</code></td>
+<td>—</td>
+<td>Query params</td>
+</tr>
+<tr>
+<td>Events</td>
+<td>Post Event</td>
+<td>POST</td>
+<td><code>{{base_url}}/api/v1/events</code></td>
+<td>Bearer <code>{{jwt_token}}</code></td>
+<td>JSON</td>
+</tr>
+<tr>
+<td>Match</td>
+<td>Finish Match</td>
+<td>POST</td>
+<td><code>{{base_url}}/api/v1/match/finish</code></td>
+<td>Bearer <code>{{jwt_token}}</code></td>
+<td>JSON</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="5127">5.12.7. Экспорт и импорт коллекции</h2>
+<p>Чтобы передать коллекцию другому разработчику или сохранить резервную копию:</p>
+<p><strong>Экспорт:</strong>
+1. В сайдбаре найти коллекцию <code>Strategy IS API</code>.
+2. Нажать <code>...</code> → <strong>Export</strong>.
+3. Выбрать формат <code>Collection v2.1</code>.
+4. Сохранить файл <code>strategy-is-api.postman_collection.json</code>.</p>
+<p><strong>Импорт:</strong>
+1. В Postman нажать <strong>Import</strong> (кнопка рядом с New).
+2. Перетащить JSON-файл или выбрать через диалог.
+3. Коллекция появится в сайдбаре.</p>
+<hr>
+<h2 id="5128-postman-test_clienthtml">5.12.8. Альтернатива Postman: <code>test_client.html</code></h2>
+<p>Если Postman устанавливать не хочется, в корне проекта есть готовый HTML-клиент:</p>
+<div class="highlight"><pre><span></span><code>strategy-support-is/test_client.html
+</code></pre></div>
+<p>Открыть двойным кликом в браузере (Chrome, Firefox, Edge). Не требует установки — работает как локальный HTML-файл.</p>
+<p>Возможности:
+- Все те же 7 endpoint'ов в одном интерфейсе
+- Автоматическое сохранение JWT после логина
+- Quick Fill кнопки с готовыми тестовыми данными
+- Лог всех запросов с HTTP-статусами и временем выполнения
+- Подсветка JSON-ответов</p>
+<p>Подробное описание интерфейса и каждого элемента — в разделе <strong>4.9</strong> документа <code>backend_implementation.md</code>.</p>
 
 
 
