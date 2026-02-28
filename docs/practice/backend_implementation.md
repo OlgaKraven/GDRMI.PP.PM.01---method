@@ -1064,3 +1064,534 @@ Content-Type: application/json
 ### 3) Тестирование через test_client.html
 
 В корне проекта находится `test_client.html` — HTML-страница для ручного тестирования всех endpoint'ов через браузер без Postman.
+
+---
+
+## 4.8. Установка библиотек (зависимости проекта)
+
+### 4.8.1. Что и зачем устанавливается
+
+Проект `strategy-support-is` использует следующие библиотеки Python:
+
+| Библиотека | Зачем нужна |
+|---|---|
+| `Flask` | Web-фреймворк, маршруты, Blueprint'ы, `before/after_request` |
+| `flask-jwt-extended` | JWT-аутентификация: `create_access_token`, `verify_jwt_in_request`, `get_jwt_identity` |
+| `flask-sqlalchemy` | ORM-обёртка над SQLAlchemy, управление сессиями БД (`db.session`) |
+| `flask-cors` | Заголовки CORS для Unity/Web/Mobile клиентов (`Access-Control-Allow-Origin`) |
+| `pymysql` | MySQL-драйвер для Python (SQLAlchemy использует его под капотом) |
+| `python-dotenv` | Загрузка переменных из `.env` файла в `os.environ` |
+| `bcrypt` | Хэширование паролей при регистрации и проверка при логине |
+
+---
+
+### 4.8.2. Установка (шаг за шагом)
+
+#### 1. Убедиться что Python установлен
+
+```bash
+python --version
+# Должно быть Python 3.10 или новее
+
+pip --version
+# pip 23.x или новее
+```
+
+Если Python не установлен: скачать с [https://www.python.org/downloads/](https://www.python.org/downloads/)  
+При установке обязательно отметить галку **«Add Python to PATH»**.
+
+---
+
+#### 2. Перейти в папку проекта
+
+```bash
+cd C:\Users\**ваш пользователь**\Desktop\project\strategy-support-is
+```
+
+Или на Linux/Mac:
+```bash
+cd ~/project/strategy-support-is
+```
+
+---
+
+#### 3. Создать виртуальное окружение (рекомендуется)
+
+```bash
+python -m venv venv
+```
+
+Активировать:
+
+```bash
+# Windows
+venv\Scripts\activate
+
+# Linux / Mac
+source venv/bin/activate
+```
+
+После активации в начале строки терминала появится `(venv)`.
+
+---
+
+#### 4. Установить все зависимости одной командой
+
+```bash
+pip install Flask flask-jwt-extended flask-sqlalchemy flask-cors pymysql python-dotenv bcrypt
+```
+
+Проверить что всё установилось:
+
+```bash
+pip list
+```
+
+Должны присутствовать все перечисленные пакеты.
+
+---
+
+#### 5. Создать файл `.env` в корне проекта
+
+Создайте файл `.env` рядом с `wsgi.py`:
+
+```text
+SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:yourpassword@localhost:3306/strategy_db?charset=utf8mb4
+DATABASE_URL=mysql+pymysql://root:yourpassword@localhost:3306/strategy_db?charset=utf8mb4
+JWT_SECRET_KEY=my-super-secret-jwt-key-change-in-prod
+SECRET_KEY=my-flask-secret-key
+```
+
+Замените `root`, `yourpassword`, `strategy_db` на ваши реальные данные MySQL.
+
+> **Важно:** файл `.env` не коммитится в Git (должен быть в `.gitignore`).
+
+---
+
+#### Шаг 6. Подготовить базу данных MySQL
+
+Подключиться к MySQL и выполнить:
+
+```sql
+CREATE DATABASE strategy_db CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+```
+
+Затем применить схему и тестовые данные:
+
+```bash
+mysql -u root -p strategy_db < db/schema.sql
+mysql -u root -p strategy_db < seed.sql
+```
+
+---
+
+####  7. Запустить сервер
+
+```bash
+python wsgi.py
+```
+
+Ожидаемый вывод:
+
+```text
+ * Running on http://127.0.0.1:5000
+ * Debug mode: on
+```
+
+---
+
+### 4.8.3. Проверка установки (быстрая)
+
+Открыть в браузере:
+
+```
+http://127.0.0.1:5000/health
+```
+
+Ожидаемый ответ:
+
+```json
+{ "ok": true, "data": { "status": "healthy" } }
+```
+
+---
+
+### 4.8.4. Частые ошибки при установке
+
+| Ошибка | Причина | Решение |
+|---|---|---|
+| `ModuleNotFoundError: No module named 'flask'` | Окружение не активировано | Выполнить `venv\Scripts\activate` |
+| `Access denied for user 'root'@'localhost'` | Неверный пароль MySQL | Проверить `.env` → `DATABASE_URL` |
+| `Unknown database 'strategy_db'` | База не создана | `CREATE DATABASE strategy_db ...` |
+| `Address already in use: 5000` | Порт занят | Завершить другой процесс или сменить порт в `wsgi.py` |
+| `bcrypt not found` | Не установлен | `pip install bcrypt` |
+| `cryptography` warning от PyMySQL | Не критично | `pip install cryptography` по желанию |
+
+---
+
+## 4.9. Клиентская сторона: `test_client.html`
+
+### 4.9.1. Что такое `test_client.html` и зачем он нужен
+
+`test_client.html` — это однофайловое веб-приложение, которое живёт прямо в корне проекта (`strategy-support-is/test_client.html`). Оно позволяет тестировать все API endpoint'ы **прямо в браузере** без Postman, curl и дополнительных инструментов.
+
+**Что умеет клиент:**
+- Отправлять все 6 типов запросов к API
+- Автоматически сохранять JWT после логина и подставлять его в защищённые запросы
+- Подсвечивать JSON-ответы (ключи, строки, числа, булевы значения)
+- Вести лог всех запросов с статусами и временем выполнения
+- Автозаполнять тела запросов готовыми тестовыми данными (Quick Fill)
+- Настраивать Base URL для работы с любым сервером
+
+---
+
+### 4.9.2. Как запустить
+
+1. Убедиться, что Flask-сервер запущен (`python wsgi.py`).
+2. Открыть файл в браузере:
+
+   ```
+   Двойной клик → test_client.html
+   ```
+
+   Или перетащить файл в браузер. Никакого веб-сервера для самого клиента не нужно — он работает как локальный HTML-файл.
+
+3. В поле **Base URL** (верхняя панель) проверить адрес — по умолчанию `http://localhost:5000`.
+
+---
+
+### 4.9.3. Дизайн и структура интерфейса
+
+Интерфейс выдержан в стиле **военного командного терминала** — тёмная цветовая схема с тёмно-зелёными и золотыми акцентами, моноширинные шрифты для технических данных.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  ⚔ Strategy IS    Base URL: [http://localhost:5000]  ●  │  ← Топ-бар
+├──────────────┬──────────────────────────┬────────────────┤
+│              │  Register User           │  Request Log   │
+│  AUTH        │  POST /api/v1/auth/reg   │                │
+│  › Register  │  ┌────────────────────┐  │  POST /auth/r  │
+│  › Login     │  │ { "email": ...     │  │  GET  /profile │
+│              │  └────────────────────┘  │  POST /match/f │
+│  PROFILE     │  [▶ Send]                │                │
+│  › My Profile│  ─────────────────────  │                │
+│              │  RESPONSE: 201 Created   │                │
+│  LEADERBOARD │  {"ok":true,"data":{...}}│                │
+│  › Leaderboard                          │                │
+│              │                          │                │
+│  EVENTS      │                          │                │
+│  › Post Event│                          │                │
+│              │                          │                │
+│  MATCH       │                          │                │
+│  › Finish    │                          │                │
+└──────────────┴──────────────────────────┴────────────────┘
+```
+
+**Три колонки:**
+- **Левая (240px)** — сайдбар с группами endpoint'ов
+- **Центральная** — рабочая область: редактор запроса + ответ
+- **Правая (320px)** — лог запросов
+
+---
+
+### 4.9.4. Описание всех элементов интерфейса
+
+#### Топ-бар
+
+| Элемент | Назначение |
+|---|---|
+| Лого `⚔ Strategy IS` | Идентификатор приложения |
+| Поле **Base URL** | Адрес сервера. Менять при развёртывании на другом хосте |
+| Индикатор `●` | Зелёный = JWT есть, серый = не авторизован. Показывает `user <id>` |
+
+#### Сайдбар (левая панель)
+
+Endpoint'ы сгруппированы по разделам:
+
+| Группа | Endpoint'ы |
+|---|---|
+| **Auth** | Register, Login |
+| **Profile** | My Profile |
+| **Leaderboard** | Leaderboard |
+| **Events** | Post Event |
+| **Match** | Finish Match |
+| **System** | Health Check |
+
+Активный endpoint подсвечен: правая граница тёмно-зелёная + фон.
+
+Для каждого endpoint'а в сайдбаре видны:
+- Метка метода (`GET` — синяя, `POST` — зелёная)
+- Название endpoint'а
+- Путь URL
+
+#### Центральная область — верх (Request Area)
+
+| Элемент | Назначение |
+|---|---|
+| Заголовок + путь | Название и полный путь выбранного endpoint'а |
+| **Info Box** (золотой фон) | Подсказка — что делает endpoint, что нужно сделать сначала |
+| **Query Params** | Поля параметров строки запроса (только для GET с параметрами, например `/leaderboard`) |
+| **Quick Fill кнопки** | Готовые тестовые данные — нажать чтобы заполнить тело одним кликом |
+| **Request Body** | Редактор JSON. Можно редактировать вручную |
+| Кнопка `▶ Send` | Отправить запрос |
+
+#### Центральная область — низ (Response Area)
+
+| Элемент | Назначение |
+|---|---|
+| **Status Pill** | HTTP-статус ответа. Зелёный = 2xx, красный = ошибка |
+| **Время** | Время выполнения запроса в миллисекундах |
+| **Response Body** | JSON ответа с подсветкой синтаксиса |
+
+**Цветовая схема подсветки JSON:**
+
+| Цвет | Тип значения |
+|---|---|
+| Бирюзовый | Ключи объекта |
+| Золотой | Строки |
+| Голубой | Числа |
+| Розовый | Boolean (true/false) |
+| Серый | null |
+
+#### Правая панель — Request Log
+
+Показывает историю всех отправленных запросов в сессии:
+- Метод (цвет по методу)
+- Путь endpoint'а
+- HTTP статус (зелёный/красный)
+- Время запроса
+
+Кнопка **Clear** — очистить лог.
+
+---
+
+### 4.9.5. Сценарий полного тестирования (шаг за шагом)
+
+#### Шаг 1. Health Check
+
+1. Нажать **System → Health Check** в сайдбаре.
+2. Нажать `▶ Send`.
+3. Ожидаемый результат: `200 OK`, ответ `{"ok": true, "data": {"status": "healthy"}}`.
+
+Если появляется ошибка CORS или сеть недоступна — сервер не запущен.
+
+---
+
+#### Шаг 2. Регистрация нового пользователя
+
+1. Нажать **Auth → Register**.
+2. Нажать Quick Fill **«New User»** — тело заполнится автоматически.
+3. Можно изменить email/nickname вручную.
+4. Нажать `▶ Send`.
+5. Ожидаемый результат: `201 Created`, в ответе `userId`.
+
+---
+
+#### Шаг 3. Логин
+
+1. Нажать **Auth → Login**.
+2. Нажать Quick Fill **«alice (admin)»**.
+3. Нажать `▶ Send`.
+4. Ожидаемый результат: `200 OK`. Индикатор `●` в топ-баре станет зелёным — JWT сохранён.
+
+После этого все защищённые endpoint'ы будут работать автоматически.
+
+> Тестовые пользователи (пароль у всех: `password123`):
+> - `alice@example.com` — роли player + admin
+> - `bob@example.com` — роли player + moderator
+> - `carol@example.com` — player
+> - `eve@example.com` — player (высокий рейтинг)
+> - `banned@example.com` — заблокирован (вернёт 403)
+
+---
+
+#### Шаг 4. Просмотр профиля
+
+1. Нажать **Profile → My Profile**.
+2. Нажать `▶ Send`.
+3. Ожидаемый результат: `200 OK`, данные alice: уровень, XP, валюта, роли.
+
+Если вернулся `401 UNAUTHORIZED` — вернуться к шагу 3 (логин).
+
+---
+
+#### Шаг 5. Таблица лидеров
+
+1. Нажать **Leaderboard → Leaderboard**.
+2. В Query Params проверить: `boardCode=default`, `season=1`, `limit=10`.
+3. Нажать `▶ Send`.
+4. Ожидаемый результат: список игроков с рангами и очками.
+
+Попробовать `boardCode=pvp` — другая доска.
+
+---
+
+#### Шаг 6. Отправка события
+
+1. Нажать **Events → Post Event**.
+2. Нажать Quick Fill **«Match Start»** или **«Unit Deploy»**.
+3. Обратить внимание: `eventId` генерируется автоматически (уникальный UUID).
+4. Нажать `▶ Send`.
+5. Ожидаемый результат: `200 OK`, `{"status": "accepted"}`.
+
+Попробовать нажать `▶ Send` ещё раз с тем же `eventId` — вернётся `409 EVENT_REJECTED` (дедупликация).
+
+---
+
+#### Шаг 7. Завершение матча
+
+1. Нажать **Match → Finish Match**.
+2. Нажать Quick Fill **«Win (match 9)»**.
+
+   > Матч с `id=9` создан в `seed.sql` и принадлежит alice. Нужно быть залогиненным как alice.
+
+3. Нажать `▶ Send`.
+4. Ожидаемый результат: `200 OK`, в ответе `xpGained: 100`, `softCurrencyGained: 50`.
+
+Попробовать нажать `▶ Send` повторно — вернётся `409 CONFLICT` (матч уже завершён).
+
+---
+
+### 4.9.6. Технические детали реализации клиента
+
+Клиент написан на чистом HTML + CSS + JavaScript, без фреймворков.
+
+#### Архитектура JS
+
+```javascript
+// Конфигурация всех endpoint'ов
+const endpoints = {
+  register:     { method: 'POST', path: '/api/v1/auth/register', auth: false, ... },
+  login:        { method: 'POST', path: '/api/v1/auth/login',    auth: false, ... },
+  profile:      { method: 'GET',  path: '/api/v1/profile',       auth: true,  ... },
+  leaderboard:  { method: 'GET',  path: '/api/v1/leaderboard',   auth: false, params: [...] },
+  event:        { method: 'POST', path: '/api/v1/events',        auth: true,  ... },
+  match_finish: { method: 'POST', path: '/api/v1/match/finish',  auth: true,  ... },
+  health:       { method: 'GET',  path: '/health',               auth: false  },
+};
+```
+
+#### Хранение JWT
+
+```javascript
+let token = null;  // хранится в памяти вкладки
+
+// При логине — автоматически извлекается из ответа:
+if (currentEndpoint === 'login' && resp.ok && data?.data?.accessToken) {
+    token = data.data.accessToken;
+    updateTokenUI();
+}
+
+// При запросе — автоматически подставляется:
+if (ep.auth && token)
+    opts.headers['Authorization'] = 'Bearer ' + token;
+```
+
+#### Quick Fill для событий — автогенерация `eventId`
+
+```javascript
+// При выборе Quick Fill для /events — eventId генерируется каждый раз новый:
+if (currentEndpoint === 'event' && body.eventId === '') {
+    body.eventId = 'evt-' + Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+}
+```
+
+Это гарантирует уникальность при повторных нажатиях Quick Fill.
+
+#### Подсветка JSON
+
+```javascript
+function syntaxHighlight(json) {
+  return json.replace(/(ключи|строки|числа|булевые|null)/g, match => {
+    // каждый тип оборачивается в <span class="json-key|str|num|bool|null">
+  });
+}
+```
+
+---
+
+### 4.9.7. Дизайн: цветовая палитра и CSS-переменные
+
+Все цвета объявлены как CSS-переменные в `:root`:
+
+```css
+:root {
+  --bg:      #080c10;   /* фон — почти чёрный */
+  --panel:   #0d1318;   /* панели */
+  --panel2:  #111920;   /* вторичные панели */
+  --border:  #1a2830;   /* границы */
+  --border2: #1f3040;   /* акцентные границы */
+  --gold:    #c8982a;   /* золото — Quick Fill, Info Box */
+  --gold2:   #e8b84b;   /* золото светлое — лого, JSON-строки */
+  --teal:    #1db8a0;   /* бирюза — активные элементы, ссылки */
+  --teal2:   #25d4ba;   /* бирюза светлая — JSON-ключи, inputs */
+  --red:     #e05050;   /* ошибки */
+  --green:   #3dba7a;   /* успех, POST-метки */
+  --blue:    #3a8fd4;   /* GET-метки, JSON-числа */
+  --text:    #d4e0e8;   /* основной текст */
+  --muted:   #4a6070;   /* вторичный текст */
+  --bright:  #eef4f8;   /* заголовки */
+}
+```
+
+**Сетка страницы** — CSS Grid 3 колонки:
+
+```css
+.shell {
+  display: grid;
+  grid-template-columns: 240px 1fr 320px;  /* сайдбар | контент | лог */
+  grid-template-rows: 56px 1fr;            /* топ-бар | тело */
+  height: 100vh;
+}
+```
+
+**Анимированный фон** — сетка из тонких линий через псевдоэлемент:
+
+```css
+body::before {
+  background-image:
+    linear-gradient(rgba(29,184,160,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29,184,160,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+```
+
+**Шрифты** (подключены через Google Fonts):
+- `Rajdhani` — основной UI (навигация, кнопки, заголовки)
+- `Share Tech Mono` — технические данные (URL, JSON, метки методов)
+
+---
+
+### 4.9.8. Как адаптировать клиент под свой проект
+
+Если вы добавили новый endpoint в Flask — добавьте его в `test_client.html`:
+
+```javascript
+// В объект endpoints добавьте новую запись:
+my_endpoint: {
+  title:       'My New Endpoint',
+  method:      'POST',
+  path:        '/api/v1/my-endpoint',
+  auth:        true,
+  info:        'Описание что делает endpoint',
+  quickFills: [
+    { label: 'Пример', body: { field1: 'value1', field2: 42 } }
+  ],
+  defaultBody: { field1: 'value1', field2: 42 }
+},
+```
+
+Добавьте кнопку в HTML-сайдбар:
+
+```html
+<div class="sidebar-section">
+  <div class="sidebar-section-title">My Group</div>
+  <button class="endpoint-btn" onclick="selectEndpoint('my_endpoint')">
+    <div><span class="method-tag POST">POST</span></div>
+    <div>
+      <div class="ep-name">My Endpoint</div>
+      <div class="ep-path">/api/v1/my-endpoint</div>
+    </div>
+  </button>
+</div>
+```
